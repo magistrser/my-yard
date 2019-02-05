@@ -105,7 +105,7 @@ Babel requires plugins to do the transformation. Presets are the set of plugins 
 
 [Webpack](https://webpack.js.org/) is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser.
 
-[webpack.config.js](https://webpack.js.org/configuration/) file is used to describe the configurations required for webpack. Below is the webpack.config.js file which I am using.
+[webpack.config.client.js](https://webpack.js.org/configuration/) file is used to describe the configurations required for webpack. Below is the webpack.config.client.js file which I am using.
 
 ```javascript
 const path = require("path");
@@ -167,7 +167,7 @@ module.exports = {
 
 [Webpack dev server](https://webpack.js.org/configuration/dev-server/) is used along with webpack. It provides a development server that provides live reloading for the client side code. This should be used for development only.
 
-The devServer section of webpack.config.js contains the configuration required to run webpack-dev-server which is given below.
+The devServer section of webpack.config.client.js contains the configuration required to run webpack-dev-server which is given below.
 
 ```javascript
 devServer: {

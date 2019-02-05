@@ -1,4 +1,7 @@
+// ignore studios files
+.idea
 .vscode
+
 node_modules
 dist
 *.log
