@@ -9,7 +9,9 @@
     "client": "webpack-dev-server --config webpack.config.client.js --mode development --devtool inline-source-map --hot",
     "server": "nodemon --exec babel-node --inspect src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "prettier": "prettier --write \"src/**/*.js\""
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "flow": "flow",
+    "updateLibsFlow": "flow-typed install"
   },
   "author": "Sandeep Raveesh",
   "license": "ISC",
@@ -37,6 +39,8 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "file-loader": "^3.0.0",
+    "flow-bin": "^0.92.1",
+    "flow-typed": "^2.5.1",
     "html-webpack-plugin": "^3.2.0",
     "nodemon": "^1.17.3",
     "prettier": "1.16.4",

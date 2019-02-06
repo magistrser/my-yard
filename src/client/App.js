@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import './app.css';
 import ReactImage from './react.png';
 
-export default class App extends Component {
+type Props = {
+    //
+};
+
+type State = {
+    username: ?string
+};
+
+export default class App extends React.Component<Props, State> {
     state = { username: null };
 
     componentDidMount() {
