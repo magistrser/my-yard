@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './app.css';
 import ReactImage from './react.png';
+import YMap from './yandex/loadYmap'
 
 type Props = {
     //
@@ -25,6 +26,7 @@ export default class App extends React.Component<Props, State> {
             <div>
                 {username ? <h1>{`Hello ${username}`}</h1> : <h1>Loading.. please wait!</h1>}
                 <img src={ReactImage} alt="react" />
+                <YMap/>
             </div>
         );
     }
