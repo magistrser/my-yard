@@ -5,7 +5,7 @@ class YMapLoader{
 
     _runScriptForApiLoad() {
         const script = document.createElement("script");
-        script.src = "https://api-maps.yandex.ru/2.1/?apikey=9d4c59f1-72a1-418f-a219-a1734042cd50&load=Map&lang=ru_RU&onload=ymapOnLoad&onerrorYmapOnError";
+        script.src = "https://api-maps.yandex.ru/2.1/?apikey=9d4c59f1-72a1-418f-a219-a1734042cd50&load=Map&lang=ru_RU&onload=ymapOnLoad&onerror=YmapOnError";
         script.async = true;
         document.head.appendChild(script);
     }
