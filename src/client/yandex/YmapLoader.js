@@ -20,11 +20,6 @@ class YMapLoader{
             this._runScriptForApiLoad();
 
             window.ymapOnLoad = ymap => {
-                
-                console.log(`ymap = ${ymap}`); // Object
-                console.log(`ymaps = ${ymaps}`); // Object
-                console.log(`ymaps === ymap? ${ymaps === ymap}`); // True
-
                 this.ymap = ymap;
                 resolve(ymap);
             };
