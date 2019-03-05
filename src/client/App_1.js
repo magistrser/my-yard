@@ -16,11 +16,12 @@ export class App_1 extends Component {
 
         const btnZoomOnClickHandler = event => {
             event.preventDefault();
-            console.log(this.refs.textZoom.value);
+            console.log(this.refs.textZoom.value, this.refs.textZoom);
 
             const zoom = parseFloat(this.refs.textZoom.value); 
             if (!zoom) {
-                this.refs.textZoom.value = "NOPE";
+                this.refs.textZoom.value = "";
+                this.refs.textZoom.placeholder = "NOPE";
                 return;
             }
             this.setState({ zoom });
