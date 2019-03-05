@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import { YMaps, Map, Placemark, GeoObject } from 'react-yandex-maps';
 
 export class App_1 extends Component {
     constructor() {
         super();
         this.state = {
             apikey: `9d4c59f1-72a1-418f-a219-a1734042cd50`, // Works somehow without api key
-            center: [-19.9490072,-69.6348673],
+            center: [55.771707, 37.678784],
             zoom: 14,
             controls: ['zoomControl', 'fullscreenControl'],
         };
@@ -54,6 +54,13 @@ export class App_1 extends Component {
                                 balloonContentBody: `<h3>BALOON</h3><input type="button" value="OK"/><script>alert('?')</script>`,
                             }}
                         />
+                        <GeoObject 
+                        geometry={{
+
+                        }}
+                        options={{
+                            
+                        }} />
                     </Map>
                 </YMaps>
             </div>
