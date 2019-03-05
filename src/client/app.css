@@ -3,7 +3,8 @@ h1 {
   border-radius: 20%;
   border-bottom-left-radius: 70%;
   border-top-right-radius: 70%;
-  
+  width: 50%;
+  margin: 5vh auto;
 }
 
 body {
