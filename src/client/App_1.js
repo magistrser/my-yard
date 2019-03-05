@@ -2,20 +2,43 @@ import React, { Component } from 'react';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
 
 export class App_1 extends Component {
-    render() {
-        const apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`;
-        // Works somehow without api key
-        const state = {
+    constructor() {
+        super();
+        this.state = {
+            apikey: `9d4c59f1-72a1-418f-a219-a1734042cd50`, // Works somehow without api key
             center: [55.75, 37.57],
             zoom: 9,
             controls: ['zoomControl', 'fullscreenControl'],
         };
+    }
 
+    render() {
+
+        const btnZoomOnClickHandler = event => {
+            event.preventDefault();
+            console.log(this.refs.textZoom.value);
+
+            const zoom = parseFloat(this.refs.textZoom.value); 
+            if (!zoom) {
+                this.refs.textZoom.value = "NOPE";
+                return;
+            }
+            this.setState({
+                zoom
+            });
+        }
+
+        const apikey = this.state.apikey;
         return (
             <div>
                 <h1>react-yandex-maps</h1>
+                <div>
+                    <label>Zoom value:</label>
+                    <input type="text" ref="textZoom"/>
+                    <input type="button" name="btnZoom" onClick={btnZoomOnClickHandler} value="OK"/>
+                </div>
                 <YMaps query={{ apikey, load: 'package.full' }}>
-                    <Map defaultState={state} width="100%" height="100vh">
+                    <Map state={this.state} width="100%" height="100vh">
                         <Placemark
                             defaultGeometry={[55.75, 37.57]}
                             properties={{
