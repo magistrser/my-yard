@@ -17,19 +17,35 @@ const mapStyle = {
 }
 
 export default class App extends React.Component<Props, State> {
-    state = { username: null, ymap: { api: null, error: null }, map: null };
+    state = { username: null /*What user*/, ymap: { api: null, error: null }, map: null };
 
-    componentDidMount() {
-        fetch('/api/getUsername')
-            .then(res => res.json())
-            .then(user => this.setState({ username: user.username }));
+    // componentDidMount() {
+    //     fetch('/api/getUsername')
+    //        .then(res => res.json())
+    //        .then(user => this.setState({ username: user.username }));
 
-        ymapLoader.getApi()
-            .then(api => {
-                this.setState({ymap: { api, error: null }});
-                this._createMap();
-            })
-            .catch(error => this.setState({ymap: { api: null, error }}));
+    //     ymapLoader.getApi()
+    //         .then(api => {
+    //             this.setState({ymap: { api, error: null }});
+    //             this._createMap();
+    //         })
+    //         .catch(error => this.setState({ymap: { api: null, error }}));
+    // }
+
+    // Async/Await version
+    async componentDidMount() {
+        /* Redundant */
+        // let res = await fetch('/api/getUsername');
+        // let user = res.json();
+        // this.setState({ username: user.username });
+        
+        try {
+            let api = await ymapLoader.getApi();
+            this.setState({ ymap: { api, error: null } });
+            this._createMap();
+        } catch (err) {
+            this.setState({ ymap: { api: null, error } });
+        }
     }
 
     _createMap() {

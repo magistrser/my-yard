@@ -6,8 +6,8 @@ export class App_1 extends Component {
         super();
         this.state = {
             apikey: `9d4c59f1-72a1-418f-a219-a1734042cd50`, // Works somehow without api key
-            center: [55.75, 37.57],
-            zoom: 9,
+            center: [-19.9490072,-69.6348673],
+            zoom: 14,
             controls: ['zoomControl', 'fullscreenControl'],
         };
     }
