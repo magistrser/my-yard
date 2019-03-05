@@ -41,10 +41,13 @@ export class App_1 extends Component {
                     <input type="button" name="btnZoom" onClick={btnZoomOnClickHandler} value="OK"/>
                 </div>
                 <YMaps query={{ apikey, load: 'package.full' }}>
-                    <Map state={this.state} width="100%" height="100vh"> 
+                    <Map state={this.state} 
+                        width="100%"
+                        height="100vh" 
+                        onClick={(e) => console.log("Clicked on map", e)}> 
                         <Placemark
                             // That's how we catch api instance:
-                            onLoad={(ymaps) => console.log(`onLoad on any component is fired when api is loaded. First argument is ymaps = ${ymaps}`)}
+                            onLoad={(ymaps) => console.log(`onLoad on any component is fired when api is loaded. First argument is ymaps = ${ymaps}`, ymaps)}
                             defaultGeometry={[55.75, 37.57]}
                             properties={{
                                 balloonContentBody: `<h3>BALOON</h3><input type="button" value="OK"/><script>alert('?')</script>`,
