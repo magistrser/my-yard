@@ -23,9 +23,12 @@ export class App_1 extends Component {
                 this.refs.textZoom.value = "NOPE";
                 return;
             }
-            this.setState({
-                zoom
-            });
+            this.setState({ zoom });
+            /*
+            There are two versions of YMap-related component properties:
+            <property> and default<property> (state and defaultState for instance)
+            We can change only not default verions by calling set state.
+            */
         }
 
         const apikey = this.state.apikey;
@@ -40,6 +43,7 @@ export class App_1 extends Component {
                 <YMaps query={{ apikey, load: 'package.full' }}>
                     <Map state={this.state} width="100%" height="100vh">
                         <Placemark
+                            onLoad={(ymaps) => console.log(`onLoad on any component is fired when api is loaded. First argument is ymaps = ${ymaps}`)}
                             defaultGeometry={[55.75, 37.57]}
                             properties={{
                                 balloonContentBody: `<h3>BALOON</h3><input type="button" value="OK"/><script>alert('?')</script>`,
