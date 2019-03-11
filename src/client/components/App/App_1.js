@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route, Link } from "react-router-dom";
 import { YMaps, Map, Placemark, GeoObject } from 'react-yandex-maps';
 
 export class App_1 extends Component {
