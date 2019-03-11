@@ -81,7 +81,7 @@ export class App_1 extends Component {
                         properties={{
                             // iFrame works as intended
                             balloonContentBody: `
-                            <iframe src="/index.html">
+                            <iframe src="http://localhost:3000/api/getExampleHtml">
                                 <p>Your browser does not support iframes.</p>
                             </iframe>
                             `,
