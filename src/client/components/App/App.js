@@ -1,7 +1,6 @@
 import * as React from 'react';
-import './app.css';
-import ReactImage from './react.png';
-import { ymapLoader } from './yandex/YmapLoader'
+import './App.css';
+import { ymapLoader } from '../../utils/YmapLoader'
 
 type Props = {
     //
