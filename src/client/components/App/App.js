@@ -1,7 +1,6 @@
 import * as React from 'react';
-import './app.css';
-import ReactImage from './react.png';
-import { ymapLoader } from './yandex/YmapLoader'
+import './App.css';
+import { ymapLoader } from '../../utils/YmapLoader'
 
 type Props = {
     //
@@ -17,19 +16,16 @@ const mapStyle = {
 }
 
 export default class App extends React.Component<Props, State> {
-    state = { username: null, ymap: { api: null, error: null }, map: null };
+    state = { ymap: { api: null, error: null }, map: null };
 
-    componentDidMount() {
-        fetch('/api/getUsername')
-            .then(res => res.json())
-            .then(user => this.setState({ username: user.username }));
-
-        ymapLoader.getApi()
-            .then(api => {
-                this.setState({ymap: { api, error: null }});
-                this._createMap();
-            })
-            .catch(error => this.setState({ymap: { api: null, error }}));
+    async componentDidMount() {
+        try {
+            let api = await ymapLoader.getApi();
+            this.setState({ ymap: { api, error: null } });
+            this._createMap();
+        } catch (err) {
+            this.setState({ ymap: { api: null, error } });
+        }
     }
 
     _createMap() {

@@ -28,8 +28,6 @@ class YMapLoader{
                 reject(error);
             }
         });
-
-
     }
 }
 
