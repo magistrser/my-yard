@@ -18,11 +18,9 @@ app.get('/api/getExampleHtml', (req: $Request, res: $Response) => {
     res.sendFile(path.join(rootFolder, 'public', 'iFrameContent.html'));
 });
 
-app.get('/lol', (req, res) => res.send("Changes in this file are not affecting server"));
-
 // Handles any requests that don't match the ones above
-app.get('*', (req,res) =>{
-    res.sendFile(path.resolve(rootFolder, "dist", "index.html"));
-});
+// app.get('*', (req,res) =>{
+//     res.sendFile(path.resolve(rootFolder, "dist", "index.html"));
+// });
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
