@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import App from './components/App/App';
 import App_1 from './components/App/App_1';
 import styles from './index.css';
-import { PlacemarkMap } from './components/PlacemarkMap/PacemarkMap';
+import { PlacemarkMap } from '../examples/PlacemarkMap/PacemarkMap';
 
 ReactDOM.render(
     <Router>
