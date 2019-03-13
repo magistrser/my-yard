@@ -24,16 +24,44 @@ export class PlacemarkMap extends Component {
 
     handleMapClick = ev => {
         // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/events-docpage/
-        const coords = ev.get('coords');
+        const coords = ev.get("coords");
         console.log(coords); // Координаты
         this.addPlacemark(...coords);
     };
 
-    handleButtonClick = ev =>
+    handleButtonClick = ev => {
         this.addPlacemark(
             55.771707 + (-Math.random()) ** (~~(Math.random() + 0.5) + 1),
             37.678784 + (-Math.random()) ** (~~(Math.random() + 0.5) + 1)
         );
+    };
+
+    handlePlacemarkClick = ev => {
+        const placemark = ev.get("target"); // Получить объект, вызвавший событие
+        console.dir(placemark);
+        placemark.options.set("preset", "islands#blueWaterwayIcon");
+    };
+
+    handlePlacemarkContextMenu = ev => {
+        const placemark = ev.get("target");
+        // Если меню открыто - убрать
+        document.getElementById("menu")?.remove();
+
+        // Получить экранные координаты точки
+        let leftOffset = ev.get("pagePixels")[0];
+        let topOffset = ev.get("pagePixels")[1];
+        console.log(`${leftOffset}, ${topOffset}`);
+
+        // Отобразить "меню"
+        let menu = document.createElement("div");
+        menu.addEventListener("click", e => document.getElementById("menu")?.remove());
+        menu.id = "menu";
+        menu.innerHTML = "<h3>Меню</h3>";
+        menu.style.left = `${leftOffset}px`;
+        menu.style.top = `${topOffset}px`;
+        document.body.appendChild(menu);
+
+    }
 
     render() {
         return (
@@ -61,16 +89,23 @@ export class PlacemarkMap extends Component {
                                 options={{
                                     // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/geoobjects-docpage/#geoobjects__icon-style
                                     iconLayout: 'default#image',
+                                    // Можно использовать любую картинку или css-спрайт
                                     iconImageHref: 'https://png.pngtree.com/svg/20150401/5d42bc059c.svg',
                                     iconImageSize: [60, 60],
                                     // Смещение левого верхнего угла иконки относительно
                                     // её "ножки" (точки привязки).
                                     iconImageOffset: [-5, -38],
                                 }}
+                                onClick={this.handlePlacemarkClick}
+                                onContextmenu={this.handlePlacemarkContextMenu}
                             />
 
                             {this.state.placemarks.map((pm, i) => (
-                                <Placemark key={i} defaultGeometry={[...Object.values(pm)]} />
+                                <Placemark 
+                                    key={i} 
+                                    defaultGeometry={[...Object.values(pm)]}
+                                    onClick={this.handlePlacemarkClick} 
+                                />
                             )) /*Динамическое добавление меток*/}
                         </Map>
                     </YMaps>

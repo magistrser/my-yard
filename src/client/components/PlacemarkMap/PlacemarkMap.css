@@ -1,3 +1,4 @@
+
 div .overlay {
   z-index: 2000000000;
   position: absolute;
@@ -24,4 +25,16 @@ div .overlay {
 
 #add-random-placemark:active {
   background: blue;
+}
+
+#menu {
+  position: absolute;
+  display: inline-block;
+  width: 12em;
+  color: black;
+  background: rgba(3, 247, 247, 0.5);
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding-bottom: 10px;
+  z-index: 2000000000;
 }
