@@ -25,7 +25,7 @@ export class PlacemarkMap extends Component {
     handleMapClick = ev => {
         // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/events-docpage/
         const coords = ev.get("coords");
-        console.log(coords); // Координаты
+        console.log(coords); // Geo coordinates
         this.addPlacemark(...coords);
     };
 
@@ -37,22 +37,25 @@ export class PlacemarkMap extends Component {
     };
 
     handlePlacemarkClick = ev => {
-        const placemark = ev.get("target"); // Получить объект, вызвавший событие
+        // Get object that invoked event (in yandex API event model)
+        const placemark = ev.get("target");
         console.dir(placemark);
+        // Set placemark options dynamically (one of default icons, see link below)
+        // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/geoobjects-docpage/#geoobjects__icon-style
         placemark.options.set("preset", "islands#blueWaterwayIcon");
     };
 
     handlePlacemarkContextMenu = ev => {
         const placemark = ev.get("target");
-        // Если меню открыто - убрать
+        // Remove "menu" if it is there
         document.getElementById("menu")?.remove();
 
-        // Получить экранные координаты точки
+        // Get screen coords
         let leftOffset = ev.get("pagePixels")[0];
         let topOffset = ev.get("pagePixels")[1];
         console.log(`${leftOffset}, ${topOffset}`);
 
-        // Отобразить "меню"
+        // Show "menu" on this coordinates:
         let menu = document.createElement("div");
         menu.addEventListener("click", e => document.getElementById("menu")?.remove());
         menu.id = "menu";
@@ -89,11 +92,10 @@ export class PlacemarkMap extends Component {
                                 options={{
                                     // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/geoobjects-docpage/#geoobjects__icon-style
                                     iconLayout: 'default#image',
-                                    // Можно использовать любую картинку или css-спрайт
+                                    // Placemark can be any image or css-sprite
                                     iconImageHref: 'https://png.pngtree.com/svg/20150401/5d42bc059c.svg',
                                     iconImageSize: [60, 60],
-                                    // Смещение левого верхнего угла иконки относительно
-                                    // её "ножки" (точки привязки).
+                                    // Left upper icon corner offset relative to its pointer
                                     iconImageOffset: [-5, -38],
                                 }}
                                 onClick={this.handlePlacemarkClick}
@@ -106,7 +108,7 @@ export class PlacemarkMap extends Component {
                                     defaultGeometry={[...Object.values(pm)]}
                                     onClick={this.handlePlacemarkClick} 
                                 />
-                            )) /*Динамическое добавление меток*/}
+                            )) /*This adds placemarks dynamically*/}
                         </Map>
                     </YMaps>
                 </div>
