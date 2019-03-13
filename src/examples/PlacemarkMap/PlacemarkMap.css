@@ -1,0 +1,40 @@
+
+div .overlay {
+  z-index: 2000000000;
+  position: absolute;
+  display: inline-block;
+  left: 0px;
+  top: 0px;
+  width: 200px;
+  height: 100px;
+  background-color: azure;
+  border: 2px solid black;
+  padding: 2px;
+}
+
+#add-random-placemark {
+  width: 100%;
+  border: none;
+  height: 32px;
+  background: aquamarine;
+  color: cornflowerblue;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+#add-random-placemark:active {
+  background: blue;
+}
+
+#menu {
+  position: absolute;
+  display: inline-block;
+  width: 12em;
+  color: black;
+  background: rgba(3, 247, 247, 0.5);
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding-bottom: 10px;
+  z-index: 2000000000;
+}

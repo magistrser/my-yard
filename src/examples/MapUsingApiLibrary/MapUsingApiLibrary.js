@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Route, Link } from "react-router-dom";
+import { Route, Link } from 'react-router-dom';
 import { YMaps, Map, Placemark, GeoObject } from 'react-yandex-maps';
 
-export class App_1 extends Component {
+export class MapUsingApiLibrary extends Component {
     constructor() {
         super();
         this.state = {
@@ -13,41 +13,39 @@ export class App_1 extends Component {
         };
     }
 
+    btnZoomOnClickHandler = event => {
+        event.preventDefault();
+        console.log(this.refs.textZoom.value, this.refs.textZoom);
+
+        const zoom = parseFloat(this.refs.textZoom.value);
+        if (!zoom) {
+            this.refs.textZoom.value = '';
+            this.refs.textZoom.placeholder = 'NOPE';
+            return;
+        }
+        this.setState({ zoom });
+        /*
+        There are two versions of YMap-related component properties:
+        <property> and default<property> (state and defaultState for instance)
+        We can change only not default verions by calling set state.
+        */
+    };
+    // onLoad is called when map is loaded
+    mapOnLoadEventHandler = ymaps => {
+        // Capture ymaps api object on load
+        this.ymaps = ymaps;
+
+        console.log('YMAPS instance', this.ymaps);
+        // Create panel
+        //let panel = this.ymaps.Panel(); // There is no panel!
+        //this.mapInstance.controls.add(panel, { float: 'left' });
+        //panel.setContent("!!!!!");
+    };
+    // instanceRef is called when component is mount (but before onLoad)
+    mapInstanceRefEventHandler = mapInstance => {
+        this.mapInstance = mapInstance;
+    };
     render() {
-        const btnZoomOnClickHandler = event => {
-            event.preventDefault();
-            console.log(this.refs.textZoom.value, this.refs.textZoom);
-
-            const zoom = parseFloat(this.refs.textZoom.value);
-            if (!zoom) {
-                this.refs.textZoom.value = '';
-                this.refs.textZoom.placeholder = 'NOPE';
-                return;
-            }
-            this.setState({ zoom });
-            /*
-            There are two versions of YMap-related component properties:
-            <property> and default<property> (state and defaultState for instance)
-            We can change only not default verions by calling set state.
-            */
-        };
-
-        // onLoad is called when map is loaded
-        const mapOnLoadEventHandler = ymaps => {
-            // Capture ymaps api object on load
-            this.ymaps = ymaps;
-
-            console.log("YMAPS instance",this.ymaps);
-            // Create panel
-            //let panel = this.ymaps.Panel(); // There is no panel!
-            //this.mapInstance.controls.add(panel, { float: 'left' });
-            //panel.setContent("!!!!!");
-        }
-        // instanceRef is called when component is mount (but before onLoad)
-        const mapInstanceRefEventHandler = mapInstance => {
-            this.mapInstance = mapInstance;
-        }
-
         const apikey = this.state.apikey;
         return (
             <div>
@@ -55,15 +53,17 @@ export class App_1 extends Component {
                 <div>
                     <label>Zoom value:</label>
                     <input type="text" ref="textZoom" />
-                    <input type="button" name="btnZoom" onClick={btnZoomOnClickHandler} value="OK" />
+                    <input type="button" name="btnZoom" onClick={this.btnZoomOnClickHandler} value="OK" />
                 </div>
                 <YMaps query={{ apikey, load: 'package.full' }} version={'2.1'}>
-                    <Map state={this.state} 
-                        width="100%" 
-                        height="100vh" 
+                    <Map
+                        state={this.state}
+                        width="100%"
+                        height="100vh"
                         onClick={e => console.log('Clicked on map', e)}
-                        onLoad={mapOnLoadEventHandler}
-                        instanceRef={mapInstanceRefEventHandler}>
+                        onLoad={this.mapOnLoadEventHandler}
+                        instanceRef={this.mapInstanceRefEventHandler}
+                    >
                         <Placemark
                             // That's how we catch api instance:
                             onLoad={ymaps =>
@@ -78,16 +78,16 @@ export class App_1 extends Component {
                             }}
                         />
                         <Placemark
-                        defaultGeometry={[55.75, 37.8]}
-                        properties={{
-                            // iFrame works as intended
-                            balloonContentBody: `
+                            defaultGeometry={[55.75, 37.8]}
+                            properties={{
+                                // iFrame works as intended
+                                balloonContentBody: `
                             <iframe src="http://localhost:3000/api/getExampleHtml">
                                 <p>Your browser does not support iframes.</p>
                             </iframe>
                             `,
-                        }}
-                    />
+                            }}
+                        />
                         <GeoObject // Arbitrary GeoObject
                             geometry={{
                                 type: 'Polygon',
@@ -119,4 +119,4 @@ export class App_1 extends Component {
     }
 }
 
-export default App_1;
+export default MapUsingApiLibrary;
