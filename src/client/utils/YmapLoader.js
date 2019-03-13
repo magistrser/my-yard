@@ -1,19 +1,20 @@
-class YMapLoader{
+class YMapLoader {
     constructor() {
         this.ymap = null;
     }
 
     _runScriptForApiLoad() {
-        const script = document.createElement("script");
-        script.src = "https://api-maps.yandex.ru/2.1/?apikey=9d4c59f1-72a1-418f-a219-a1734042cd50&load=Map&lang=ru_RU&onload=ymapOnLoad&onerror=YmapOnError";
+        const script = document.createElement('script');
+        script.src =
+            'https://api-maps.yandex.ru/2.1/?apikey=9d4c59f1-72a1-418f-a219-a1734042cd50&load=Map&lang=ru_RU&onload=ymapOnLoad&onerror=YmapOnError';
         script.async = true;
         document.head.appendChild(script);
     }
 
     getApi() {
         return new Promise((resolve, reject) => {
-            if(this.ymap) {
-                resolve(this.ymap)
+            if (this.ymap) {
+                resolve(this.ymap);
                 return;
             }
 
@@ -26,7 +27,7 @@ class YMapLoader{
 
             window.ymapOnError = error => {
                 reject(error);
-            }
+            };
         });
     }
 }

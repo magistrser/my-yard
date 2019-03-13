@@ -24,7 +24,7 @@ export class PlacemarkMap extends Component {
 
     handleMapClick = ev => {
         // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/events-docpage/
-        const coords = ev.get("coords");
+        const coords = ev.get('coords');
         console.log(coords); // Geo coordinates
         this.addPlacemark(...coords);
     };
@@ -38,33 +38,30 @@ export class PlacemarkMap extends Component {
 
     handlePlacemarkClick = ev => {
         // Get object that invoked event (in yandex API event model)
-        const placemark = ev.get("target");
+        const placemark = ev.get('target');
         console.dir(placemark);
         // Set placemark options dynamically (one of default icons, see link below)
         // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/geoobjects-docpage/#geoobjects__icon-style
-        placemark.options.set("preset", "islands#blueWaterwayIcon");
+        placemark.options.set('preset', 'islands#blueWaterwayIcon');
     };
 
     handlePlacemarkContextMenu = ev => {
-        const placemark = ev.get("target");
-        // Remove "menu" if it is there
-        document.getElementById("menu")?.remove();
+        const placemark = ev.get('target'); // Remove "menu" if it is there
+        document.getElementById('menu')?.remove();
 
-        // Get screen coords
-        let leftOffset = ev.get("pagePixels")[0];
-        let topOffset = ev.get("pagePixels")[1];
+        let leftOffset = ev.get('pagePixels')[0]; // Get screen coords
+        let topOffset = ev.get('pagePixels')[1];
         console.log(`${leftOffset}, ${topOffset}`);
 
         // Show "menu" on this coordinates:
-        let menu = document.createElement("div");
-        menu.addEventListener("click", e => document.getElementById("menu")?.remove());
-        menu.id = "menu";
-        menu.innerHTML = "<h3>Меню</h3>";
+        let menu = document.createElement('div');
+        menu.addEventListener('click', e => document.getElementById('menu')?.remove());
+        menu.id = 'menu';
+        menu.innerHTML = '<h3>Меню</h3>';
         menu.style.left = `${leftOffset}px`;
         menu.style.top = `${topOffset}px`;
         document.body.appendChild(menu);
-
-    }
+    };
 
     render() {
         return (
@@ -103,11 +100,7 @@ export class PlacemarkMap extends Component {
                             />
 
                             {this.state.placemarks.map((pm, i) => (
-                                <Placemark 
-                                    key={i} 
-                                    defaultGeometry={[...Object.values(pm)]}
-                                    onClick={this.handlePlacemarkClick} 
-                                />
+                                <Placemark key={i} defaultGeometry={[...Object.values(pm)]} onClick={this.handlePlacemarkClick} />
                             )) /*This adds placemarks dynamically*/}
                         </Map>
                     </YMaps>

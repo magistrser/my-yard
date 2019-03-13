@@ -2,12 +2,7 @@ import os from 'os';
 import express from 'express';
 import path from 'path';
 
-import type {
-    $Request,
-    $Response,
-    NextFunction,
-    Middleware,
-} from 'express';
+import type { $Request, $Response, NextFunction, Middleware } from 'express';
 
 const app = express();
 const rootFolder = path.join(__dirname, '..', '..');
