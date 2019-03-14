@@ -5,13 +5,15 @@ import MapUsingApiDirectly from '../examples/MapUsingApiDirectly/MapUsingApiDire
 import MapUsingApiLibrary from '../examples/MapUsingApiLibrary/MapUsingApiLibrary';
 import styles from './index.css';
 import { PlacemarkMap } from '../examples/PlacemarkMap/PacemarkMap';
+import { GeolocationMap } from './components/GeolocationMap/GeolocationMap'
 
 ReactDOM.render(
     <Router>
         <>
             <Route exact path="/" component={MapUsingApiLibrary} />
             <Route exact path="/app" component={MapUsingApiDirectly} />
-            <Route exact path="/PlacemarkMap" component={PlacemarkMap} />
+            <Route exact path="/placemark-map" component={PlacemarkMap} />
+            <Route exact path="/geolocation-map" component={GeolocationMap} />
         </>
     </Router>,
     document.getElementById('root')
