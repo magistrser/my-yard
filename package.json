@@ -7,7 +7,7 @@
     "buildClient": "webpack --config webpack.config.client.js --mode production",
     "start": "npm run buildClient && nodemon --exec babel-node src/server/index.js",
     "client": "webpack-dev-server --config webpack.config.client.js --mode development --devtool inline-source-map --hot",
-    "server": "nodemon --exec babel-node --inspect src/server/index.js",
+    "server": "nodemon --exec babel-node --inspect --debug src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "prettier": "prettier --write \"src/**/*.js\"",
     "flow": "flow",
