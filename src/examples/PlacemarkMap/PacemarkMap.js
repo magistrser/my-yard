@@ -7,7 +7,6 @@ export class PlacemarkMap extends Component {
     constructor() {
         super();
         this.state = {
-            apikey: `9d4c59f1-72a1-418f-a219-a1734042cd50`,
             center: [55.771707, 37.678784],
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
