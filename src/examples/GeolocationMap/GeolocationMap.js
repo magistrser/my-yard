@@ -15,7 +15,7 @@ export class GeolocationMap extends Component {
     }
 
     componentDidMount() {
-        let overlay = document.getElementById('geolocation-overlay');
+        const overlay = document.getElementById('geolocation-overlay');
         draggifyDiv(overlay);
     }
 
@@ -23,7 +23,7 @@ export class GeolocationMap extends Component {
     // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/geolocation-docpage/
     // https://tech.yandex.ru/maps/doc/jsapi/2.1/ref/reference/geolocation-docpage/
     handleGetGeodataClick = async e => {
-        let result = await this.ymapsAPI.geolocation.get({
+        const result = await this.ymapsAPI.geolocation.get({
             /* List of options: */
             autoReverseGeocode: true, // This option might be payed (see docs)
             mapStateAutoApply: true,
@@ -35,9 +35,9 @@ export class GeolocationMap extends Component {
         // Result contains geoObjects array (of one) that could be added to the map (not necessarily)
         this.mapInstance.geoObjects.add(result.geoObjects); // This makes your location appear on the map
         // Get information about user location:
-        let countryName = result.geoObjects.get(0).getCountry();
-        let address = result.geoObjects.get(0).properties.get('text');
-        let coodinates = result.geoObjects.get(0).geometry.getCoordinates();
+        const countryName = result.geoObjects.get(0).getCountry();
+        const address = result.geoObjects.get(0).properties.get('text');
+        const coodinates = result.geoObjects.get(0).geometry.getCoordinates();
 
         document.querySelector('div .overlay > #overlay-content').innerHTML = `
         <h3>Страна:</h3>
@@ -52,8 +52,8 @@ export class GeolocationMap extends Component {
     // Get geolocation using static 'geocode' function
     // https://tech.yandex.ru/maps/doc/jsapi/2.1/ref/reference/geocode-docpage/
     handleMapClick = async e => {
-        let placeToFind = e.get('coords');
-        let result = await this.ymapsAPI.geocode(
+        const placeToFind = e.get('coords');
+        const result = await this.ymapsAPI.geocode(
             placeToFind, // coords array or string address
             /* Options */
             {
@@ -62,7 +62,7 @@ export class GeolocationMap extends Component {
                 results: 1,
             }
         );
-        let foundObjects = result.geoObjects; // Collection of placemarks with addresses
+        const foundObjects = result.geoObjects; // Collection of placemarks with addresses
         console.log(foundObjects);
         this.mapInstance.geoObjects.add(foundObjects); // Show found address on click
     };
