@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import { YMaps, Map, Placemark, GeolocationControl } from 'react-yandex-maps';
 import './GeolocationMap.css';
 
 export class GeolocationMap extends Component {
@@ -23,7 +23,7 @@ export class GeolocationMap extends Component {
     render() {
         return (
             <>
-                <div className="overlay" style={{ display: 'none' }} />
+                <div className="overlay" />
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
                         className="map-container"
@@ -31,9 +31,12 @@ export class GeolocationMap extends Component {
                         onLoad={ymaps => (this.ymapsAPI = ymaps)} // Keep ymaps api instance as a field
                         instanceRef={map => (this.mapInstance = map)} // Keep map instance as a field
                         state={this.state}
-                        //width="100%"
-                        //height="100vh"
-                    />
+                    >
+                        <GeolocationControl
+                            options={{ float: 'right' }}
+                            onClick={e => console.log('Click on geolocation button event: ', e)}
+                        />
+                    </Map>
                 </YMaps>
             </>
         );
