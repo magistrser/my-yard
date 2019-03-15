@@ -11,3 +11,9 @@ div .overlay {
   padding: 2px;
   color: black;
 }
+
+.map-container {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
