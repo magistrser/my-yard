@@ -49,6 +49,24 @@ export class GeolocationMap extends Component {
         `;
     };
 
+    // Get geolocation using static 'geocode' function
+    // https://tech.yandex.ru/maps/doc/jsapi/2.1/ref/reference/geocode-docpage/
+    handleMapClick = async e => {
+        let placeToFind = e.get('coords');
+        let result = await this.ymapsAPI.geocode(
+            placeToFind, // coords array or string address
+            /* Options */
+            {
+                json: false, // geoObjectCollection or json with cryptic data
+                kind: 'house', // what to look for
+                results: 1,
+            }
+        );
+        let foundObjects = result.geoObjects; // Collection of placemarks with addresses
+        console.log(foundObjects);
+        this.mapInstance.geoObjects.add(foundObjects); // Show found address on click
+    };
+
     render() {
         return (
             <>
@@ -63,7 +81,7 @@ export class GeolocationMap extends Component {
                         className="map-container"
                         onLoad={ymaps => (this.ymapsAPI = ymaps)} // Keep ymaps api instance as a field
                         instanceRef={map => (this.mapInstance = map)} // Keep map instance as a field
-                        onClick={handleMapClick}
+                        onClick={this.handleMapClick}
                         state={this.state}
                     />
                 </YMaps>
