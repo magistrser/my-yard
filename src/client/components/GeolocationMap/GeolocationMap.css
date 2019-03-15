@@ -6,8 +6,9 @@ div .overlay {
   top: 0px;
   width: 200px;
   height: 100px;
-  background-color: azure;
-  border: 2px solid black;
+  background-color: rgb(243, 236, 198);
+  border: 4px solid rgb(255, 204, 0);
+  border-radius: 10px;
   padding: 2px;
   color: black;
 }
@@ -16,4 +17,37 @@ div .overlay {
   display: inline-block;
   height: 100%;
   width: 100%;
+}
+
+#geolocation-overlay {
+  cursor: move;
+  text-align: center;
+  height: 500px;
+  left: 40px;
+  top: 5px;
+  padding: 20px 5px
+}
+
+#overlay-content {
+  text-align: left;
+  overflow: auto;
+}
+
+#overlay-content > h3 {
+  text-decoration: underline;
+}
+
+#get-geodata {
+  border: none;
+  height: 30px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  background: rgb(248, 212, 69)
+}
+
+#get-geodata:active {
+  background: rgb(255, 235, 155)
 }
