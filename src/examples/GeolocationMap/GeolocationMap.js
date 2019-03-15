@@ -23,7 +23,7 @@ export class GeolocationMap extends Component {
     // https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/geolocation-docpage/
     // https://tech.yandex.ru/maps/doc/jsapi/2.1/ref/reference/geolocation-docpage/
     handleGetGeodataClick = async e => {
-        const result = await this.ymapsAPI.geolocation.get({
+        const resultWithAutoReverse = await this.ymapsAPI.geolocation.get({
             /* List of options: */
             autoReverseGeocode: true, // This option might be payed (see docs)
             mapStateAutoApply: true,
@@ -31,6 +31,15 @@ export class GeolocationMap extends Component {
             timeout: 3000,
             useMapMargin: true,
         });
+        const resultWithoutAutoReverse = await this.ymapsAPI.geolocation.get({
+            autoReverseGeocode: false,
+        });
+
+        //Difference between autoReverseGeocode: true and false
+        console.log('Result with auto reverse: ', resultWithAutoReverse); // Can get adress and stuff out of it (see below)
+        console.log('Result without auto reverse: ', resultWithoutAutoReverse); // Can get only coord out of it
+
+        const result = resultWithAutoReverse;
         console.log('Geolocation result: ', result);
         // Result contains geoObjects array (of one) that could be added to the map (not necessarily)
         this.mapInstance.geoObjects.add(result.geoObjects); // This makes your location appear on the map
