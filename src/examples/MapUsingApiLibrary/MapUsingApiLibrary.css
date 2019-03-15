@@ -1,0 +1,11 @@
+.map-container-with-header {
+  display: inline-block;
+  width: 100%;
+  height: 80%;
+}
+
+#map-header {
+  width: 100%;
+  height: 20%;
+  min-height: 100px;
+}

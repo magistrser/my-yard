@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
 import { YMaps, Map, Placemark, GeoObject } from 'react-yandex-maps';
+import styles from './MapUsingApiLibrary.css';
 
 export class MapUsingApiLibrary extends Component {
     constructor() {
@@ -48,18 +49,21 @@ export class MapUsingApiLibrary extends Component {
     render() {
         const apikey = this.state.apikey;
         return (
-            <div>
-                <h1>react-yandex-maps</h1>
-                <div>
-                    <label>Zoom value:</label>
-                    <input type="text" ref="textZoom" />
-                    <input type="button" name="btnZoom" onClick={this.btnZoomOnClickHandler} value="OK" />
-                </div>
+            <>
+                <header id="map-header">
+                    <h1>react-yandex-maps</h1>
+                    <div>
+                        <label>Zoom value:</label>
+                        <input type="text" ref="textZoom" />
+                        <input type="button" name="btnZoom" onClick={this.btnZoomOnClickHandler} value="OK" />
+                    </div>
+                </header>
                 <YMaps query={{ apikey, load: 'package.full' }} version={'2.1'}>
                     <Map
+                        className="map-container-with-header"
                         state={this.state}
                         width="100%"
-                        height="100vh"
+                        height="100%"
                         onClick={e => console.log('Clicked on map', e)}
                         onLoad={this.mapOnLoadEventHandler}
                         instanceRef={this.mapInstanceRefEventHandler}
@@ -114,7 +118,7 @@ export class MapUsingApiLibrary extends Component {
                     </Map>
                 </YMaps>
                 <script>console.log("This script is in DOM and it does nothing too");</script>
-            </div>
+            </>
         );
     }
 }
