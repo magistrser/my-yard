@@ -48,6 +48,7 @@ export default class UserClickMap extends Component {
             },
             {
                 preset: 'islands#greenStretchyIcon',
+                geoObjectZIndexHover: 210,
             }
         );
         this.mapInstance.geoObjects.add(placemark);
