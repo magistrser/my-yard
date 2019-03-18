@@ -11,23 +11,27 @@ export default class UserClickMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl', 'geolocationControl'],
             // Component state
+            isInAddMode: false,
         };
         this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`;
-        this.isInAddMode = false;
+        //this.isInAddMode = false;
     }
 
-    handleAddNewPlacemarkClick = ev => {
+    handleAddNewPlacemarkBtnClick = ev => {
         // Change cursor depending on
-        this.isInAddMode = !this.isInAddMode;
-        if (this.isInAddMode) {
+        ev.preventDefault();
+        if (!this.state.isInAddMode) {
             this.cursor.setKey('crosshair');
         } else {
             this.cursor.setKey('grab');
         }
+        this.setState(prevState => {
+            return { ...prevState, isInAddMode: !prevState.isInAddMode };
+        });
     };
 
     handleMapClick = ev => {
-        if (this.isInAddMode) {
+        if (this.state.isInAddMode) {
             ev.preventDefault();
             this.addPlaceMark(ev);
             //this.setState(); // No need to set state, map refreshes itself
@@ -67,7 +71,11 @@ export default class UserClickMap extends Component {
             <div>
                 <aside id="user-click-aside">
                     <p>Options</p>
-                    <button className="user-click-button" id="add-new-placemark" onClick={this.handleAddNewPlacemarkClick}>
+                    <button
+                        className={this.state.isInAddMode ? 'user-click-button-on' : 'user-click-button-off'}
+                        id="add-new-placemark"
+                        onClick={this.handleAddNewPlacemarkBtnClick}
+                    >
                         Add new placemark
                     </button>
                 </aside>
