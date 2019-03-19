@@ -6,6 +6,7 @@ import MapUsingApiLibrary from '../examples/MapUsingApiLibrary/MapUsingApiLibrar
 import styles from './index.css';
 import { PlacemarkMap } from '../examples/PlacemarkMap/PacemarkMap';
 import { GeolocationMap } from '../examples/GeolocationMap/GeolocationMap';
+import UserClickMap from '../examples/UserClickMap/UserClickMap';
 
 ReactDOM.render(
     <Router>
@@ -14,6 +15,7 @@ ReactDOM.render(
             <Route exact path="/app" component={MapUsingApiDirectly} />
             <Route exact path="/placemark-map" component={PlacemarkMap} />
             <Route exact path="/geolocation-map" component={GeolocationMap} />
+            <Route exact path="/user-click-map" component={UserClickMap} />
         </>
     </Router>,
     document.getElementById('root')

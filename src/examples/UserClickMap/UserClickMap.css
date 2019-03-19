@@ -1,0 +1,41 @@
+#user-click-aside {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 300px;
+    background: cornflowerblue;
+    height: 100vh;
+}
+#user-click-main {
+    position: absolute;
+    left: 300px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    background: darkslateblue;
+    height: 100vh;
+}
+.map-container {
+    width: 100%;
+    height: 100%;
+}
+.user-click-button-on {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.user-click-button-off {
+    background-color: rgb(38, 95, 40);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
