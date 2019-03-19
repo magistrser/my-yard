@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ymapLoader } from '../../client/utils/YmapLoader';
+import { ymapLoader } from '../../../utils/YmapLoader';
 
 type Props = {
     //
