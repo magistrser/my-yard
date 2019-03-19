@@ -1,4 +1,4 @@
-div .overlay {
+div .geolocation-map-overlay {
   z-index: 2000000000;
   position: absolute;
   display: inline-block;
@@ -13,7 +13,7 @@ div .overlay {
   color: black;
 }
 
-.map-container {
+.geolocation-map-container {
   display: inline-block;
   height: 100%;
   width: 100%;
@@ -28,7 +28,7 @@ div .overlay {
   padding: 20px 5px
 }
 
-#overlay-content {
+#geolocation-map-overlay-content {
   text-align: left;
   overflow: auto;
 }

@@ -48,7 +48,7 @@ export class GeolocationMap extends Component {
         const address = result.geoObjects.get(0).properties.get('text');
         const coodinates = result.geoObjects.get(0).geometry.getCoordinates();
 
-        document.querySelector('div .overlay > #overlay-content').innerHTML = `
+        document.getElementById('geolocation-map-overlay-content').innerHTML = `
         <h3>Страна:</h3>
         <p>${countryName}</p>
         <h3>Адрес:</h3>
@@ -79,15 +79,15 @@ export class GeolocationMap extends Component {
     render() {
         return (
             <>
-                <div className="overlay" id="geolocation-overlay">
+                <div className="geolocation-map-overlay" id="geolocation-overlay">
                     <button id="get-geodata" onClick={this.handleGetGeodataClick}>
                         Вычислить по айпи
                     </button>
-                    <div id="overlay-content" />
+                    <div id="geolocation-map-overlay-content" />
                 </div>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
-                        className="map-container"
+                        className="geolocation-map-container"
                         onLoad={ymaps => (this.ymapsAPI = ymaps)} // Keep ymaps api instance as a field
                         instanceRef={map => (this.mapInstance = map)} // Keep map instance as a field
                         onClick={this.handleMapClick}
