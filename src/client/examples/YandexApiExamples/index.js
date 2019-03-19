@@ -5,7 +5,7 @@ import MapUsingApiDirectly from './MapUsingApiDirectly/MapUsingApiDirectly';
 import MapUsingApiLibrary from './MapUsingApiLibrary/MapUsingApiLibrary';
 import styles from './index.css';
 import { PlacemarkMap } from './PlacemarkMap/PacemarkMap';
-import { GeolocationMap } from './examples/YandexApiExamples/GeolocationMap/GeolocationMap';
+import { GeolocationMap } from './GeolocationMap/GeolocationMap';
 import UserClickMap from './UserClickMap/UserClickMap';
 
 ReactDOM.render(

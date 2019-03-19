@@ -11,7 +11,9 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "prettier": "prettier --write \"src/**/*.js\"",
     "flow": "flow",
-    "updateLibsFlow": "flow-typed install"
+    "updateLibsFlow": "flow-typed install",
+    "yandexExamplesClient": "webpack-dev-server --config src/client/examples/YandexApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
+    "yandexExamples": "concurrently \"npm run server\" \"npm run yandexExamplesClient\""
   },
   "author": "Sandeep Raveesh",
   "license": "ISC",
