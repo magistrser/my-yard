@@ -8,15 +8,19 @@ import { PlacemarkMap } from './examples/YandexApiExamples/PlacemarkMap/Pacemark
 import { GeolocationMap } from './examples/YandexApiExamples/GeolocationMap/GeolocationMap';
 import UserClickMap from './examples/YandexApiExamples/UserClickMap/UserClickMap';
 
-ReactDOM.render(
-    <Router>
-        <>
-            <Route exact path="/" component={MapUsingApiLibrary} />
-            <Route exact path="/app" component={MapUsingApiDirectly} />
-            <Route exact path="/placemark-map" component={PlacemarkMap} />
-            <Route exact path="/geolocation-map" component={GeolocationMap} />
-            <Route exact path="/user-click-map" component={UserClickMap} />
-        </>
-    </Router>,
-    document.getElementById('root')
-);
+import App from './components/App/App';
+
+// ReactDOM.render(
+//     <Router>
+//         <>
+//             <Route exact path="/" component={MapUsingApiLibrary} />
+//             <Route exact path="/app" component={MapUsingApiDirectly} />
+//             <Route exact path="/placemark-map" component={PlacemarkMap} />
+//             <Route exact path="/geolocation-map" component={GeolocationMap} />
+//             <Route exact path="/user-click-map" component={UserClickMap} />
+//         </>
+//     </Router>,
+//     document.getElementById('root')
+// );
+
+ReactDOM.render(<App />, document.getElementById('root'));
