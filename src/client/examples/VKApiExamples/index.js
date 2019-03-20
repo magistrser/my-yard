@@ -2,24 +2,20 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import AuthExample from './components/AuthExample/AuthExample';
-import styles from './index.css';
+import './index.css';
 
 ReactDOM.render(
     <Router>
         <>
-            <nav className={styles.vknav}>
-                <ul>
+            <header className="vk-examples-header">
+                <ul className="vk-examples-main-nav">
                     <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/">Home</Link>
+                        <Link className="vk-examples-link" to="/">
+                            Authification
+                        </Link>
                     </li>
                 </ul>
-            </nav>
+            </header>
             <Switch>
                 <Route exact path="/" component={AuthExample} />
             </Switch>
