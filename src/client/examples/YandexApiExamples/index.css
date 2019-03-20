@@ -1,0 +1,28 @@
+html {
+  height: 100%;
+}
+
+h1 {
+  border: 3px solid #ccc;
+  border-radius: 20%;
+  border-bottom-left-radius: 70%;
+  border-top-right-radius: 70%;
+  width: 50%;
+  margin: 5vh auto;
+}
+
+body {
+  height: 100%;
+  color: #fff;
+  background-color: #333;
+  text-align: center;
+  margin: auto;
+  font-family: 'Courier New', Impact,  Courier, monospace;
+  font-weight: bold;
+}
+
+#root {
+  /*These make sure that % measures won't compute to 0*/
+  height: 100% !important;
+  width: 100% !important;
+}
