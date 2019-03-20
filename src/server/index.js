@@ -14,8 +14,8 @@ app.get('/api/getExampleHtml', (req: $Request, res: $Response) => {
 });
 
 // Handles any requests that don't match the ones above
-// app.get('*', (req,res) =>{
-//     res.sendFile(path.resolve(rootFolder, "dist", "index.html"));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(rootFolder, 'dist', 'index.html'));
+});
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
