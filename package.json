@@ -12,8 +12,11 @@
     "prettier": "prettier --write \"src/**/*.js\"",
     "flow": "flow",
     "updateLibsFlow": "flow-typed install",
+
     "yandexExamplesClient": "webpack-dev-server --config src/client/examples/YandexApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
-    "yandexExamples": "concurrently \"npm run server\" \"npm run yandexExamplesClient\""
+    "yandexExamples": "concurrently \"npm run server\" \"npm run yandexExamplesClient\"",
+    "vkExamplesClient": "webpack-dev-server --config src/client/examples/VKApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
+    "vkExamples": "concurrently \"npm run server\" \"npm run vkExamplesClient\""
   },
   "author": "Sandeep Raveesh",
   "license": "ISC",
