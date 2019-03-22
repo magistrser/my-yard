@@ -1,7 +1,14 @@
+/**
+ * Docs on the topic:
+ * https://vk.com/dev/access_token
+ * VK uses OAuth 2.0 authentication protocol:
+ * https://habr.com/ru/company/mailru/blog/115163/
+ */
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import ReactDOM from 'react-dom';
-import AuthExample from './components/AuthExample/AuthExample';
+import AccessTokenExample from './components/AccessTokenExample/AccessTokenExample';
 import './index.css';
 
 ReactDOM.render(
@@ -11,13 +18,13 @@ ReactDOM.render(
                 <ul className="vk-examples-main-nav">
                     <li>
                         <Link className="vk-examples-link" to="/">
-                            Simple Auth
+                            Access Token
                         </Link>
                     </li>
                 </ul>
             </header>
             <Switch>
-                <Route exact path="/" component={AuthExample} />
+                <Route exact path="/" component={AccessTokenExample} />
             </Switch>
         </>
     </Router>,
