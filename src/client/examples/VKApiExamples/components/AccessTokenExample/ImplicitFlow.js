@@ -9,12 +9,14 @@ export default function ImplicitFlow() {
         ev.preventDefault();
         location.href =
             'https://oauth.vk.com/authorize?' +
-            'client_id=6907668' +
-            '&scope=email' +
-            '&redirect_uri=localhost:3000' +
-            '&display=popup' +
-            '&response_type=token' +
-            '&v=5.92';
+            'client_id=6907668' + // Our app id
+            '&scope=email' + // Required permissions
+            '&redirect_uri=localhost:3000' + // Where to redirect after login (yup, localhost works)
+            '&display=popup' + // page, popup or mobile
+            '&response_type=token' + // token or code
+            '&state=arbitrary_string' + // Returned in answer
+            '&revoke=1' + // Asks for permissions even if user is already authorized (0 by default)
+            '&v=5.92'; // version of api (mandatory)
     }
 
     function outputAnswer() {
