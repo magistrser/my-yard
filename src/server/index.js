@@ -22,11 +22,12 @@ app.get('/api/getToken', (req, res) => {
         'https://oauth.vk.com/access_token?' +
         '&client_id=6907668' +
         '&client_secret=wJVp247QPfcwcLdAeUjB' +
-        '&redirect_uri=localhost:3000/api/getToken' +
+        '&redirect_uri=http://localhost:3000/api/getToken' +
         `&code=${code}`;
     https.get(queryUrl, response => {
         response.on('data', data => {
-            res.send(JSON.parse(data));
+            const response = JSON.parse(data);
+            res.send(response);
         });
     });
 });

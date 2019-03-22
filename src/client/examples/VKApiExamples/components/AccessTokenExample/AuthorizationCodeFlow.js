@@ -24,7 +24,7 @@ export default function AuthorizationCodeFlow() {
             'https://oauth.vk.com/authorize?' +
             'client_id=6907668' + // Our app id
             '&scope=email' + // Required permissions
-            '&redirect_uri=localhost:3000/api/getToken' + // Our server login endpoint
+            '&redirect_uri=http://localhost:3000/api/getToken' + // Our server login endpoint
             '&display=page' + // page, popup or mobile
             '&response_type=code' + // Will be sent to our server as a get query. Can be used within 1 hour to get access token from server
             '&state=arbitrary_string' + // Returned in answer
