@@ -11,7 +11,7 @@ ReactDOM.render(
                 <ul className="vk-examples-main-nav">
                     <li>
                         <Link className="vk-examples-link" to="/">
-                            AuthWidgets
+                            Simple Auth
                         </Link>
                     </li>
                 </ul>

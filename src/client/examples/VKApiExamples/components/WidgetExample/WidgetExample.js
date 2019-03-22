@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class AuthExample extends Component {
+export default class WidgetExample extends Component {
     componentDidMount() {
         // TODO: Make this thing loading like with yandex maps api:
         <script type="text/javascript" src="https://vk.com/js/api/openapi.js?160" />;
