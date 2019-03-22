@@ -14,6 +14,7 @@ export default function AuthorizationCodeFlow() {
                 Ключ доступа, полученный таким способом, не привязан к IP-адресу, но набор прав, которые может получить приложение,
                 ограничен из соображений безопасности.
             </p>
+            <button onClick={handleLoginClick}>Авторизцаия через сервер</button>
         </div>
     );
 
@@ -23,8 +24,8 @@ export default function AuthorizationCodeFlow() {
             'https://oauth.vk.com/authorize?' +
             'client_id=6907668' + // Our app id
             '&scope=email' + // Required permissions
-            '&redirect_uri=localhost:3000' + // Our server login endpoint
-            '&display=popup' + // page, popup or mobile
+            '&redirect_uri=localhost:3000/api/getToken' + // Our server login endpoint
+            '&display=page' + // page, popup or mobile
             '&response_type=code' + // Will be sent to our server as a get query. Can be used within 1 hour to get access token from server
             '&state=arbitrary_string' + // Returned in answer
             '&revoke=1' + // Asks for permissions even if user is already authorized (0 by default)

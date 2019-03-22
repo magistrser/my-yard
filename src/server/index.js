@@ -1,6 +1,9 @@
 import os from 'os';
 import express from 'express';
 import path from 'path';
+import url from 'url';
+import http from 'http';
+import https from 'https';
 
 import type { $Request, $Response, NextFunction, Middleware } from 'express';
 
@@ -11,6 +14,21 @@ app.use(express.static('dist'));
 
 app.get('/api/getExampleHtml', (req: $Request, res: $Response) => {
     res.sendFile(path.join(rootFolder, 'public', 'iFrameContent.html'));
+});
+
+app.get('/api/getToken', (req, res) => {
+    const code = req.query.code;
+    const queryUrl =
+        'https://oauth.vk.com/access_token?' +
+        '&client_id=6907668' +
+        '&client_secret=wJVp247QPfcwcLdAeUjB' +
+        '&redirect_uri=localhost:3000/api/getToken' +
+        `&code=${code}`;
+    https.get(queryUrl, response => {
+        response.on('data', data => {
+            res.send(JSON.parse(data));
+        });
+    });
 });
 
 // Handles any requests that don't match the ones above
