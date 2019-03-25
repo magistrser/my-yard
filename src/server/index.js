@@ -20,10 +20,10 @@ app.get('/api/getToken', (req, res) => {
     const code = req.query.code;
     const queryUrl =
         'https://oauth.vk.com/access_token?' +
-        '&client_id=6907668' +
-        '&client_secret=wJVp247QPfcwcLdAeUjB' +
-        '&redirect_uri=http://localhost:3000/api/getToken' +
-        `&code=${code}`;
+        '&client_id=6907668' + // Our app ID
+        '&client_secret=wJVp247QPfcwcLdAeUjB' + // Our secret key
+        '&redirect_uri=http://localhost:3000/api/getToken' + // Exactly the same uri that we used on client-side
+        `&code=${code}`; // code we got from clinet-side
     https.get(queryUrl, response => {
         response.on('data', data => {
             const response = JSON.parse(data);
