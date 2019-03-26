@@ -22,12 +22,16 @@ body {
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  flex-direction: row;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.vk-examples-main-nav > li:hover {
+
+.vk-examples-main-nav li {
+  display: flex;
+  flex-direction: column;
+}
+.vk-examples-main-nav li:hover {
   border-bottom: 4px solid rgb(30, 146, 255);
 }
 .vk-examples-link {

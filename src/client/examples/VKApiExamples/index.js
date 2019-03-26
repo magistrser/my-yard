@@ -9,6 +9,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import AccessTokenExample from './components/AccessTokenExample/AccessTokenExample';
+import WidgetExample from './components/WidgetExample/WidgetExample';
 import './index.css';
 
 ReactDOM.render(
@@ -21,10 +22,16 @@ ReactDOM.render(
                             Access Token
                         </Link>
                     </li>
+                    <li>
+                        <Link className="vk-examples-link" to="/widgets">
+                            Widgets
+                        </Link>
+                    </li>
                 </ul>
             </header>
             <Switch>
                 <Route exact path="/" component={AccessTokenExample} />
+                <Route exact path="/widgets" component={WidgetExample} />
             </Switch>
         </>
     </Router>,
