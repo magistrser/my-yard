@@ -42,19 +42,22 @@ export default class OpenApiExample extends Component {
     }
 
     handleLoginBtnClick = ev => {
-        VK.Auth.login(data => {
-            console.log('Loged in via VK.Auth.login', data);
-            this.setState({ loggedIn: data?.status === 'connected' });
-        });
+        if (!this.state.loggedIn) {
+            VK.Auth.login(data => {
+                console.log('Loged in via VK.Auth.login', data);
+                this.setState({ loggedIn: data?.status === 'connected' });
+            });
+        } else {
+            VK.Auth.logout(data => console.log('Logged out via VK.Auth.logout', data));
+            this.setState({ loggedIn: false });
+        }
     };
 
     render() {
         return (
             <div>
                 <h1>Работа с OpenApi</h1>
-                <button onClick={this.handleLoginBtnClick} disabled={this.state.loggedIn}>
-                    Войти через ВК
-                </button>
+                <button onClick={this.handleLoginBtnClick}>{!this.state.loggedIn ? 'Войти через ВК' : 'Выйти'}</button>
             </div>
         );
     }
