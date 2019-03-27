@@ -24,7 +24,7 @@ export default function ImplicitFlow() {
             'https://oauth.vk.com/authorize?' +
             'client_id=6907668' + // Our app id
             '&scope=email' + // Required permissions
-            '&redirect_uri=localhost:3000' + // Where to redirect after login (yup, localhost works)
+            '&redirect_uri=localhost' + // Where to redirect after login (yup, localhost works)
             '&display=popup' + // page, popup or mobile
             '&response_type=token' + // different every time
             '&state=arbitrary_string' + // Returned in answer

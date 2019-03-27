@@ -20,6 +20,7 @@ export default class WidgetExample extends Component {
     componentDidMount() {
         const script = document.createElement('script');
         script.src = 'https://vk.com/js/api/openapi.js?160';
+        script.id = 'vk_script';
         document.head.appendChild(script);
         // HACK: This one kinda bad, need to check if VK api loaded somehow instead of waiting for 0.5 sec
         // TODO: Check if it is loaded every 100ms untill its loaded or timelimit reached, for example
@@ -59,6 +60,12 @@ export default class WidgetExample extends Component {
             authUrl: 'http://localhost/widgets', // Url to redirect with get query string (should be server endpoint)
             // onAuth makes widget dynamic so authUrl is ignored
         });
+    }
+
+    componentWillUnmount() {
+        // Delete VK script so other examples work properly
+        const script = document.getElementById('vk_script');
+        document.head.removeChild(script);
     }
 
     handleValidationBtnClick = ev => {
