@@ -27,21 +27,21 @@ app.get('/api/getToken', (req, res) => {
         `&code=${code}`; // code we got from clinet-side
     https.get(queryUrl, response => {
         response.on('data', data => {
-            // Parse json in response:
+            // Parse json from response:
             const jsonResponse = JSON.parse(data);
             // Print out json body:
             res.write('Server responded with:\n');
             res.write(Object.keys(jsonResponse).reduce((acc, i) => (acc += `${i} = ${jsonResponse[i]} \n`), ''));
             res.write('\n');
             const token = jsonResponse['access_token'];
-            // We aquired new token along with user id and email if we asked for it.
-            // We can validate this token by api call
+            // We aquired new token along with user id (and email if we asked for it).
+            // We can validate this token by api call. Generic api call looks like this:
             // https://api.vk.com/method/METHOD_NAME?PARAMETERS&access_token=ACCESS_TOKEN&v=V
 
-            // secure.checkToken (https://vk.com/dev/secure.checkToken) won't work because "application type is not standalone"
+            //secure.checkToken (https://vk.com/dev/secure.checkToken) won't work because "application type is not standalone"
             //const apiReq = `https://api.vk.com/method/secure.checkToken?token=${token}&v=5.92&access_token=6f20ab596f20ab596f20ab59ea6f49cc4d66f206f20ab5933b2deca56e66ad2cb25d04a`;
 
-            // users.get with token should return id of the user posessing this token:
+            // users.get with token should return only one user posessing this token:
             const apiReq = `https://api.vk.com/method/users.get?access_token=${token}&v=5.92)`;
             res.write(`Sending request to ${apiReq}...\n`);
             axios
