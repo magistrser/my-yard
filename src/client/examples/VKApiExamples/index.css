@@ -39,5 +39,7 @@ body {
   padding: 10px 15px;
 	text-transform: uppercase;
 	text-align: center;
-	display: block;
+  display: block;
+  color: black;
+  font-family: 'Arial Narrow Bold', sans-serif;
 }
