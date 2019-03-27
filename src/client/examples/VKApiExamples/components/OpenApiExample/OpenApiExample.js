@@ -4,6 +4,7 @@ export default class OpenApiExample extends Component {
     constructor() {
         super();
         this.state = {
+            loaded: false,
             loggedIn: false,
         };
     }
@@ -18,12 +19,15 @@ export default class OpenApiExample extends Component {
         // Create callback vkAsyncInit callback (fired when api is loaded)
         window.vkAsyncInit = () => {
             console.log('VK api is loaded', VK);
+            this.setState({ loaded: true });
             // Init VK
             VK.init({
                 apiId: 6907668,
             });
             // Subscribe to events in OpenAPI event model
             VK.Observer.subscribe('auth.login', e => console.log('User just loged in', e));
+            // Create login button using vk api
+            // VK.UI.button('fancy_login_button'); // Unclear how it works
         };
         // Append vk api script to transport div
         setTimeout(() => {
@@ -53,11 +57,22 @@ export default class OpenApiExample extends Component {
         }
     };
 
+    handleCheckLoginStatusBtnClick = ev => {
+        // Get login status and session data
+        VK.Auth.getLoginStatus(status => {
+            console.log('VK.Auth.getLoginStatus', status);
+        });
+    };
+
     render() {
         return (
             <div>
                 <h1>Работа с OpenApi</h1>
-                <button onClick={this.handleLoginBtnClick}>{!this.state.loggedIn ? 'Войти через ВК' : 'Выйти'}</button>
+                <div hidden={!this.state.loaded}>
+                    <button onClick={this.handleLoginBtnClick}>{!this.state.loggedIn ? 'Войти через ВК' : 'Выйти'}</button>
+                    <div id="fancy_login_button" />
+                    <button onClick={this.handleCheckLoginStatusBtnClick}>Check Login Status</button>
+                </div>
             </div>
         );
     }
