@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 export default class OpenApiExample extends Component {
     constructor() {
         super();
+        this.state = {
+            loggedIn: false,
+        };
     }
 
     componentWillMount() {
@@ -15,9 +18,12 @@ export default class OpenApiExample extends Component {
         // Create callback vkAsyncInit callback (fired when api is loaded)
         window.vkAsyncInit = () => {
             console.log('VK api is loaded', VK);
+            // Init VK
             VK.init({
                 apiId: 6907668,
             });
+            // Subscribe to events in OpenAPI event model
+            VK.Observer.subscribe('auth.login', e => console.log('User just loged in', e));
         };
         // Append vk api script to transport div
         setTimeout(() => {
@@ -34,10 +40,21 @@ export default class OpenApiExample extends Component {
         document.body.removeChild(vkDiv);
         window.vkAsyncInit = null;
     }
+
+    handleLoginBtnClick = ev => {
+        VK.Auth.login(data => {
+            console.log('Loged in via VK.Auth.login', data);
+            this.setState({ loggedIn: data?.status === 'connected' });
+        });
+    };
+
     render() {
         return (
             <div>
-                <h1>hi</h1>
+                <h1>Работа с OpenApi</h1>
+                <button onClick={this.handleLoginBtnClick} disabled={this.state.loggedIn}>
+                    Войти через ВК
+                </button>
             </div>
         );
     }
