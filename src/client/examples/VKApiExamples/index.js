@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import AccessTokenExample from './components/AccessTokenExample/AccessTokenExample';
 import WidgetExample from './components/WidgetExample/WidgetExample';
+import OpenApiExample from './components/OpenApiExample/OpenApiExample';
 import './index.css';
 
 ReactDOM.render(
@@ -27,11 +28,17 @@ ReactDOM.render(
                             Widgets
                         </Link>
                     </li>
+                    <li>
+                        <Link className="vk-examples-link" to="/open-api">
+                            Open API
+                        </Link>
+                    </li>
                 </ul>
             </header>
             <Switch>
                 <Route exact path="/" component={AccessTokenExample} />
                 <Route exact path="/widgets" component={WidgetExample} />
+                <Route exact path="/open-api" component={OpenApiExample} />
             </Switch>
         </>
     </Router>,

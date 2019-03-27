@@ -63,9 +63,11 @@ export default class WidgetExample extends Component {
     }
 
     componentWillUnmount() {
-        // Delete VK script so other examples work properly
+        // Clean up so other examples work properly
         const script = document.getElementById('vk_script');
+        const vkDiv = document.getElementById('vk_api_transport');
         document.head.removeChild(script);
+        document.body.removeChild(vkDiv);
     }
 
     handleValidationBtnClick = ev => {
@@ -75,6 +77,8 @@ export default class WidgetExample extends Component {
         const user_id = this.state.data.uid.toString();
         const secret_key = 'wJVp247QPfcwcLdAeUjB';
         const validationColor = md5(app_id + user_id + secret_key) === this.state.data.hash ? 'green' : 'red';
+        // We could actually calculate md5 like this, using method of VK object:
+        console.log(`md5(app_id + user_id + secret_key) = ${VK.MD5(app_id + user_id + secret_key)}`);
         this.setState({ validationColor });
     };
 
