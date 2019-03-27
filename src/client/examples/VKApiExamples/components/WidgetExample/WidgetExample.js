@@ -24,46 +24,44 @@ export default class WidgetExample extends Component {
         // HACK: This one kinda bad, need to check if VK api loaded somehow instead of waiting for 0.5 sec
         // TODO: Check if it is loaded every 100ms untill its loaded or timelimit reached, for example
         setTimeout(() => {
-            console.dir(VK);
+            console.log('VK instance: ', VK);
             VK.init({ apiId: 6907668 });
             this.setState({ loading: false });
-            // Init dynamic widget:
-            VK.Widgets.Auth('vk_auth_dynamic', {
-                onAuth: data => {
-                    const authInfo = [];
-                    authInfo.push('onAuth is called');
-                    for (let key of Object.keys(data)) {
-                        if (key === 'session') {
-                            authInfo.push(
-                                `${key} = { 
-                                    ${Object.keys(data[key]).reduce((acc, item) => (acc += `${item}, `), '')}
-                                }`
-                            );
-                        } else {
-                            authInfo.push(`${key} = ${data[key]}`);
-                        }
-                    }
-                    this.setState({ vkAuthDynamicInfo: authInfo, data });
-                    console.log('data object from dynamic widget', data);
-                },
-            });
-            // Init ordinary widget
-            VK.Widgets.Auth('vk_auth_ordinary', {
-                authUrl: 'http://localhost/widgets',
-                onAuth: data => {
-                    alert(
-                        `Все параметры были переданы в строку гет-запроса \n
-                        ${window.location.search}
-                        \nCallback onAuth работает как обычно, объект data с теми же параметрами приходит`
-                    );
-                    console.log('data object from ordinary widget', data);
-                },
-            });
+            this.initDynamicWidget();
+            this.initOrdinaryWidget();
         }, 500);
     }
 
-    handleClick = ev => {
-        let msg = '';
+    initDynamicWidget() {
+        VK.Widgets.Auth('vk_auth_dynamic', {
+            onAuth: data => {
+                const authInfo = [];
+                authInfo.push('onAuth is called');
+                for (let key of Object.keys(data)) {
+                    if (key === 'session') {
+                        authInfo.push(
+                            `${key} = { 
+                                ${Object.keys(data[key]).reduce((acc, item) => (acc += `${item}, `), '')}
+                            }`
+                        );
+                    } else {
+                        authInfo.push(`${key} = ${data[key]}`);
+                    }
+                }
+                this.setState({ vkAuthDynamicInfo: authInfo, data });
+                console.log('data object from dynamic widget', data);
+            },
+        });
+    }
+
+    initOrdinaryWidget() {
+        VK.Widgets.Auth('vk_auth_ordinary', {
+            authUrl: 'http://localhost/widgets', // Url to redirect with get query string (should be server endpoint)
+            // onAuth makes widget dynamic so authUrl is ignored
+        });
+    }
+
+    handleValidationBtnClick = ev => {
         // To validate authorization we should compare hash and md5(app_id+user_id+secret_key)
         // SHOULD BE DONE ON SERVER!
         const app_id = '6907668';
@@ -85,7 +83,7 @@ export default class WidgetExample extends Component {
                 <h2>Динамический</h2>
                 {this.state.loading ? <h2>Loading...</h2> : <div id="vk_auth_dynamic" />}
                 <p>
-                    после авторизации будет вызвана функция onAuth c объектом data, содержащим поля{' '}
+                    После авторизации будет вызвана функция onAuth c объектом data, содержащим поля{' '}
                     <b>uid, first_name, last_name, photo, photo_rec, session, hash,</b> также пользователь будет авторизован в openApi.
                 </p>
                 <div id="vk_auth_dynamic_info" style={{ border: '2px solid black' }}>
@@ -98,16 +96,17 @@ export default class WidgetExample extends Component {
                                 Для проверки авторизации Вы можете использовать полученный параметр hash, сравнив его с md5 подписью от
                                 app_id+user_id+secret_key, например md5(194253766748fTanppCrNSeuYPbA4ENCo).
                             </p>
-                            <button onClick={this.handleClick}>Проверить авторизацию</button>
+                            <button onClick={this.handleValidationBtnClick}>Проверить авторизацию</button>
                         </div>
                     ) : null}
                 </div>
                 <h2>Обычный</h2>
                 {this.state.loading ? <h2>Loading...</h2> : <div id="vk_auth_ordinary" />}
                 <p>
-                    пользователь будет переадресован на указанный в параметре authUrl адрес с полями:{' '}
+                    Пользователь будет переадресован на указанный в параметре authUrl адрес с полями:{' '}
                     <b>uid, first_name, last_name, photo, photo_rec, hash</b>
                 </p>
+                <div style={{ border: '2px solid black' }}>Query string: {document.location.search}</div>
             </div>
         );
     }
