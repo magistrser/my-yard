@@ -75,7 +75,7 @@ export default class WidgetExample extends Component {
         // SHOULD BE DONE ON SERVER!
         const app_id = '6907668';
         const user_id = this.state.data.uid.toString();
-        const secret_key = 'wJVp247QPfcwcLdAeUjB';
+        const secret_key = 'zf6g1HUZdbqJCzbqtq0N';
         const validationColor = md5(app_id + user_id + secret_key) === this.state.data.hash ? 'green' : 'red';
         // We could actually calculate md5 like this, using method of VK object:
         console.log(`md5(app_id + user_id + secret_key) = ${VK.MD5(app_id + user_id + secret_key)}`);
