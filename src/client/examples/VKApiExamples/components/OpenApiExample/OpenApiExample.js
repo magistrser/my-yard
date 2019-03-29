@@ -54,15 +54,7 @@ export default class OpenApiExample extends Component {
         if (!this.state.loggedIn) {
             VK.Auth.login(data => {
                 console.log('Loged in via VK.Auth.login', data);
-                // To validate authorization we need to do the following:
 
-                // HACK: HOW IS THAT TWO DIFFERENT VALUES FFS!?
-                // https://vk.com/dev/openapi_2?f=3.6.%20%D0%90%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F%20%D0%BD%D0%B0%20%D1%83%D0%B4%D0%B0%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE%D0%B9%20%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%B5
-                const md5hash = VK.MD5(
-                    `expire=${data.session.expire}mid=${data.session.mid}secret=${'zf6g1HUZdbqJCzbqtq0N'}sid=${data.session.sid}`
-                );
-                const sig = data.session.sig;
-                alert(`${md5hash} = ${sig}`); // These two must be equal if I understand everything correctly
                 this.setState({ loggedIn: data?.status === 'connected' });
             });
         } else {
@@ -75,6 +67,18 @@ export default class OpenApiExample extends Component {
         // Get login status and session data
         VK.Auth.getLoginStatus(status => {
             console.log('VK.Auth.getLoginStatus', status);
+            // To validate authorization (on server side) we need to do the following:
+            // (https://vk.com/dev/openapi_2?f=3.6.%20Авторизация%20на%20удаленной%20стороне)
+            const hash =
+                `expire=${status.session.expire}` +
+                `mid=${status.session.mid}` +
+                `secret=${status.session.secret}` +
+                `sid=${status.session.sid}` +
+                `${'zf6g1HUZdbqJCzbqtq0N'}`; // TODO: Secret key
+
+            const md5hash = VK.MD5(hash); // md5 of incoming parameters + API secret key
+            const sig = status.session.sig; // ...should be equal to this signature
+            alert(`${md5hash} = ${sig}`); // true
         });
     };
 
