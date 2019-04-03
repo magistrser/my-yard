@@ -62,17 +62,18 @@ app.get('/api/auth/vkontakte', passport.authenticate('vkontakte'));
 // ...vk.com redirects back here after authentication
 app.get('/api/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/api/fail' }), (req, res) => {
     // Successful authentication
+    console.log('User: ', req.user); // { id, name }
+    console.log('Session: ', req.session); // { passport: { user: <id> } }
+    console.log('AuthInfo: ', req.authInfo); // { message: 'some message' }
     res.redirect('/api/success');
 });
 
 // If auth succeeds:
 app.get('/api/success', (req, res) => {
-    console.log('Auth succeeded', req.body);
     res.send('success');
 });
 // If auth fails:
 app.get('/api/fail', (req, res) => {
-    console.log('Auth failed', req.body);
     res.send('fail');
 });
 

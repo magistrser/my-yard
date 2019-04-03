@@ -34,7 +34,7 @@ export default passport => {
                     storage.Users.push(user);
                 }
 
-                return done(null, user);
+                return done(null, user, { message: 'some message' });
             }
         )
     );
