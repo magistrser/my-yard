@@ -13,6 +13,8 @@ export default passport => {
                 clientID: secrets.appID, // VK.com docs call it 'API ID', 'app_id', 'api_id', 'client_id' or 'apiId'
                 clientSecret: secrets.secretKey,
                 callbackURL: 'http://localhost:8080/api/auth/vkontakte/callback',
+                scope: ['email'],
+                profileFields: ['email'],
             },
             // verify
             (accessToken, refreshToken, params, profile, done) => {
@@ -38,7 +40,11 @@ export default passport => {
             }
         )
     );
-
+    /* To support persistent login sessions, Passport needs to be able to
+     * serialize users into and deserialize users out of the session.  Typically,
+     * this will be as simple as storing the user ID when serializing, and finding
+     * the user by ID when deserializing.
+     */
     passport.serializeUser((user, done) => {
         done(null, user.id);
     });

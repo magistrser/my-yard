@@ -8,8 +8,23 @@ import axios from 'axios';
 
 import type { $Request, $Response, NextFunction, Middleware } from 'express';
 
+import passport from 'passport';
+import session from 'express-session';
+import configurePassport from './config/passport';
+
 const app = express();
-const rootFolder = path.join(__dirname, '..', '..');
+const rootFolder = path.join(__dirname, '..', '..', '..');
+
+// Express session
+app.use(
+    session({
+        secret: 'secret',
+        resave: true,
+        saveUninitialized: true,
+    })
+);
+
+configurePassport(passport);
 
 app.use(express.static('dist'));
 // Passport middleware
@@ -51,21 +66,30 @@ app.get('/api/getToken', (req, res) => {
     });
 });
 
-// Passport auth:
-import passport from 'passport';
-import configurePassport from './config/passport';
+/**
+ * Passport auth:
+ */
 
-configurePassport(passport);
-// Redirects to vk.com for authentication...
+// First step. Redirects to vk.com for authentication
 app.get('/api/auth/vkontakte', passport.authenticate('vkontakte'));
 
-// ...vk.com redirects back here after authentication
-app.get('/api/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/api/fail' }), (req, res) => {
-    // Successful authentication
-    console.log('User: ', req.user); // { id, name }
-    console.log('Session: ', req.session); // { passport: { user: <id> } }
-    console.log('AuthInfo: ', req.authInfo); // { message: 'some message' }
-    res.redirect('/api/success');
+// Second step. vk.com redirects back here after authentication
+app.get(
+    '/api/auth/vkontakte/callback',
+    passport.authenticate('vkontakte', { failureRedirect: '/api/fail' }), // Redirect to /login page for example
+    (req, res) => {
+        // Successful authentication
+        console.log('User: ', req.user); // { id, name }
+        console.log('Session: ', req.session); // { passport: { user: <id> } }
+        console.log('AuthInfo: ', req.authInfo); // { message: 'some message' }
+        res.redirect('/api/success'); // Redirect to homepage.
+    }
+);
+
+// Endpoint which will respond only if user is authorized
+app.get('/api/restricted-area', ensureAuthenticated, (req, res) => {
+    const username = req.user.name;
+    res.send(`${username} is authorized`);
 });
 
 // If auth succeeds:
@@ -83,3 +107,10 @@ app.get('*', (req, res) => {
 });
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/api/fail');
+}

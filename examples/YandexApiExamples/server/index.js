@@ -9,7 +9,7 @@ import axios from 'axios';
 import type { $Request, $Response, NextFunction, Middleware } from 'express';
 
 const app = express();
-const rootFolder = path.join(__dirname, '..', '..');
+const rootFolder = path.join(__dirname, '..', '..', '..');
 
 app.use(express.static('dist'));
 
