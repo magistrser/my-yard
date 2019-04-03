@@ -48,6 +48,26 @@ app.get('/api/getToken', (req, res) => {
     });
 });
 
+// Passport auth:
+import passport from 'passport';
+import configurePassport from './config/passport';
+
+configurePassport(passport);
+
+// Redirects to vk.com for authentication...
+app.get('/api/auth/vkontakte', passport.authenticate('vkontakte'));
+
+// ...vk.com redirects back here after authentication
+app.get('/api/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/api/fail' }), (req, res) => {
+    // Successful authentication
+    res.redirect('/api/success');
+});
+
+// If auth succeeds:
+app.get('/api/success', (req, res) => res.send('success'));
+// If auth fails:
+app.get('/api/fail', (req, res) => res.sendStatus(403));
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(rootFolder, 'dist', 'index.html'));

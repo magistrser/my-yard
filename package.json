@@ -12,18 +12,20 @@
     "prettier": "prettier --write \"src/**/*.js\"",
     "flow": "flow",
     "updateLibsFlow": "flow-typed install",
-
     "yandexExamplesClient": "webpack-dev-server --config examples/YandexApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
     "yandexExamplesServer": "nodemon --exec babel-node --inspect --debug examples/YandexApiExamples/server/index.js",
     "yandexExamples": "concurrently \"npm run yandexExamplesServer\" \"npm run yandexExamplesClient\"",
     "vkExamplesClient": "webpack-dev-server --config examples/VKApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
-    "vkExamples": "concurrently \"npm run server\" \"npm run vkExamplesClient\""
+    "vkExamplesServer": "nodemon --exec babel-node --inspect --debug examples/VKApiExamples/server/index.js",
+    "vkExamples": "concurrently \"npm run vkExamplesServer\" \"npm run vkExamplesClient\""
   },
   "author": "Sandeep Raveesh",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
     "express": "^4.16.3",
+    "passport": "^0.4.0",
+    "passport-vkontakte": "^0.3.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-router-dom": "^4.3.1",

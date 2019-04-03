@@ -66,8 +66,12 @@ export default class WidgetExample extends Component {
         // Clean up so other examples work properly
         const script = document.getElementById('vk_script');
         const vkDiv = document.getElementById('vk_api_transport');
-        document.head.removeChild(script);
-        document.body.removeChild(vkDiv);
+        if (vkDiv) {
+            document.body.removeChild(vkDiv);
+        }
+        if (script) {
+            document.head.removeChild(script);
+        }
     }
 
     handleValidationBtnClick = ev => {

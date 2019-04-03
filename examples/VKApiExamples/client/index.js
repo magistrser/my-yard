@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import AccessTokenExample from './components/AccessTokenExample/AccessTokenExample';
 import WidgetExample from './components/WidgetExample/WidgetExample';
 import OpenApiExample from './components/OpenApiExample/OpenApiExample';
+import PassportExample from './components/PassportExample/PassportExample';
 import './index.css';
 
 ReactDOM.render(
@@ -33,12 +34,18 @@ ReactDOM.render(
                             Open API
                         </Link>
                     </li>
+                    <li>
+                        <Link className="vk-examples-link" to="/passport">
+                            Passport.js
+                        </Link>
+                    </li>
                 </ul>
             </header>
             <Switch>
                 <Route exact path="/" component={AccessTokenExample} />
                 <Route exact path="/widgets" component={WidgetExample} />
                 <Route exact path="/open-api" component={OpenApiExample} />
+                <Route exact path="/passport" component={PassportExample} />
             </Switch>
         </>
     </Router>,
