@@ -92,12 +92,12 @@ app.get('/api/restricted-area', ensureAuthenticated, (req, res) => {
 // If auth succeeds:
 app.get('/api/success', (req, res) => {
     console.log('<<Auth succeeded>>');
-    res.redirect('http://localhost:80/passport');
+    res.redirect('/passport');
 });
 // If auth fails:
 app.get('/api/fail', (req, res) => {
     console.log('<<Auth failed>>');
-    res.redirect('http://localhost:80/passport'); // TODO: can't just do /passport, it opens empty index.html. Check routing
+    res.redirect('/passport'); // http://localhost:80/passport TODO: can't just do /passport, it opens empty index.html. Check routing
 });
 
 // Checks if user is authenticated
@@ -108,12 +108,13 @@ app.get('/api/check-authentication', (req, res) => {
 // Logs user out
 app.get('/api/logout', (req, res) => {
     req.logout();
-    res.redirect('http://localhost:80/passport');
+    res.redirect('/passport');
 });
 
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(rootFolder, 'dist', 'index.html'));
+    //res.sendFile(path.resolve(rootFolder, 'dist', 'index.html'));
+    res.redirect('http://localhost:80/' + req.query); // HACK: A workaround
 });
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));

@@ -46,6 +46,7 @@ ReactDOM.render(
                 <Route exact path="/widgets" component={WidgetExample} />
                 <Route exact path="/open-api" component={OpenApiExample} />
                 <Route exact path="/passport" component={PassportExample} />
+                <Route component={PassportExample} />
             </Switch>
         </>
     </Router>,
