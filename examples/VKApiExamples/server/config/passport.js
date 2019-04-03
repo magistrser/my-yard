@@ -20,10 +20,6 @@ export default passport => {
             (accessToken, refreshToken, params, profile, done) => {
                 // TODO: Do the authentication here
                 console.log('VkontakteStrategy middleware triggered...');
-                //console.log('accessToken: ', accessToken);
-                //console.log('refreshToken: ', refreshToken);
-                //console.log('params: ', params);
-                //console.log('profile: ', profile);
 
                 // If user is not registred
                 let user = storage.Users.filter(u => u.id === profile.id)[0];

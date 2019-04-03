@@ -97,7 +97,7 @@ app.get('/api/success', (req, res) => {
 // If auth fails:
 app.get('/api/fail', (req, res) => {
     console.log('<<Auth failed>>');
-    res.redirect('/passport'); // http://localhost:80/passport TODO: can't just do /passport, it opens empty index.html. Check routing
+    res.redirect('/passport');
 });
 
 // Checks if user is authenticated
