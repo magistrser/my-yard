@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import axios from 'axios';
-import md5 from '../../../../utils/md5';
+import md5 from '../../utils/md5';
 
 export default class WidgetExample extends Component {
     constructor(props) {

@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const outputDirectory = 'dist';
 
 module.exports = {
-    entry: ['babel-polyfill', './src/client/examples/YandexApiExamples/index.js'],
+    entry: ['babel-polyfill', './examples/VKApiExamples/client/index.js'],
     output: {
         path: path.join(__dirname, outputDirectory),
         filename: 'bundle.js',
@@ -30,8 +30,9 @@ module.exports = {
         ],
     },
     devServer: {
-        port: 3000,
+        port: 80,
         open: true,
+        historyApiFallback: true,
         proxy: {
             '/api': 'http://localhost:8080',
         },
