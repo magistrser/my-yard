@@ -1,6 +1,7 @@
 /**
  * Passport configuration goes here
  */
+import { storage } from '../mockStorage';
 import secrets from '../config/secrets';
 const VKontakteStrategy = require('passport-vkontakte').Strategy; // TODO: something like import {Strategy} from ...
 
@@ -17,12 +18,23 @@ export default passport => {
             (accessToken, refreshToken, params, profile, done) => {
                 // TODO: Do the authentication here
                 console.log('VkontakteStrategy middleware triggered...');
-                console.log('accessToken: ', accessToken);
-                console.log('refreshToken: ', refreshToken);
-                console.log('params: ', params);
-                console.log('profile: ', profile);
+                //console.log('accessToken: ', accessToken);
+                //console.log('refreshToken: ', refreshToken);
+                //console.log('params: ', params);
+                //console.log('profile: ', profile);
 
-                return done(null, { username: profile.username, id: profile.id });
+                // If user is not registred
+                let user = storage.Users.filter(u => u.id === profile.id)[0];
+                console.log('<<user>>', user);
+                if (!user) {
+                    user = {
+                        id: profile.id,
+                        name: profile.displayName,
+                    };
+                    storage.Users.push(user);
+                }
+
+                return done(null, user);
             }
         )
     );
@@ -33,6 +45,7 @@ export default passport => {
 
     passport.deserializeUser((id, done) => {
         // Get user from DB
-        done();
+        const user = storage.Users.filter(u => u.id === id)[0];
+        done(null, user ? user : false);
     });
 };

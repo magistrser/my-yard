@@ -56,7 +56,6 @@ import passport from 'passport';
 import configurePassport from './config/passport';
 
 configurePassport(passport);
-
 // Redirects to vk.com for authentication...
 app.get('/api/auth/vkontakte', passport.authenticate('vkontakte'));
 
