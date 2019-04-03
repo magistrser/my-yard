@@ -5,12 +5,11 @@ import url from 'url';
 import http from 'http';
 import https from 'https';
 import axios from 'axios';
-
-import type { $Request, $Response, NextFunction, Middleware } from 'express';
-
 import passport from 'passport';
 import session from 'express-session';
 import configurePassport from './config/passport';
+
+import type { $Request, $Response, NextFunction, Middleware } from 'express';
 
 const app = express();
 const rootFolder = path.join(__dirname, '..', '..', '..');
@@ -24,12 +23,13 @@ app.use(
     })
 );
 
+// Passport configuration
 configurePassport(passport);
-
-app.use(express.static('dist'));
-// Passport middleware
+// Passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(express.static('dist'));
 
 app.get('/api/getToken', (req, res) => {
     const code = req.query.code;
@@ -66,10 +66,7 @@ app.get('/api/getToken', (req, res) => {
     });
 });
 
-/**
- * Passport auth:
- */
-
+// Passport auth:
 // First step. Redirects to vk.com for authentication
 app.get('/api/auth/vkontakte', passport.authenticate('vkontakte'));
 
@@ -94,11 +91,24 @@ app.get('/api/restricted-area', ensureAuthenticated, (req, res) => {
 
 // If auth succeeds:
 app.get('/api/success', (req, res) => {
-    res.send('success');
+    console.log('<<Auth succeeded>>');
+    res.redirect('http://localhost:80/passport');
 });
 // If auth fails:
 app.get('/api/fail', (req, res) => {
-    res.send('fail');
+    console.log('<<Auth failed>>');
+    res.redirect('http://localhost:80/passport'); // TODO: can't just do /passport, it opens empty index.html. Check routing
+});
+
+// Checks if user is authenticated
+app.get('/api/check-authentication', (req, res) => {
+    res.send(req.isAuthenticated());
+});
+
+// Logs user out
+app.get('/api/logout', (req, res) => {
+    req.logout();
+    res.redirect('http://localhost:80/passport');
 });
 
 // Handles any requests that don't match the ones above
@@ -108,6 +118,7 @@ app.get('*', (req, res) => {
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
 
+// Middleware that checks if user is authenticated
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();

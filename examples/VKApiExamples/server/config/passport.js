@@ -27,7 +27,6 @@ export default passport => {
 
                 // If user is not registred
                 let user = storage.Users.filter(u => u.id === profile.id)[0];
-                console.log('<<user>>', user);
                 if (!user) {
                     user = {
                         id: profile.id,
