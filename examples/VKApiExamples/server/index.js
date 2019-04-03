@@ -13,10 +13,6 @@ const rootFolder = path.join(__dirname, '..', '..');
 
 app.use(express.static('dist'));
 
-app.get('/api/getExampleHtml', (req: $Request, res: $Response) => {
-    res.sendFile(path.join(rootFolder, 'public', 'iFrameContent.html'));
-});
-
 app.get('/api/getToken', (req, res) => {
     const code = req.query.code;
     const queryUrl =
