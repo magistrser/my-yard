@@ -22,8 +22,17 @@ export default passport => {
                 console.log('params: ', params);
                 console.log('profile: ', profile);
 
-                return done(null, null, { message: 'Authorization is not implemented' });
+                return done(null, { username: profile.username, id: profile.id });
             }
         )
     );
+
+    passport.serializeUser((user, done) => {
+        done(null, user.id);
+    });
+
+    passport.deserializeUser((id, done) => {
+        // Get user from DB
+        done();
+    });
 };

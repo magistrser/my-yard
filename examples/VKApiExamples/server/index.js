@@ -12,6 +12,9 @@ const app = express();
 const rootFolder = path.join(__dirname, '..', '..');
 
 app.use(express.static('dist'));
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/api/getToken', (req, res) => {
     const code = req.query.code;
@@ -64,9 +67,15 @@ app.get('/api/auth/vkontakte/callback', passport.authenticate('vkontakte', { fai
 });
 
 // If auth succeeds:
-app.get('/api/success', (req, res) => res.send('success'));
+app.get('/api/success', (req, res) => {
+    console.log('Auth succeeded', req.body);
+    res.send('success');
+});
 // If auth fails:
-app.get('/api/fail', (req, res) => res.sendStatus(403));
+app.get('/api/fail', (req, res) => {
+    console.log('Auth failed', req.body);
+    res.send('fail');
+});
 
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
