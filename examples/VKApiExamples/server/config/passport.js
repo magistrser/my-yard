@@ -3,7 +3,7 @@
  */
 import { storage } from '../mockStorage';
 import secrets from '../config/secrets';
-const VKontakteStrategy = require('passport-vkontakte').Strategy; // TODO: something like import {Strategy} from ...
+import { Strategy as VKontakteStrategy } from 'passport-vkontakte';
 
 export default passport => {
     passport.use(
