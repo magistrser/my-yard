@@ -4,6 +4,7 @@
  */
 
 import React, { Component } from 'react';
+import './OpenApiExample.css';
 
 export default class OpenApiExample extends Component {
     constructor() {
@@ -43,6 +44,7 @@ export default class OpenApiExample extends Component {
             document.getElementById('vk_api_transport').appendChild(el);
         }, 0);
     }
+
     componentWillUnmount() {
         // Clean up so other examples work properly
         const vkDiv = document.getElementById('vk_api_transport');
@@ -82,16 +84,32 @@ export default class OpenApiExample extends Component {
         });
     };
 
+    handleFormSubmit = ev => {
+        ev.preventDefault();
+    };
+
     render() {
         return (
-            <div>
-                <h1>Работа с OpenApi</h1>
-                <div hidden={!this.state.loaded}>
-                    <button onClick={this.handleLoginBtnClick}>{!this.state.loggedIn ? 'Войти через ВК' : 'Выйти'}</button>
-                    <div id="fancy_login_button" />
-                    <button onClick={this.handleCheckLoginStatusBtnClick}>Check Login Status</button>
+            <>
+                <div id="openapi-header" hidden={!this.state.loaded}>
+                    <h1>Работа с OpenApi</h1>
+                    <div id="opebapi-login-buttons">
+                        <button onClick={this.handleLoginBtnClick}>{!this.state.loggedIn ? 'Войти через ВК' : 'Выйти'}</button>
+                        <button onClick={this.handleCheckLoginStatusBtnClick}>Check Login Status</button>
+                    </div>
                 </div>
-            </div>
+                {this.state.loggedIn ? (
+                    <div>
+                        <form id="post-form">
+                            <label>Add post to vk group</label>
+                            <textarea placeholder="Post content" ref="postContent" />
+                            <button text="Submit" onClick={this.handleFormSubmit}>
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                ) : null}
+            </>
         );
     }
 }

@@ -121,6 +121,8 @@ app.get('/api/logout', (req, res) => {
 /**
  * Working with api methods
  */
+// This one doesn't work because this api method is unavalivle from server side
+// TODO: change method to something that does work, overall it is correct
 app.post('/api/create-post-in-group', ensureAuthenticated, (req, res) => {
     const vkPost = req.body;
 
