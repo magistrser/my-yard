@@ -1,0 +1,22 @@
+.btn {
+    font: bold 11px Arial;
+    text-decoration: none;
+    background-color: rgb(47, 143, 187);
+    color: #ffffff;
+    padding: 10px 30px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+    max-width: 100px;
+    max-height: 40px;
+}
+.btn-red {
+    background-color: rgb(207, 60, 60);
+}
+
+.auth-header {
+    display: flex;
+    justify-content: space-between
+}
+  
