@@ -7,10 +7,9 @@
     border-right: 1px solid #333333;
     border-bottom: 1px solid #333333;
     border-left: 1px solid #CCCCCC;
-    min-width: 100px;
     max-height: 40px;
     text-align: center;
-    padding: 10px 0px;
+    padding: 10px 20px;
 }
 .btn-red {
     background-color: rgb(207, 60, 60);
@@ -18,27 +17,6 @@
 
 .auth-header {
     display: flex;
-    justify-content: space-between
-}
-
-form {
-    border: 1px solid black;
-    display: flex;
-    width: 40%;
-    margin: auto;
+    justify-content: space-around;
     flex-direction: column;
-}
-
-input, textarea, button {
-    padding: 5px;    
-}  
-textarea {
-    resize: none;
-    overflow: auto;
-    height: 100px;
-}
-label {
-    font: bold 20px Arial;
-    text-align: center;
-    padding: 5px;
 }
