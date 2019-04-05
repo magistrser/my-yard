@@ -20,4 +20,25 @@
     display: flex;
     justify-content: space-between
 }
-  
+
+form {
+    border: 1px solid black;
+    display: flex;
+    width: 40%;
+    margin: auto;
+    flex-direction: column;
+}
+
+input, textarea, button {
+    padding: 5px;    
+}  
+textarea {
+    resize: none;
+    overflow: auto;
+    height: 100px;
+}
+label {
+    font: bold 20px Arial;
+    text-align: center;
+    padding: 5px;
+}
