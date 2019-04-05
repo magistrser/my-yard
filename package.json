@@ -13,10 +13,10 @@
     "flow": "flow",
     "updateLibsFlow": "flow-typed install",
     "yandexExamplesClient": "webpack-dev-server --config examples/YandexApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
-    "yandexExamplesServer": "nodemon --exec babel-node --inspect --debug examples/YandexApiExamples/server/index.js",
+    "yandexExamplesServer": "nodemon --exec babel-node --inspect --debug examples/YandexApiExamples/server/index.js --watch examples/YandexApiExamples/server/index.js",
     "yandexExamples": "concurrently \"npm run yandexExamplesServer\" \"npm run yandexExamplesClient\"",
     "vkExamplesClient": "webpack-dev-server --config examples/VKApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
-    "vkExamplesServer": "nodemon --exec babel-node --inspect --debug examples/VKApiExamples/server/index.js",
+    "vkExamplesServer": "nodemon --exec babel-node --inspect --debug examples/VKApiExamples/server/index.js --watch examples/VKApiExamples/server/index.js",
     "vkExamples": "concurrently \"npm run vkExamplesServer\" \"npm run vkExamplesClient\""
   },
   "author": "Sandeep Raveesh",
