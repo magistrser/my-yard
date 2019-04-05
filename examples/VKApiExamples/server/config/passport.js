@@ -13,7 +13,7 @@ export default passport => {
                 clientID: secrets.appID, // VK.com docs call it 'API ID', 'app_id', 'api_id', 'client_id' or 'apiId'
                 clientSecret: secrets.secretKey,
                 callbackURL: 'http://localhost:8080/api/auth/vkontakte/callback',
-                scope: ['email'],
+                scope: ['email', 'wall', 'photos'], // WALL is ignored!
                 profileFields: ['email'],
             },
             // verify
