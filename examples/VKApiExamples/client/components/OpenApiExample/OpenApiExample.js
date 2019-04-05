@@ -12,6 +12,7 @@ export default class OpenApiExample extends Component {
         this.state = {
             loaded: false,
             loggedIn: false,
+            hasAttachment: false,
         };
     }
 
@@ -32,8 +33,12 @@ export default class OpenApiExample extends Component {
             });
             // Subscribe to events in OpenAPI event model
             VK.Observer.subscribe('auth.login', e => console.log('User just loged in', e));
+
             // Create login button using vk api
             // VK.UI.button('fancy_login_button'); // Unclear how it works
+
+            // Check if user is logged in
+            VK.Auth.getLoginStatus(res => this.setState({ loggedIn: res.status === 'connected' }));
         };
         // Append vk api script to transport div
         setTimeout(() => {
@@ -86,6 +91,29 @@ export default class OpenApiExample extends Component {
 
     handleFormSubmit = ev => {
         ev.preventDefault();
+
+        const message = this.refs.postContent.value;
+        const type = this.refs.type.value;
+        const attachmentId = this.refs.attachmentId?.value;
+        let attachments = type !== '' ? `${type}${attachmentId}` : '';
+
+        if (confirm('Create post?')) {
+            VK.Api.call(
+                'wall.post',
+                {
+                    owner_id: -179961949,
+                    message,
+                    attachments,
+                },
+                res => console.dir(res)
+            );
+        }
+    };
+
+    handleSelectTypeChange = ev => {
+        if (this.refs.type.value !== '') {
+            this.setState({ hasAttachment: true });
+        }
     };
 
     render() {
@@ -103,6 +131,13 @@ export default class OpenApiExample extends Component {
                         <form id="post-form">
                             <label>Add post to vk group</label>
                             <textarea placeholder="Post content" ref="postContent" />
+                            <label>Attachment:</label>
+                            <select ref="type" onChange={this.handleSelectTypeChange}>
+                                <option value="">--Select attachment type--</option>
+                                <option value="photo">Photo</option>
+                                <option value="video">Video</option>
+                            </select>
+                            {this.state.hasAttachment ? <input type="text" ref="attachmentId" placeholder="<owner_id>_<media_id>" /> : null}
                             <button text="Submit" onClick={this.handleFormSubmit}>
                                 Submit
                             </button>
