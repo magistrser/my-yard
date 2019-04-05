@@ -27,6 +27,7 @@ export default passport => {
                     user = {
                         id: profile.id,
                         name: profile.displayName,
+                        accessToken, // I dont see how else can we get it
                     };
                     storage.Users.push(user);
                 }

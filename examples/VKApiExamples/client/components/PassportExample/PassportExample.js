@@ -15,16 +15,34 @@ export default class PassportExample extends Component {
             .get('/api/check-authentication') // How secure is this?
             .then(res => {
                 console.log(res);
-                this.setState({ isAuthorized: res.data });
+                this.setState({ isAuthorized: res.data.isAuthenticated });
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                this.setState({ isAuthorized: false });
+            });
     }
+
+    handleFormSubmit = ev => {
+        ev.preventDefault();
+
+        const content = this.refs.postContent.value;
+
+        if (confirm('Are you sure?')) {
+            axios
+                .post('/api/create-post-in-group', {
+                    content,
+                })
+                .then(val => console.log(val))
+                .catch(err => console.log(err));
+        }
+    };
 
     render() {
         return (
             <>
                 <div className="auth-header">
-                    <h1>Authorize via passport</h1>
+                    <h1>Authorization via passport</h1>
                     {!this.state.isAuthorized ? (
                         <a className="btn" href="/api/auth/vkontakte">
                             Login
@@ -37,7 +55,13 @@ export default class PassportExample extends Component {
                 </div>
                 {this.state.isAuthorized ? (
                     <div>
-                        <h1>hi</h1>
+                        <form id="post-form">
+                            <label>Add post to vk group</label>
+                            <textarea placeholder="Post content" ref="postContent" />
+                            <button text="Submit" onClick={this.handleFormSubmit}>
+                                Submit
+                            </button>
+                        </form>
                     </div>
                 ) : null}
             </>

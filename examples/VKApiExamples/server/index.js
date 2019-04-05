@@ -8,11 +8,15 @@ import axios from 'axios';
 import passport from 'passport';
 import session from 'express-session';
 import configurePassport from './config/passport';
+import secrets from './config/secrets';
 
 import type { $Request, $Response, NextFunction, Middleware } from 'express';
 
 const app = express();
 const rootFolder = path.join(__dirname, '..', '..', '..');
+
+// Post request bodyparser
+app.use(express.json());
 
 // Express session
 app.use(
@@ -31,6 +35,7 @@ app.use(passport.session());
 
 app.use(express.static('dist'));
 
+// Authorization code flow example
 app.get('/api/getToken', (req, res) => {
     const code = req.query.code;
     const queryUrl =
@@ -89,6 +94,7 @@ app.get('/api/restricted-area', ensureAuthenticated, (req, res) => {
     res.send(`${username} is authorized`);
 });
 
+// Two following endpoins added only for logging:
 // If auth succeeds:
 app.get('/api/success', (req, res) => {
     console.log('<<Auth succeeded>>');
@@ -102,13 +108,35 @@ app.get('/api/fail', (req, res) => {
 
 // Checks if user is authenticated
 app.get('/api/check-authentication', (req, res) => {
-    res.send(req.isAuthenticated());
+    const isAuthenticated = req.isAuthenticated();
+    res.send({ isAuthenticated });
 });
 
 // Logs user out
 app.get('/api/logout', (req, res) => {
     req.logout();
     res.redirect('/passport');
+});
+
+/**
+ * Working with api methods
+ */
+app.post('/api/create-post-in-group', ensureAuthenticated, (req, res) => {
+    const vkPost = req.body;
+
+    let apiReqestUrl =
+        'https://api.vk.com/method/' +
+        'wall.post?' + // Method
+        `&access_token=${req.user.accessToken}` +
+        '&v=5.92';
+    axios
+        .post(apiReqestUrl, {
+            owner_id: -179961949,
+            message: vkPost.content,
+        })
+        .then(result => console.log('<<wall.post result>>: ', result.data))
+        .catch(err => console.log('<<wall.post error>>: ', err));
+    res.send({ ...req.user });
 });
 
 // Handles any requests that don't match the ones above
