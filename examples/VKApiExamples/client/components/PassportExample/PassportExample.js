@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './PassportExample.css';
 
 export default class PassportExample extends Component {
     constructor() {
@@ -14,17 +15,32 @@ export default class PassportExample extends Component {
             .get('/api/check-authentication') // How secure is this?
             .then(res => {
                 console.log(res);
-                this.setState({ isAuthorized: res.data });
+                this.setState({ isAuthorized: res.data.isAuthenticated });
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                this.setState({ isAuthorized: false });
+            });
     }
 
     render() {
         return (
-            <div>
-                <h1>Authorize via passport</h1>
-                {!this.state.isAuthorized ? <a href="/api/auth/vkontakte">Login</a> : <a href="/api/logout">Logout</a>}
-            </div>
+            <>
+                <div className="auth-header">
+                    <h1>Authorization via passport</h1>
+                    <div style={{ margin: 'auto' }}>
+                        {!this.state.isAuthorized ? (
+                            <a className="btn" href="/api/auth/vkontakte">
+                                Login
+                            </a>
+                        ) : (
+                            <a className="btn btn-red" href="/api/logout">
+                                Logout
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </>
         );
     }
 }

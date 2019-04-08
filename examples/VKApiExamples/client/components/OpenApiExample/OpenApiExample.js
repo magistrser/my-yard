@@ -4,6 +4,7 @@
  */
 
 import React, { Component } from 'react';
+import './OpenApiExample.css';
 
 export default class OpenApiExample extends Component {
     constructor() {
@@ -11,6 +12,7 @@ export default class OpenApiExample extends Component {
         this.state = {
             loaded: false,
             loggedIn: false,
+            hasAttachment: false,
         };
     }
 
@@ -31,8 +33,12 @@ export default class OpenApiExample extends Component {
             });
             // Subscribe to events in OpenAPI event model
             VK.Observer.subscribe('auth.login', e => console.log('User just loged in', e));
+
             // Create login button using vk api
             // VK.UI.button('fancy_login_button'); // Unclear how it works
+
+            // Check if user is logged in
+            VK.Auth.getLoginStatus(res => this.setState({ loggedIn: res.status === 'connected' }));
         };
         // Append vk api script to transport div
         setTimeout(() => {
@@ -43,6 +49,7 @@ export default class OpenApiExample extends Component {
             document.getElementById('vk_api_transport').appendChild(el);
         }, 0);
     }
+
     componentWillUnmount() {
         // Clean up so other examples work properly
         const vkDiv = document.getElementById('vk_api_transport');
@@ -82,16 +89,62 @@ export default class OpenApiExample extends Component {
         });
     };
 
+    handleFormSubmit = ev => {
+        ev.preventDefault();
+
+        const message = this.refs.postContent.value;
+        const type = this.refs.type.value;
+        const attachmentId = this.refs.attachmentId?.value;
+        let attachments = type !== '' ? `${type}${attachmentId}` : '';
+
+        if (confirm('Create post?')) {
+            VK.Api.call(
+                'wall.post',
+                {
+                    owner_id: -179961949,
+                    message,
+                    attachments,
+                },
+                res => console.dir(res)
+            );
+        }
+    };
+
+    handleSelectTypeChange = ev => {
+        if (this.refs.type.value !== '') {
+            this.setState({ hasAttachment: true });
+        }
+    };
+
     render() {
         return (
-            <div>
-                <h1>Работа с OpenApi</h1>
-                <div hidden={!this.state.loaded}>
-                    <button onClick={this.handleLoginBtnClick}>{!this.state.loggedIn ? 'Войти через ВК' : 'Выйти'}</button>
-                    <div id="fancy_login_button" />
-                    <button onClick={this.handleCheckLoginStatusBtnClick}>Check Login Status</button>
+            <>
+                <div id="openapi-header" hidden={!this.state.loaded}>
+                    <h1>Работа с OpenApi</h1>
+                    <div id="opebapi-login-buttons">
+                        <button onClick={this.handleLoginBtnClick}>{!this.state.loggedIn ? 'Войти через ВК' : 'Выйти'}</button>
+                        <button onClick={this.handleCheckLoginStatusBtnClick}>Check Login Status</button>
+                    </div>
                 </div>
-            </div>
+                {this.state.loggedIn ? (
+                    <div>
+                        <form id="post-form">
+                            <label>Add post to vk group</label>
+                            <textarea placeholder="Post content" ref="postContent" />
+                            <label>Attachment:</label>
+                            <select ref="type" onChange={this.handleSelectTypeChange}>
+                                <option value="">--Select attachment type--</option>
+                                <option value="photo">Photo</option>
+                                <option value="video">Video</option>
+                            </select>
+                            {this.state.hasAttachment ? <input type="text" ref="attachmentId" placeholder="<owner_id>_<media_id>" /> : null}
+                            <button text="Submit" onClick={this.handleFormSubmit}>
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                ) : null}
+            </>
         );
     }
 }
