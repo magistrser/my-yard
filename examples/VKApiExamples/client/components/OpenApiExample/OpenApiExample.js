@@ -39,6 +39,18 @@ export default class OpenApiExample extends Component {
 
             // Check if user is logged in
             VK.Auth.getLoginStatus(res => this.setState({ loggedIn: res.status === 'connected' }));
+
+            // Add comment sections
+            for (let i = 1; i <= 3; i++) {
+                VK.Widgets.Comments(
+                    `vk-comments-${i}`,
+                    {
+                        limit: 10,
+                        attach: '*',
+                    },
+                    i // page_id for several comment sections on one page
+                );
+            }
         };
         // Append vk api script to transport div
         setTimeout(() => {
@@ -149,19 +161,19 @@ export default class OpenApiExample extends Component {
                         <h3>Post 1</h3>
                         <span>Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla</span>
                         <h3>Comment section</h3>
-                        <div id={`vk-post-${1}` /*id of the post*/} />
+                        <div id={`vk-comments-${1}` /*id of the post*/} />
                     </section>
                     <section class="post">
                         <h3>Post 2</h3>
                         <span>Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla</span>
                         <h3>Comment section</h3>
-                        <div id={`vk-post-${2}` /*id of the post*/} />
+                        <div id={`vk-comments-${2}` /*id of the post*/} />
                     </section>
                     <section class="post">
                         <h3>Post 3</h3>
                         <span>Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla</span>
                         <h3>Comment section</h3>
-                        <div id={`vk-post-${3}` /*id of the post*/} />
+                        <div id={`vk-comments-${3}` /*id of the post*/} />
                     </section>
                 </div>
             </>
