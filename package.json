@@ -17,7 +17,10 @@
     "yandexExamples": "concurrently \"npm run yandexExamplesServer\" \"npm run yandexExamplesClient\"",
     "vkExamplesClient": "webpack-dev-server --config examples/VKApiExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
     "vkExamplesServer": "nodemon --exec babel-node --inspect --debug examples/VKApiExamples/server/index.js --watch examples/VKApiExamples/server/index.js",
-    "vkExamples": "concurrently \"npm run vkExamplesServer\" \"npm run vkExamplesClient\""
+    "vkExamples": "concurrently \"npm run vkExamplesServer\" \"npm run vkExamplesClient\"",
+    "infExamplesClient": "webpack-dev-server --config examples/InfrastructureExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
+    "infExamplesServer": "nodemon --exec babel-node --inspect --debug examples/InfrastructureExamples/server/index.js --watch examples/InfrastructureExamples/server/index.js",
+    "infExamples": "concurrently \"npm run infExamplesServer\" \"npm run infExamplesClient\""
   },
   "author": "Sandeep Raveesh",
   "license": "ISC",
