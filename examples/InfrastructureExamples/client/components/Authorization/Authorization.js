@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './PassportExample.css';
+import './Authorization.css';
 
 export default class PassportExample extends Component {
     constructor() {
@@ -26,19 +26,9 @@ export default class PassportExample extends Component {
     render() {
         return (
             <>
-                <div className="auth-header">
+                <div>
                     <h1>Authorization via passport</h1>
-                    <div style={{ margin: 'auto' }}>
-                        {!this.state.isAuthorized ? (
-                            <a className="btn" href="/api/auth/vkontakte">
-                                Login
-                            </a>
-                        ) : (
-                            <a className="btn btn-red" href="/api/logout">
-                                Logout
-                            </a>
-                        )}
-                    </div>
+                    <div>{!this.state.isAuthorized ? <a href="/api/auth/vkontakte">Login</a> : <a href="/api/logout">Logout</a>}</div>
                 </div>
             </>
         );
