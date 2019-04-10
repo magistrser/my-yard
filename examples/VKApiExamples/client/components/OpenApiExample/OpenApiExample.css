@@ -36,7 +36,7 @@ form {
     border: 1px solid black;
     display: flex;
     width: 40%;
-    margin: auto;
+    margin: 20px auto;
     flex-direction: column;
 }
 
@@ -53,4 +53,17 @@ label {
     font: bold 20px Arial;
     text-align: center;
     padding: 5px;
+}
+
+#posts {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.post {
+    border: 1px solid skyblue;
+    background: aliceblue;
+    border-radius: 20px;
+    padding: 1em;
 }

@@ -144,6 +144,26 @@ export default class OpenApiExample extends Component {
                         </form>
                     </div>
                 ) : null}
+                <div id="posts">
+                    <section class="post">
+                        <h3>Post 1</h3>
+                        <span>Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla</span>
+                        <h3>Comment section</h3>
+                        <div id={`vk-post-${1}` /*id of the post*/} />
+                    </section>
+                    <section class="post">
+                        <h3>Post 2</h3>
+                        <span>Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla</span>
+                        <h3>Comment section</h3>
+                        <div id={`vk-post-${2}` /*id of the post*/} />
+                    </section>
+                    <section class="post">
+                        <h3>Post 3</h3>
+                        <span>Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla</span>
+                        <h3>Comment section</h3>
+                        <div id={`vk-post-${3}` /*id of the post*/} />
+                    </section>
+                </div>
             </>
         );
     }
