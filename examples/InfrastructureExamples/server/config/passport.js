@@ -42,10 +42,7 @@ export default passport => {
                             photoUrl: profile.photos[0].value,
                         };
                         // For some reason this thing refuses to work with transactions or execute more than one given query
-                        const sqlStoreUser = `begin transaction;
-                        insert into Users (id, email, fullName) values ('${user.id}', '${user.email}', '${user.fullName}');
-                        insert into Photos (userId, url) values ('${user.id}', '${user.photoUrl}');
-                        commit;`;
+                        //const sqlStoreUser = ;
                         // Usless:
                         // const sqlStoreUserParams = {
                         //     $id: user.id,
@@ -54,14 +51,33 @@ export default passport => {
                         // };
 
                         // I guess we can leave it like this, its safe unless VK team will consider to hack our app with sql injection
-                        Storage.Db.exec(sqlStoreUser, err => {
-                            if (err) {
-                                console.log('SQL ERR', err);
-                                return done(err);
-                            } else {
-                                return done(null, user);
+                        Storage.Db.run(
+                            `insert into Users (id, email, fullName) values ($id, $email, $fullName);`,
+                            {
+                                $id: user.id,
+                                $email: user.email,
+                                $fullName: user.fullName,
+                            },
+                            err => {
+                                if (err) {
+                                    console.log('SQL ERR', err);
+                                    return done(err);
+                                } else {
+                                    Storage.Db.run(
+                                        `insert into Photos (userId, url) values ($id, $url);`,
+                                        { $id: user.id, $url: user.photoUrl },
+                                        err => {
+                                            if (err) {
+                                                console.log('SQL ERR 2', err);
+                                                return done(err);
+                                            } else {
+                                                return done(null, user);
+                                            }
+                                        }
+                                    );
+                                }
                             }
-                        });
+                        );
                     } else {
                         // User exists
                         const user = rows[0];
