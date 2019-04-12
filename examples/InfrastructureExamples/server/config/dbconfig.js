@@ -1,4 +1,4 @@
-/** https://www.npmjs.com/package/sqlite */
+/** https://www.npmjs.com/package/sqlite3 */
 
 import sqlite3 from 'sqlite3';
 
