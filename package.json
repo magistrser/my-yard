@@ -33,7 +33,10 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-router-dom": "^4.3.1",
-    "react-yandex-maps": "^3.0.2"
+    "react-yandex-maps": "^3.0.2",
+    "sql-template-strings": "^2.2.2",
+    "sqlite": "^3.0.3",
+    "sqlite3": "^4.0.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

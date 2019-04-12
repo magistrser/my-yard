@@ -9,6 +9,10 @@ import passport from 'passport';
 import session from 'express-session';
 import configurePassport from './config/passport';
 import secrets from './config/secrets';
+// Database
+import sqlite from 'sqlite';
+import sqlite3 from 'sqlite3';
+import Storage from './config/dbconfig';
 
 import type { $Request, $Response, NextFunction, Middleware } from 'express';
 
@@ -78,6 +82,10 @@ app.get('/api/check-authentication', (req, res) => {
 app.get('/api/logout', (req, res) => {
     req.logout();
     res.redirect('http://localhost:80/');
+});
+
+app.get('/api/db', async (req, res) => {
+    res.send('Done');
 });
 
 // Handles any requests that don't match the ones above
