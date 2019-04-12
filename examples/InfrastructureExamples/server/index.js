@@ -46,9 +46,6 @@ app.get(
     passport.authenticate('vkontakte', { failureRedirect: '/api/fail' }), // Redirect to /login page for example
     (req, res) => {
         // Successful authentication
-        console.log('User: ', req.user); // { id, name }
-        console.log('Session: ', req.session); // { passport: { user: <id> } }
-        console.log('AuthInfo: ', req.authInfo); // { message: 'some message' }
         res.redirect('/api/success'); // Redirect to homepage.
     }
 );
