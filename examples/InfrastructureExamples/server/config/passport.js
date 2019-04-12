@@ -5,6 +5,7 @@ import { storage } from '../mockStorage';
 import Storage from './dbconfig';
 import secrets from '../config/secrets';
 import { Strategy as VKontakteStrategy } from 'passport-vkontakte';
+import { v4 } from 'uuid';
 
 export default passport => {
     passport.use(
@@ -23,7 +24,8 @@ export default passport => {
 
                 // TODO: Probably we should verify token
 
-                const sqlReq = 'select email, fullName from Users where email = $email';
+                const sqlReq =
+                    'select u.id, u.email, u.fullName, p.url as photoUrl from Users u inner join Photos p on u.id=userId where u.email = $email';
                 const sqlParams = { $email: params.email };
                 const statement = Storage.Db.prepare(sqlReq);
                 statement.all(sqlParams, (err, rows) => {
@@ -32,14 +34,29 @@ export default passport => {
                     }
                     if (rows.length === 0) {
                         // User does not exist
+
                         const user = {
+                            id: v4(),
                             email: params.email,
                             fullName: profile.displayName,
+                            photoUrl: profile.photos[0].value,
                         };
-                        const sqlStoreUser = 'insert into Users (email, fullName) values ($email, $fullName)';
-                        const sqlStoreUserParams = { $email: user.email, $fullName: user.fullName };
-                        Storage.Db.run(sqlStoreUser, sqlStoreUserParams, err => {
+                        // For some reason this thing refuses to work with transactions or execute more than one given query
+                        const sqlStoreUser = `begin transaction;
+                        insert into Users (id, email, fullName) values ('${user.id}', '${user.email}', '${user.fullName}');
+                        insert into Photos (userId, url) values ('${user.id}', '${user.photoUrl}');
+                        commit;`;
+                        // Usless:
+                        // const sqlStoreUserParams = {
+                        //     $id: user.id,
+                        //     $email: user.email,
+                        //     $fullName: user.fullName,
+                        // };
+
+                        // I guess we can leave it like this, its safe unless VK team will consider to hack our app with sql injection
+                        Storage.Db.exec(sqlStoreUser, err => {
                             if (err) {
+                                console.log('SQL ERR', err);
                                 return done(err);
                             } else {
                                 return done(null, user);
@@ -48,6 +65,7 @@ export default passport => {
                     } else {
                         // User exists
                         const user = rows[0];
+                        console.log('USER EXISTS>>', user);
                         return done(null, user);
                     }
                 });
@@ -72,13 +90,14 @@ export default passport => {
      * the user by ID when deserializing.
      */
     passport.serializeUser((user, done) => {
-        done(null, user.email);
+        done(null, user.id);
     });
 
-    passport.deserializeUser((email, done) => {
+    passport.deserializeUser((id, done) => {
         // TODO: Do something with shitcode. Make methods for queries, make rest api. Something.
-        const sqlReq = 'select email, fullName from Users where email = $email';
-        const sqlParams = { $email: email };
+        const sqlReq =
+            'select u.id, u.email, u.fullName, p.url as photoUrl from Users u inner join Photos p on u.id=userId where u.id = $id';
+        const sqlParams = { $id: id };
         const statement = Storage.Db.prepare(sqlReq);
         statement.all(sqlParams, (err, rows) => {
             if (err) {
