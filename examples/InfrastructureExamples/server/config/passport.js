@@ -40,78 +40,6 @@ export default passport => {
                 } catch (err) {
                     return done(err);
                 }
-                // const sqlReq =
-                //     'select u.id, u.email, u.fullName, p.url as photoUrl from Users u inner join Photos p on u.id=userId where u.email = $email';
-                // const sqlParams = { $email: params.email };
-                // const statement = Storage.Db.prepare(sqlReq);
-                // statement.all(sqlParams, (err, rows) => {
-                //     if (err) {
-                //         return done(err);
-                //     }
-                //     if (rows.length === 0) {
-                //         // User does not exist
-
-                //         const user = {
-                //             id: v4(),
-                //             email: params.email,
-                //             fullName: profile.displayName,
-                //             photoUrl: profile.photos[0].value,
-                //         };
-                //         // For some reason this thing refuses to work with transactions or execute more than one given query
-                //         //const sqlStoreUser = ;
-                //         // Usless:
-                //         // const sqlStoreUserParams = {
-                //         //     $id: user.id,
-                //         //     $email: user.email,
-                //         //     $fullName: user.fullName,
-                //         // };
-
-                //         Storage.Db.run(
-                //             `insert into Users (id, email, fullName) values ($id, $email, $fullName);`,
-                //             {
-                //                 $id: user.id,
-                //                 $email: user.email,
-                //                 $fullName: user.fullName,
-                //             },
-                //             err => {
-                //                 if (err) {
-                //                     console.log('SQL ERR', err);
-                //                     return done(err);
-                //                 } else {
-                //                     Storage.Db.run(
-                //                         `insert into Photos (userId, url) values ($id, $url);`,
-                //                         { $id: user.id, $url: user.photoUrl },
-                //                         err => {
-                //                             if (err) {
-                //                                 console.log('SQL ERR 2', err);
-                //                                 return done(err);
-                //                             } else {
-                //                                 return done(null, user);
-                //                             }
-                //                         }
-                //                     );
-                //                 }
-                //             }
-                //         );
-                //     } else {
-                //         // User exists
-                //         const user = rows[0];
-                //         console.log('USER EXISTS>>', user);
-                //         return done(null, user);
-                //     }
-                // });
-
-                // let user = storage.Users.filter(u => u.id === profile.id)[0];
-                // if (!user) {
-                //     user = {
-                //         id: profile.id,
-                //         name: profile.displayName,
-                //         accessToken, // I dont see how else can we get it
-                //     };
-                //     storage.Users.push(user);
-                // }
-
-                // return done(null, user, { message: 'some message' });
             }
         )
     );
@@ -125,26 +53,11 @@ export default passport => {
     });
 
     passport.deserializeUser(async (id, done) => {
-        // TODO: Do something with shitcode. Make methods for queries, make rest api. Something.
-        // const sqlReq =
-        //     'select u.id, u.email, u.fullName, p.url as photoUrl from Users u inner join Photos p on u.id=userId where u.id = $id';
-        // const sqlParams = { $id: id };
-        // const statement = Storage.Db.prepare(sqlReq);
-        // statement.all(sqlParams, (err, rows) => {
-        //     if (err) {
-        //         done(err);
-        //     }
-        //     const user = rows[0];
-        //     done(null, user ? user : false);
-        // });
         try {
             const user = await Storage.getUserById(id);
             return done(null, user ? user : false);
         } catch (err) {
             return done(err);
         }
-        // // Get user from DB
-        // const user = storage.Users.filter(u => u.id === id)[0];
-        // done(null, user ? user : false);
     });
 };
