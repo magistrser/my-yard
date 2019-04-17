@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import axios from 'axios';
-import './Authorization.css';
+import Header from '../Header/Header';
+import Posts from '../Posts/Posts';
+import './App.css';
 
-export default class PassportExample extends Component {
+export default class App extends Component {
     constructor() {
         super();
     }
@@ -25,12 +28,14 @@ export default class PassportExample extends Component {
 
     render() {
         return (
-            <>
-                <div>
-                    <h1>Authorization via passport</h1>
-                    <div>{!this.state.isAuthorized ? <a href="/api/auth/vkontakte">Login</a> : <a href="/api/logout">Logout</a>}</div>
-                </div>
-            </>
+            <Router>
+                <>
+                    <Header {...this.state} />
+                    <Switch>
+                        <Route component={Posts} />
+                    </Switch>
+                </>
+            </Router>
         );
     }
 }
