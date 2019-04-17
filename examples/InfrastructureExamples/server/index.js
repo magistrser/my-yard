@@ -81,14 +81,20 @@ app.get('/api/logout', (req, res) => {
 
 app.get('/api/db/:id', async (req, res) => {
     const userId = req.params.id;
-    Storage.Db.get('select url from Users u inner join Photos p on u.id = p.userId where u.id = $id', { $id: userId }, (err, row) => {
-        if (row) {
-            console.log(row);
-            res.redirect(row.url);
-        } else {
-            res.status(404).send();
-        }
-    });
+    const user = await Storage.getUserById(userId);
+    if (user) {
+        res.redirect(user.photoUrl);
+    } else {
+        res.status(404).send();
+    }
+    // Storage.Db.get('select url from Users u inner join Photos p on u.id = p.userId where u.id = $id', { $id: userId }, (err, row) => {
+    //     if (row) {
+    //         console.log(row);
+    //         res.redirect(row.url);
+    //     } else {
+    //         res.status(404).send();
+    //     }
+    // });
 });
 
 // Handles any requests that don't match the ones above
