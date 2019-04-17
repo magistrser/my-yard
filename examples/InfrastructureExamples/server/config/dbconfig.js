@@ -95,4 +95,20 @@ export default class Storage {
             );
         });
     }
+
+    static getPosts() {
+        return new Promise((resolve, reject) => {
+            this._db.all(
+                'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic ' +
+                    'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId',
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                }
+            );
+        });
+    }
 }

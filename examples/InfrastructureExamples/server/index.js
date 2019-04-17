@@ -107,6 +107,13 @@ app.post('/api/create-post', ensureAuthenticated, async (req, res) => {
     res.redirect('back');
 });
 
+// Sends posts
+app.get('/api/get-posts', async (req, res) => {
+    const posts = await Storage.getPosts();
+
+    res.json(posts);
+});
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
     res.redirect('http://localhost:80/'); // HACK: A workaround
