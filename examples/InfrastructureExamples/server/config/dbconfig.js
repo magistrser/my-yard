@@ -73,4 +73,26 @@ export default class Storage {
                 );
         });
     }
+
+    static insertPost(post) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                'insert into Posts (id, userId, text) values ($id, $userId, $text)',
+                {
+                    $id: post.id,
+                    $userId: post.userId,
+                    $text: post.text,
+                },
+                err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        // TODO: Figure out if this callback is called if no err was thrown
+
+                        resolve();
+                    }
+                }
+            );
+        });
+    }
 }

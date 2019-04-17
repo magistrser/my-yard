@@ -9,7 +9,7 @@ import passport from 'passport';
 import session from 'express-session';
 import configurePassport from './config/passport';
 import secrets from './config/secrets';
-import { v4 } from 'uuid';
+import { v4 as generateGuid } from 'uuid';
 import sqlite3 from 'sqlite3';
 import Storage from './config/dbconfig';
 
@@ -19,6 +19,7 @@ const app = express();
 
 /* Body parser middleware */
 app.use(express.json());
+app.use(express.urlencoded());
 /* Session middleware */
 app.use(
     session({
@@ -79,6 +80,7 @@ app.get('/api/logout', (req, res) => {
     res.redirect('http://localhost:80/');
 });
 
+// Sends userpic by userId
 app.get('/api/db/:id', async (req, res) => {
     const userId = req.params.id;
     const user = await Storage.getUserById(userId);
@@ -87,14 +89,22 @@ app.get('/api/db/:id', async (req, res) => {
     } else {
         res.status(404).send();
     }
-    // Storage.Db.get('select url from Users u inner join Photos p on u.id = p.userId where u.id = $id', { $id: userId }, (err, row) => {
-    //     if (row) {
-    //         console.log(row);
-    //         res.redirect(row.url);
-    //     } else {
-    //         res.status(404).send();
-    //     }
-    // });
+});
+
+// Creates new post
+app.post('/api/create-post', ensureAuthenticated, async (req, res) => {
+    const post = {
+        id: generateGuid(),
+        userId: req.user.id,
+        text: req.body.text,
+    };
+    try {
+        await Storage.insertPost(post);
+    } catch (err) {
+        res.status(500).send();
+    }
+
+    res.redirect('back');
 });
 
 // Handles any requests that don't match the ones above
