@@ -10,8 +10,6 @@ import session from 'express-session';
 import configurePassport from './config/passport';
 import secrets from './config/secrets';
 import { v4 } from 'uuid';
-// Database
-import sqlite from 'sqlite';
 import sqlite3 from 'sqlite3';
 import Storage from './config/dbconfig';
 
@@ -21,7 +19,6 @@ const app = express();
 
 /* Body parser middleware */
 app.use(express.json());
-
 /* Session middleware */
 app.use(
     session({
