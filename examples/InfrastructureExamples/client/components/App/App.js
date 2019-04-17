@@ -32,7 +32,7 @@ export default class App extends Component {
                 <>
                     <Header {...this.state} />
                     <Switch>
-                        <Route component={Posts} />
+                        <Route component={() => <Posts {...this.state} />} />
                     </Switch>
                 </>
             </Router>
