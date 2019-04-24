@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import axios from 'axios';
 
 export default class PostsMap extends Component {
     constructor(props) {
@@ -10,9 +11,20 @@ export default class PostsMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
             isYmapsAPILoaded: false,
-            placemarks: [{ latitude: 55.771707, longitude: 37.678784 }],
+            posts: [],
         };
     }
+
+    componentDidMount() {
+        console.log('This method is called twice every time'); // TODO: WHY componentDidMount is called twice? Because of redirect?
+        this.loadPosts();
+    }
+
+    async loadPosts() {
+        const posts = await axios.get('/api/get-posts');
+        this.setState({ posts: posts.data });
+    }
+
     render() {
         return (
             <div className="map-container">
@@ -27,8 +39,8 @@ export default class PostsMap extends Component {
                         width="100%"
                         height="90vh"
                     >
-                        {this.state.placemarks.map((pm, i) => (
-                            <Placemark key={i} defaultGeometry={[...Object.values(pm)]} />
+                        {this.state.posts.map((post, i) => (
+                            <Placemark key={i} defaultGeometry={[post.latitude, post.longitude]} />
                         ))}
                     </Map>
                 </YMaps>

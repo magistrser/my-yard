@@ -12,6 +12,7 @@ export default class App extends Component {
     }
     state = {
         isAuthorized: false,
+        // TODO: Maybe add isLoaded here to prevent redundant rendering
     };
 
     async componentDidMount() {
