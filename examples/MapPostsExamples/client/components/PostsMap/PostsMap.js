@@ -44,7 +44,6 @@ export default class PostsMap extends Component {
                 <button type="submit">Send</button>
             </form>
         );
-        console.log(ReactDOMServer.renderToString(postForm));
         this.mapInstance.balloon.open(coords, ReactDOMServer.renderToString(postForm));
     };
 
@@ -72,8 +71,7 @@ export default class PostsMap extends Component {
                                     balloonContentBody: ReactDOMServer.renderToString(
                                         <>
                                             <img src={post.userPic} />
-                                            <h2>{post.author}</h2>
-                                            <section>{post.text}</section>
+                                            <Post post={post} />
                                         </>
                                     ),
                                 }}
