@@ -13,7 +13,6 @@ export default class PostsMap extends Component {
             center: [55.771707, 37.678784],
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
-            isYmapsAPILoaded: false,
             posts: [],
         };
     }
@@ -28,6 +27,16 @@ export default class PostsMap extends Component {
         this.setState({ posts: posts.data });
     }
 
+    handleMapClick = async ev => {
+        ev.preventDefault();
+        if (!this.ymapsAPI || !this.mapInstance || !this.props.isAuthorized) {
+            return;
+        }
+        const coords = ev.get('coords');
+        // Open balloon
+        this.mapInstance.balloon.open(coords, '<h1>hi</h1>');
+    };
+
     render() {
         return (
             <div className="map-container">
@@ -36,7 +45,9 @@ export default class PostsMap extends Component {
                         onClick={this.handleMapClick}
                         onLoad={ymaps => {
                             this.ymapsAPI = ymaps;
-                            this.setState({ isYmapsAPILoaded: true });
+                        }}
+                        instanceRef={map => {
+                            this.mapInstance = map;
                         }}
                         state={this.state}
                         width="100%"
