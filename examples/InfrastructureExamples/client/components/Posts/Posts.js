@@ -14,12 +14,12 @@ export default class Posts extends Component {
 
     loadPosts = () => {
         axios.get('/api/get-posts').then(res => {
-            console.log('asdasd');
             this.setState({ posts: res.data });
         });
     };
 
     componentDidMount() {
+        // TODO: React shows warning. Cancel async task here?
         this.loadPosts();
     }
 
@@ -30,7 +30,7 @@ export default class Posts extends Component {
                 <div className={styles.container}>
                     {this.props.isAuthorized ? <PostForm /> : null}
                     <button className={styles.button} onClick={this.loadPosts}>
-                        Refresh comments
+                        Refresh posts
                     </button>
                     <div className={styles.innerContainer}>
                         {this.state.posts.map(post => (
