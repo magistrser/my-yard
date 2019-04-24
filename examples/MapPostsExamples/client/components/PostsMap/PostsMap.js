@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import jsxToString from 'jsx-to-string';
 import axios from 'axios';
+import Post from '../Post/Post';
 
 export default class PostsMap extends Component {
     constructor(props) {
@@ -40,7 +43,19 @@ export default class PostsMap extends Component {
                         height="90vh"
                     >
                         {this.state.posts.map((post, i) => (
-                            <Placemark key={i} defaultGeometry={[post.latitude, post.longitude]} />
+                            <Placemark
+                                key={post.id}
+                                defaultGeometry={[post.latitude, post.longitude]}
+                                properties={{
+                                    balloonContentBody: jsxToString(
+                                        <div>
+                                            <img src={post.userPic} />
+                                            <h2>{post.author}</h2>
+                                            <section>{post.text}</section>
+                                        </div>
+                                    ),
+                                }}
+                            />
                         ))}
                     </Map>
                 </YMaps>
