@@ -4,6 +4,7 @@ import axios from 'axios';
 import Header from '../Header/Header';
 import Posts from '../Posts/Posts';
 import './App.css';
+import PostsMap from '../PostsMap/PostsMap';
 
 export default class App extends Component {
     constructor() {
@@ -29,7 +30,7 @@ export default class App extends Component {
                 <>
                     <Header {...this.state} />
                     <Switch>
-                        <Route component={() => <Posts {...this.state} />} />
+                        <Route component={() => <PostsMap {...this.state} />} />
                     </Switch>
                 </>
             </Router>
