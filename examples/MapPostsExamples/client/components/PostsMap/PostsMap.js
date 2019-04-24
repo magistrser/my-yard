@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import ReactDOM from 'react-dom';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
 import jsxToString from 'jsx-to-string';
@@ -19,6 +20,7 @@ export default class PostsMap extends Component {
 
     componentDidMount() {
         console.log('This method is called twice every time'); // TODO: WHY componentDidMount is called twice? Because of redirect?
+        console.log(ReactDOMServer);
         this.loadPosts();
     }
 
@@ -36,18 +38,14 @@ export default class PostsMap extends Component {
         const postForm = (
             <form action="/api/create-post" method="post">
                 <h1>Create post</h1>
-                <input type="text" placeholder="Text" name="text" />
-                <input
-                    type="hidden"
-                    name="latitude"
-                    value={coords[0].toString() /* without toString this shitlibrary leaves {} in result string*/}
-                />
-                <input type="hidden" name="longitude" value={coords[1].toString()} />
+                <textarea type="text" placeholder="Text" name="text" />
+                <input type="hidden" name="latitude" value={coords[0]} />
+                <input type="hidden" name="longitude" value={coords[1]} />
                 <button type="submit">Send</button>
             </form>
         );
-        console.log(jsxToString(postForm));
-        this.mapInstance.balloon.open(coords, jsxToString(postForm));
+        console.log(ReactDOMServer.renderToString(postForm));
+        this.mapInstance.balloon.open(coords, ReactDOMServer.renderToString(postForm));
     };
 
     render() {
@@ -71,12 +69,12 @@ export default class PostsMap extends Component {
                                 key={post.id}
                                 defaultGeometry={[post.latitude, post.longitude]}
                                 properties={{
-                                    balloonContentBody: jsxToString(
-                                        <div>
+                                    balloonContentBody: ReactDOMServer.renderToString(
+                                        <>
                                             <img src={post.userPic} />
                                             <h2>{post.author}</h2>
                                             <section>{post.text}</section>
-                                        </div>
+                                        </>
                                     ),
                                 }}
                             />
