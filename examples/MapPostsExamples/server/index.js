@@ -111,8 +111,12 @@ app.post('/api/create-post', ensureAuthenticated, async (req, res) => {
 
 // Sends posts
 app.get('/api/get-posts', async (req, res) => {
-    const posts = await Storage.getPosts();
-    res.json(posts);
+    try {
+        const posts = await Storage.getPosts();
+        res.json(posts);
+    } catch (err) {
+        res.status(500).send();
+    }
 });
 
 // Handles any requests that don't match the ones above
