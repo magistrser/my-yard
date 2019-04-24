@@ -33,8 +33,21 @@ export default class PostsMap extends Component {
             return;
         }
         const coords = ev.get('coords');
-        // Open balloon
-        this.mapInstance.balloon.open(coords, '<h1>hi</h1>');
+        const postForm = (
+            <form action="/api/create-post" method="post">
+                <h1>Create post</h1>
+                <input type="text" placeholder="Text" name="text" />
+                <input
+                    type="hidden"
+                    name="latitude"
+                    value={coords[0].toString() /* without toString this shitlibrary leaves {} in result string*/}
+                />
+                <input type="hidden" name="longitude" value={coords[1].toString()} />
+                <button type="submit">Send</button>
+            </form>
+        );
+        console.log(jsxToString(postForm));
+        this.mapInstance.balloon.open(coords, jsxToString(postForm));
     };
 
     render() {
