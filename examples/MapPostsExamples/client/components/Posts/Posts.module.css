@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    max-width: 60%;
+    padding: 2% 0;
+    border: 2px whitesmoke solid;
+}
+.innerContainer {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.button {
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: greenyellow;
+    border: 0;
+    padding: 15px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+.button:hover {
+    background: green;
+}
