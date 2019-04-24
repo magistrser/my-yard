@@ -81,7 +81,7 @@ app.get('/api/logout', (req, res) => {
 });
 
 // Sends userpic by userId
-app.get('/api/db/:id', async (req, res) => {
+app.get('/api/get-userpic/:id', async (req, res) => {
     const userId = req.params.id;
     const user = await Storage.getUserById(userId);
     if (user) {
@@ -97,6 +97,8 @@ app.post('/api/create-post', ensureAuthenticated, async (req, res) => {
         id: generateGuid(),
         userId: req.user.id,
         text: req.body.text,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
     };
     try {
         await Storage.insertPost(post);
@@ -110,7 +112,6 @@ app.post('/api/create-post', ensureAuthenticated, async (req, res) => {
 // Sends posts
 app.get('/api/get-posts', async (req, res) => {
     const posts = await Storage.getPosts();
-
     res.json(posts);
 });
 

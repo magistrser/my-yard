@@ -10,7 +10,7 @@ export default class PostsMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
             isYmapsAPILoaded: false,
-            placemarks: [{ y: 55.771707, x: 37.678784 }],
+            placemarks: [{ latitude: 55.771707, longitude: 37.678784 }],
         };
     }
     render() {

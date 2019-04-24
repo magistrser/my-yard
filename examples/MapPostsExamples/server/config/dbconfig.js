@@ -4,7 +4,7 @@ import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
 
 export default class Storage {
-    static _dbLocation = './examples/InfrastructureExamples/server/db.sqlite';
+    static _dbLocation = './examples/MapPostsExamples/server/db.sqlite';
     static _db = new sqlite3.Database(Storage._dbLocation);
 
     static get Db() {
@@ -43,6 +43,7 @@ export default class Storage {
 
     static insertUser(user) {
         return new Promise((resolve, reject) => {
+            // TODO: Find a way to do this in transaction. This implementation sucks
             this._db
                 .run(
                     `insert into Users (id, email, fullName) values ($id, $email, $fullName);`,
@@ -76,31 +77,45 @@ export default class Storage {
 
     static insertPost(post) {
         return new Promise((resolve, reject) => {
-            this._db.run(
-                'insert into Posts (id, userId, text) values ($id, $userId, $text)',
-                {
-                    $id: post.id,
-                    $userId: post.userId,
-                    $text: post.text,
-                },
-                err => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        // TODO: Figure out if this callback is called if no err was thrown
-
-                        resolve();
+            this._db
+                .run(
+                    'insert into Posts (id, userId, text) values ($id, $userId, $text)',
+                    {
+                        $id: post.id,
+                        $userId: post.userId,
+                        $text: post.text,
+                    },
+                    err => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
                     }
-                }
-            );
+                )
+                .run(
+                    'insert into PostGeoPositions (postId, latitude, longitude) values ($postId, $latitude, $longitude)',
+                    {
+                        $postId: post.id,
+                        $latitude: post.latitude,
+                        $longitude: post.longitude,
+                    },
+                    err => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    }
+                );
         });
     }
 
     static getPosts() {
         return new Promise((resolve, reject) => {
             this._db.all(
-                'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic ' +
-                    'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId',
+                'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic, pgp.latitude, pgp.longitude ' +
+                    'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
                 (err, rows) => {
                     if (err) {
                         reject(err);
