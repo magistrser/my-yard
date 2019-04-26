@@ -21,7 +21,6 @@ export default class PostsMap extends Component {
 
     componentDidMount() {
         console.log('This method is called twice every time'); // TODO: WHY componentDidMount is called twice? Because of redirect?
-        console.log(ReactDOMServer);
         this.loadPosts();
     }
 
@@ -48,18 +47,34 @@ export default class PostsMap extends Component {
         this.mapInstance.balloon.open(coords, ReactDOMServer.renderToString(postForm));
     };
 
+    handleYmapsAPILoaded = ymaps => {
+        this.ymapsAPI = ymaps;
+        if (this.props.isAuthorized) {
+            // Add "add post" button
+            const addPostBtn = new ymaps.control.Button({
+                data: {
+                    content: 'Добавить пост',
+                },
+                options: {
+                    maxWidth: [30, 100, 150],
+                },
+            });
+            this.mapInstance.controls.add(addPostBtn, { float: 'right' });
+        }
+    };
+
+    handleMapLoaded = map => {
+        this.mapInstance = map;
+    };
+
     render() {
         return (
             <div className={styles.mapContainer}>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
                         onClick={this.handleMapClick}
-                        onLoad={ymaps => {
-                            this.ymapsAPI = ymaps;
-                        }}
-                        instanceRef={map => {
-                            this.mapInstance = map;
-                        }}
+                        onLoad={this.handleYmapsAPILoaded}
+                        instanceRef={this.handleMapLoaded}
                         state={this.state}
                         width="100%"
                         height="100%"
