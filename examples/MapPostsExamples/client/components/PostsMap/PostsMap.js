@@ -5,6 +5,7 @@ import { YMaps, Map, Placemark } from 'react-yandex-maps';
 import jsxToString from 'jsx-to-string';
 import axios from 'axios';
 import Post from '../Post/Post';
+import styles from './PostsMap.module.css';
 
 export default class PostsMap extends Component {
     constructor(props) {
@@ -49,7 +50,7 @@ export default class PostsMap extends Component {
 
     render() {
         return (
-            <div className="map-container">
+            <div className={styles.mapContainer}>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
                         onClick={this.handleMapClick}
@@ -61,7 +62,7 @@ export default class PostsMap extends Component {
                         }}
                         state={this.state}
                         width="100%"
-                        height="90vh"
+                        height="100%"
                     >
                         {this.state.posts.map((post, i) => (
                             <Placemark

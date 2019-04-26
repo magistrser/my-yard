@@ -2,12 +2,12 @@
     display: flex;
     justify-content: space-between;
     flex-direction: row;
-    height: 50px;
+    height: 10vh;
     width: 100%;
     background: rgb(145, 229, 255);
     padding-top: .5em;
-	padding-bottom: .5em;
-	border: 1px solid #a2a2a2;
+	  padding-bottom: .5em;
+	  border: 1px solid #a2a2a2;
     background-color: #71d2ff;
     box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.75);
     border-radius: 5px;
