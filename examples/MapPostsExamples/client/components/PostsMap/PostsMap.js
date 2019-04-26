@@ -5,6 +5,7 @@ import { YMaps, Map, Placemark } from 'react-yandex-maps';
 import jsxToString from 'jsx-to-string';
 import axios from 'axios';
 import Post from '../Post/Post';
+import PostForm from '../PostForm/PostForm';
 import styles from './PostsMap.module.css';
 
 export default class PostsMap extends Component {
@@ -16,6 +17,7 @@ export default class PostsMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
+            inPostAddingMode: false,
         };
     }
 
@@ -31,20 +33,12 @@ export default class PostsMap extends Component {
 
     handleMapClick = async ev => {
         ev.preventDefault();
-        if (!this.ymapsAPI || !this.mapInstance || !this.props.isAuthorized) {
+        if (!this.state.inPostAddingMode || !this.props.isAuthorized || !this.ymapsAPI || !this.mapInstance) {
             return;
         }
+        this.togglePostAddingMode();
         const coords = ev.get('coords');
-        const postForm = (
-            <form action="/api/create-post" method="post">
-                <h1>Create post</h1>
-                <textarea type="text" placeholder="Text" name="text" />
-                <input type="hidden" name="latitude" value={coords[0]} />
-                <input type="hidden" name="longitude" value={coords[1]} />
-                <button type="submit">Send</button>
-            </form>
-        );
-        this.mapInstance.balloon.open(coords, ReactDOMServer.renderToString(postForm));
+        this.mapInstance.balloon.open(coords, ReactDOMServer.renderToString(<PostForm coords={coords} />));
     };
 
     handleYmapsAPILoaded = ymaps => {
@@ -57,9 +51,22 @@ export default class PostsMap extends Component {
                 },
                 options: {
                     maxWidth: [30, 100, 150],
+                    selectOnClick: false,
                 },
             });
+            addPostBtn.events.add('click', this.togglePostAddingMode);
             this.mapInstance.controls.add(addPostBtn, { float: 'right' });
+        }
+    };
+
+    togglePostAddingMode = ev => {
+        ev?.preventDefault();
+        if (!this.state.inPostAddingMode) {
+            this.mapInstance.cursors.push('crosshair');
+            this.setState({ inPostAddingMode: true });
+        } else {
+            this.mapInstance.cursors.push('grab');
+            this.setState({ inPostAddingMode: false });
         }
     };
 
