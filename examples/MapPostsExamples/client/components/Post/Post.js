@@ -4,10 +4,17 @@ import styles from './Post.module.css';
 export default function Post(props) {
     return (
         <div className={styles.post}>
-            <p>
-                <b>{props.post.author}> </b>
-                {props.post.text}
-            </p>
+            <header>
+                <img src={props.post.userPic} className={styles.profileThumbnail} />
+                <div className={styles.profileName}>
+                    <h3>{props.post.author}</h3>
+                </div>
+            </header>
+            <div className={styles.inner}>
+                <hr />
+                <p>{props.post.text}</p>
+                <span className={styles.date}>{props.post.date}</span>
+            </div>
         </div>
     );
 }

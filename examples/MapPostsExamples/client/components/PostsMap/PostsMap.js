@@ -93,7 +93,6 @@ export default class PostsMap extends Component {
                                 properties={{
                                     balloonContentBody: ReactDOMServer.renderToString(
                                         <>
-                                            <img src={post.userPic} />
                                             <Post post={post} />
                                         </>
                                     ),
