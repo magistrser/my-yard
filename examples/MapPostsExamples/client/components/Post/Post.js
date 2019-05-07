@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from './Post.module.css';
+import ImageBox from '../ImageBox/ImageBox';
+import img from '../ImageBox/exampleImg.png';
 
 export default function Post(props) {
     return (
@@ -10,6 +12,7 @@ export default function Post(props) {
                     <h3>{props.post.author}</h3>
                 </div>
             </header>
+            <ImageBox images={[img, img, img, img, img]} />
             <div className={styles.inner}>
                 <hr />
                 <p>{props.post.text}</p>

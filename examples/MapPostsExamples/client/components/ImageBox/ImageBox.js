@@ -30,15 +30,22 @@ export default class ImageBox extends Component {
                         style={{
                             position: 'relative',
                         }}
-                        onClick={ev => this.onImageClick(ev, image)}
-                        onMouseEnter={ev => (ev.target.style.opacity = 1)}
+                        onClick={ev => {
+                            this.onImageClick(ev, image);
+                            console.log('gird cliuck');
+                        }}
+                        onMouseEnter={ev => {
+                            ev.target.style.opacity = 1;
+                            console.log('!');
+                        }}
                         onMouseLeave={ev => (ev.target.style.opacity = 0)}
                     >
                         <img
                             src={image}
                             style={{
-                                maxWidth: 300,
+                                maxWidth: 100,
                                 maxHeight: 200,
+                                'z-index': 2,
                             }}
                         />
                         <div
