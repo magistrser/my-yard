@@ -13,7 +13,8 @@ import { v4 as generateGuid } from 'uuid';
 import sqlite3 from 'sqlite3';
 import Storage from './config/dbconfig';
 
-import type { $Request, $Response, NextFunction, Middleware } from 'express';
+import typeimport ImageManager from './utils/ImageManager';
+ { $Request, $Response, NextFunction, Middleware } from 'express';
 
 const app = express();
 
@@ -119,12 +120,19 @@ app.get('/api/get-posts', async (req, res) => {
     }
 });
 
+// Image debug route
+app.get('/api/img', (req, res) => {
+    ImageManager.saveImage();
+});
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
     res.redirect('http://localhost:80/'); // HACK: A workaround
 });
 
-/* Start web server */
+/**
+ *  Start web server
+ * */
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
 
 // Middleware that checks if user is authenticated
