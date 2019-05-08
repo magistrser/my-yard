@@ -125,7 +125,7 @@ app.get('/api/img', async (req, res) => {
     const imgResponse = await axios.get('https://pp.userapi.com/c844417/v844417738/1f5a01/pQyVzijwg-I.jpg', {
         responseType: 'arraybuffer',
     });
-    const name = ImageManager.saveImage(imgResponse.data);
+    const name = await ImageManager.saveImage(imgResponse.data);
     try {
         const savedImage = await ImageManager.getImageByName(name);
         res.contentType('jpg');

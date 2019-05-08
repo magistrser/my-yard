@@ -26,9 +26,9 @@ export default class ImageManager {
         });
     }
 
-    static saveImage(img: ArrayBuffer) {
+    static async saveImage(img: ArrayBuffer) {
         const imageName = shortid.generate();
-        sharp(Buffer.from(img, 'binary'))
+        await sharp(Buffer.from(img, 'binary'))
             .resize(640, 480, {
                 fit: 'inside',
             })
