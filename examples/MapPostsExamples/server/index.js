@@ -12,9 +12,9 @@ import secrets from './config/secrets';
 import { v4 as generateGuid } from 'uuid';
 import sqlite3 from 'sqlite3';
 import Storage from './config/dbconfig';
+import ImageManager from './utils/ImageManager';
 
-import typeimport ImageManager from './utils/ImageManager';
- { $Request, $Response, NextFunction, Middleware } from 'express';
+import { $Request, $Response, NextFunction, Middleware } from 'express';
 
 const app = express();
 
@@ -121,8 +121,12 @@ app.get('/api/get-posts', async (req, res) => {
 });
 
 // Image debug route
-app.get('/api/img', (req, res) => {
-    ImageManager.saveImage();
+app.get('/api/img', async (req, res) => {
+    const imgResponse = await axios.get('https://pp.userapi.com/c844417/v844417738/1f5a01/pQyVzijwg-I.jpg', {
+        responseType: 'arraybuffer',
+    });
+    ImageManager.saveImage(imgResponse.data);
+    res.status(200).send();
 });
 
 // Handles any requests that don't match the ones above
