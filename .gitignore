@@ -5,6 +5,7 @@
 flow-typed
 node_modules
 dist
+examples/MapPostsExamples/server/__images/*.jpg
 
 *.log
 *.sqlite

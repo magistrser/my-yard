@@ -41,6 +41,7 @@
     "react-router-dom": "^4.3.1",
     "react-yandex-maps": "^3.0.2",
     "sharp": "^0.22.1",
+    "shortid": "^2.2.14",
     "sql-template-strings": "^2.2.2",
     "sqlite": "^3.0.3",
     "sqlite3": "^4.0.6",
