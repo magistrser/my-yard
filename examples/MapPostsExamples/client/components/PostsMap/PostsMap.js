@@ -7,6 +7,8 @@ import axios from 'axios';
 import Post from '../Post/Post';
 import PostForm from '../PostForm/PostForm';
 import styles from './PostsMap.module.css';
+import Modal from '@material-ui/core/Modal';
+import Typography from '@material-ui/core/Typography';
 
 export default class PostsMap extends Component {
     constructor(props) {
@@ -18,6 +20,8 @@ export default class PostsMap extends Component {
             controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
             inPostAddingMode: false,
+            isPostOpen: false,
+            postContent: {},
         };
     }
 
@@ -74,9 +78,17 @@ export default class PostsMap extends Component {
         this.mapInstance = map;
     };
 
+    handlePlacemarkClick = post => ev => {
+        ev.preventDefault();
+        this.setState({ isPostOpen: !this.state.isPostOpen, postContent: post });
+    };
+
     render() {
         return (
             <div className={styles.mapContainer}>
+                <Modal aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description" open={this.state.isPostOpen}>
+                    <Post post={this.state.postContent} />
+                </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
                         onClick={this.handleMapClick}
@@ -90,13 +102,14 @@ export default class PostsMap extends Component {
                             <Placemark
                                 key={post.id}
                                 defaultGeometry={[post.latitude, post.longitude]}
-                                properties={{
+                                onClick={this.handlePlacemarkClick(post)}
+                                /*properties={{
                                     balloonContentBody: ReactDOMServer.renderToString(
                                         <>
                                             <Post post={post} />
                                         </>
                                     ),
-                                }}
+                                }}*/
                             />
                         ))}
                     </Map>
