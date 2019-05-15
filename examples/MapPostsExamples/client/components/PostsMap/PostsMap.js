@@ -19,9 +19,9 @@ export default class PostsMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
+            postContent: {},
             inPostAddingMode: false,
             isPostOpen: false,
-            postContent: {},
         };
     }
 
@@ -112,13 +112,6 @@ export default class PostsMap extends Component {
                                 key={post.id}
                                 defaultGeometry={[post.latitude, post.longitude]}
                                 onClick={this.handlePlacemarkClick(post)}
-                                /*properties={{
-                                    balloonContentBody: ReactDOMServer.renderToString(
-                                        <>
-                                            <Post post={post} />
-                                        </>
-                                    ),
-                                }}*/
                             />
                         ))}
                     </Map>
