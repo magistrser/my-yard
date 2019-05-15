@@ -21,9 +21,9 @@ export default class PostsMap extends Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         console.log('This method is called twice every time'); // TODO: WHY componentDidMount is called twice? Because of redirect?
-        this.loadPosts();
+        await this.loadPosts();
     }
 
     async loadPosts() {
