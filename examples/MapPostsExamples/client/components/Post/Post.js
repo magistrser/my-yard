@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Post.module.css';
 import ImageBox from '../ImageBox/ImageBox';
 import img from '../ImageBox/exampleImg.png';
+import ImageGallery from '../ImageGallery/ImageGallery';
 
 export default function Post(props) {
     return (
@@ -13,6 +14,7 @@ export default function Post(props) {
                 </div>
             </header>
             <ImageBox images={[img, img, img, img, img]} />
+            <ImageGallery />
             <div className={styles.inner}>
                 <hr />
                 <p>{props.post.text}</p>
