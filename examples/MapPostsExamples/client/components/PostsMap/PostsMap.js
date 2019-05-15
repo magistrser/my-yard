@@ -83,10 +83,19 @@ export default class PostsMap extends Component {
         this.setState({ isPostOpen: !this.state.isPostOpen, postContent: post });
     };
 
+    handlePostClose = ev => {
+        this.setState({ isPostOpen: false });
+    };
+
     render() {
         return (
             <div className={styles.mapContainer}>
-                <Modal aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description" open={this.state.isPostOpen}>
+                <Modal
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    open={this.state.isPostOpen}
+                    onClose={this.handlePostClose}
+                >
                     <Post post={this.state.postContent} />
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
