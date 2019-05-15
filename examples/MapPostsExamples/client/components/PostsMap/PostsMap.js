@@ -98,7 +98,7 @@ export default class PostsMap extends Component {
                     onClose={this.handlePostClose}
                 >
                     <DialogContent>
-                        <Post post={this.state.postContent} />
+                        <Post post={this.state.postContent} closePost={this.handlePostClose} />
                     </DialogContent>
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
