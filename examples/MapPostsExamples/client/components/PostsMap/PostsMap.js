@@ -8,6 +8,7 @@ import Post from '../Post/Post';
 import PostForm from '../PostForm/PostForm';
 import styles from './PostsMap.module.css';
 import Modal from '@material-ui/core/Modal';
+import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 
 export default class PostsMap extends Component {
@@ -96,7 +97,9 @@ export default class PostsMap extends Component {
                     open={this.state.isPostOpen}
                     onClose={this.handlePostClose}
                 >
-                    <Post post={this.state.postContent} />
+                    <DialogContent>
+                        <Post post={this.state.postContent} />
+                    </DialogContent>
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map

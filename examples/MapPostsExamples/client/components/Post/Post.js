@@ -13,7 +13,6 @@ export default function Post(props) {
                     <h3>{props.post.author}</h3>
                 </div>
             </header>
-            <ImageBox images={[img, img, img, img, img]} />
             <ImageGallery />
             <div className={styles.inner}>
                 <hr />

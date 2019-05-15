@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import Gallery from 'react-photo-gallery';
 import Lightbox from 'react-images';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -71,15 +70,9 @@ export default class ImageGallery extends Component {
     }
 
     render() {
-        const gal = <Gallery photos={photos} onClick={this.openLightbox} />;
         return (
             <div
                 style={{
-                    position: 'absolute',
-                    top: '0',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
                     margin: 'auto',
                     'max-width': '500px',
                     'max-height': '400px',
@@ -103,7 +96,12 @@ export default class ImageGallery extends Component {
                         }}
                     >
                         {photos.map((photo, idx) => (
-                            <GridListTile onClick={ev => this.openLightbox(ev, idx)}>
+                            <GridListTile
+                                style={{
+                                    cursor: 'pointer',
+                                }}
+                                onClick={ev => this.openLightbox(ev, idx)}
+                            >
                                 <img src={photo.src} />
                             </GridListTile>
                         ))}
