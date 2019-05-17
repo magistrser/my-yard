@@ -33,7 +33,6 @@ export default class PostsMap extends Component {
 
     async loadPosts() {
         const posts = await axios.get('/api/get-posts');
-        console.log('>>', posts);
         this.setState({ posts: posts.data });
     }
 
@@ -82,7 +81,7 @@ export default class PostsMap extends Component {
 
     handlePlacemarkClick = post => ev => {
         ev.preventDefault();
-        this.setState({ isPostOpen: !this.state.isPostOpen, postContent: post });
+        this.setState({ isPostOpen: !this.state.isPostOpen, postContent: post }); // TODO: Save index in posts array instead of copying entire post into state!
     };
 
     handlePostClose = ev => {

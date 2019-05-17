@@ -38,9 +38,10 @@ const photos = [
 ];
 
 export default class ImageGallery extends Component {
-    constructor() {
+    constructor({ images }) {
         super();
         this.state = { currentImage: 0 };
+        this.postImages = images;
         this.closeLightbox = this.closeLightbox.bind(this);
         this.openLightbox = this.openLightbox.bind(this);
         this.gotoNext = this.gotoNext.bind(this);
@@ -95,20 +96,20 @@ export default class ImageGallery extends Component {
                             transform: 'translateZ(1000)',
                         }}
                     >
-                        {photos.map((photo, idx) => (
+                        {this.postImages.map((postImage, idx) => (
                             <GridListTile
                                 style={{
                                     cursor: 'pointer',
                                 }}
                                 onClick={ev => this.openLightbox(ev, idx)}
                             >
-                                <img src={photo.src} />
+                                <img src={postImage.src} />
                             </GridListTile>
                         ))}
                     </GridList>
                 </div>
                 <Lightbox
-                    images={photos}
+                    images={this.postImages}
                     onClose={this.closeLightbox}
                     onClickPrev={this.gotoPrevious}
                     onClickNext={this.gotoNext}

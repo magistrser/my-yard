@@ -147,7 +147,7 @@ export default class Storage {
                         }
                     }
                 )
-                .all('select p.id, i.name as imageName from Posts as p inner join Images as i', (err, rows) => {
+                .all('select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId', (err, rows) => {
                     if (err) {
                         reject(err);
                     } else {

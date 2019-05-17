@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 
 export default function Post(props) {
+    console.log('>>', props.post);
     return (
         <div className={styles.post}>
             <Grid container direction="column" justify="center" alignItems="center">
@@ -19,11 +20,19 @@ export default function Post(props) {
                     </Grid>
                     <Grid item>
                         <h3>{props.post.author}</h3>
-                        <Typography>{`Posted: ${props.post.date}`}</Typography>
+                        <Typography>{`Posted: ${props.post.timestamp}`}</Typography>
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <ImageGallery />
+                    <ImageGallery
+                        images={props.post.images.map(imgName => {
+                            return {
+                                src: `/api/img/${imgName}.jpg`,
+                                width: 4,
+                                height: 3,
+                            };
+                        })}
+                    />
                 </Grid>
                 <Grid item container direction="column" className={styles.inner}>
                     <hr />
