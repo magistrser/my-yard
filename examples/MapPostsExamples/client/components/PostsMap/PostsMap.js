@@ -20,7 +20,7 @@ export default class PostsMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
-            postContent: {},
+            currentPostIdx: 0,
             inPostAddingMode: false,
             isPostOpen: false,
         };
@@ -79,9 +79,9 @@ export default class PostsMap extends Component {
         this.mapInstance = map;
     };
 
-    handlePlacemarkClick = post => ev => {
+    handlePlacemarkClick = postIdx => ev => {
         ev.preventDefault();
-        this.setState({ isPostOpen: !this.state.isPostOpen, postContent: post }); // TODO: Save index in posts array instead of copying entire post into state!
+        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx });
     };
 
     handlePostClose = ev => {
@@ -98,7 +98,7 @@ export default class PostsMap extends Component {
                     onClose={this.handlePostClose}
                 >
                     <DialogContent>
-                        <Post post={this.state.postContent} closePost={this.handlePostClose} />
+                        <Post post={this.state.posts[this.state.currentPostIdx]} closePost={this.handlePostClose} />
                     </DialogContent>
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
@@ -110,11 +110,11 @@ export default class PostsMap extends Component {
                         width="100%"
                         height="100%"
                     >
-                        {this.state.posts.map((post, i) => (
+                        {this.state.posts.map((post, postIdx) => (
                             <Placemark
                                 key={post.id}
                                 defaultGeometry={[post.latitude, post.longitude]}
-                                onClick={this.handlePlacemarkClick(post)}
+                                onClick={this.handlePlacemarkClick(postIdx)}
                             />
                         ))}
                     </Map>
