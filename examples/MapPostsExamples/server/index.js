@@ -105,17 +105,16 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
     const postId = generateGuid();
     const images = [];
     try {
-        req.files
-            .map(file => {
-                if (file.size > 99999999) {
-                    // Do something about files that are too large
-                }
-                return file.buffer;
-            })
-            .forEach(imgBuf => {
-                const imageName = ImageManager.saveImage(imgBuf);
-                images.push(imageName);
-            });
+        const imageArray = req.files.map(file => {
+            if (file.size > 99999999) {
+                // Do something about files that are too large
+            }
+            return file.buffer;
+        });
+        for (let imgBuf of imageArray) {
+            const imageName = await ImageManager.saveImage(imgBuf);
+            images.push(imageName);
+        }
     } catch {
         res.status(500).send();
     }
@@ -131,7 +130,9 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
     try {
         await Storage.insertPost(post);
     } catch (err) {
-        res.status(500).send();
+        console.error('>>>', err);
+        res.status(500).end('Error occured during post insertion');
+        return;
     }
 
     res.redirect('back');

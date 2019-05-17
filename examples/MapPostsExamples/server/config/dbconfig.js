@@ -2,6 +2,7 @@
 
 import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
+import { v4 as generateGuid } from 'uuid';
 
 export default class Storage {
     static _dbLocation = './examples/MapPostsExamples/server/db.sqlite';
@@ -108,6 +109,27 @@ export default class Storage {
                         }
                     }
                 );
+            // TODO: Problem with lack of transactions is obvious here: User can create post, but images won't be saved if error occures
+            if (post.images.length > 0) {
+                const sql = 'insert into Images (rowId, postId, name) values' + post.images.map(imgName => ' (?,?,?)').join();
+                const vals = [];
+                post.images.forEach(imgName => {
+                    // Looks like shit, but I couldn't find a way to do this in a less ugly way
+                    vals.push(generateGuid());
+                    vals.push(post.id);
+                    vals.push(imgName);
+                });
+
+                console.log('>>>' + sql + '   ' + vals);
+
+                this._db.run(sql, vals, err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            }
         });
     }
 
