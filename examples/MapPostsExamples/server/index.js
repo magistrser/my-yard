@@ -13,6 +13,7 @@ import { v4 as generateGuid } from 'uuid';
 import sqlite3 from 'sqlite3';
 import Storage from './config/dbconfig';
 import ImageManager from './utils/ImageManager';
+import multer from 'multer';
 
 import { $Request, $Response, NextFunction, Middleware } from 'express';
 
@@ -29,6 +30,9 @@ app.use(
         saveUninitialized: true,
     })
 );
+
+/* File uploading middleware */
+const upload = multer({ storage: multer.memoryStorage() });
 
 /* Passport configuration */
 configurePassport(passport);
@@ -94,13 +98,35 @@ app.get('/api/get-userpic/:id', async (req, res) => {
 });
 
 // Creates new post
-app.post('/api/create-post', ensureAuthenticated, async (req, res) => {
+app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), async (req, res) => {
+    // TODO: Should we save images from here and pass names to database helper class
+    // or should we pass images to database helper class and it should save them itself?
+
+    const postId = generateGuid();
+    const images = [];
+    try {
+        req.files
+            .map(file => {
+                if (file.size > 99999999) {
+                    // Do something about files that are too large
+                }
+                return file.buffer;
+            })
+            .forEach(imgBuf => {
+                const imageName = ImageManager.saveImage(imgBuf);
+                images.push(imageName);
+            });
+    } catch {
+        res.status(500).send();
+    }
+
     const post = {
-        id: generateGuid(),
+        id: postId,
         userId: req.user.id,
         text: req.body.text,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
+        images,
     };
     try {
         await Storage.insertPost(post);
