@@ -37,6 +37,7 @@ app.use(passport.session());
 
 /* Serve static files */
 app.use(express.static('dist'));
+app.use('/api/img', express.static(`${__dirname}/__images`));
 
 /* Passport authentication */
 // VK strat:
