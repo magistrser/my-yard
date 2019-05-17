@@ -33,6 +33,7 @@ export default class PostsMap extends Component {
 
     async loadPosts() {
         const posts = await axios.get('/api/get-posts');
+        console.log('>>', posts);
         this.setState({ posts: posts.data });
     }
 

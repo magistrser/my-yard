@@ -117,6 +117,7 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
         }
     } catch {
         res.status(500).send();
+        return;
     }
 
     const post = {
@@ -149,7 +150,7 @@ app.get('/api/get-posts', async (req, res) => {
 });
 
 // Image debug route
-app.get('/api/img', async (req, res) => {
+app.get('/api/img-debug', async (req, res) => {
     const imgResponse = await axios.get('https://pp.userapi.com/c844417/v844417738/1f5a01/pQyVzijwg-I.jpg', {
         responseType: 'arraybuffer',
     });

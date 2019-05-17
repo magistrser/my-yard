@@ -120,8 +120,6 @@ export default class Storage {
                     vals.push(imgName);
                 });
 
-                console.log('>>>' + sql + '   ' + vals);
-
                 this._db.run(sql, vals, err => {
                     if (err) {
                         reject(err);
@@ -135,17 +133,33 @@ export default class Storage {
 
     static getPosts() {
         return new Promise((resolve, reject) => {
-            this._db.all(
-                'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic, pgp.latitude, pgp.longitude ' +
-                    'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
-                (err, rows) => {
+            // TODO: no idea how to do this in one query
+            let posts = [];
+            this._db
+                .all(
+                    'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic, pgp.latitude, pgp.longitude ' +
+                        'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
+                    (err, rows) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            posts = [...rows];
+                        }
+                    }
+                )
+                .all('select p.id, i.name as imageName from Posts as p inner join Images as i', (err, rows) => {
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(rows);
+                        posts.forEach(post => {
+                            post.images = [];
+                            rows.filter(row => post.id === row.id).forEach(row => {
+                                post.images.push(row.imageName);
+                            });
+                        });
+                        resolve(posts);
                     }
-                }
-            );
+                });
         });
     }
 }
