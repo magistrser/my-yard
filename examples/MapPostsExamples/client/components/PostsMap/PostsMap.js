@@ -91,15 +91,8 @@ export default class PostsMap extends Component {
     render() {
         return (
             <div className={styles.mapContainer}>
-                <Modal
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    open={this.state.isPostOpen}
-                    onClose={this.handlePostClose}
-                >
-                    <DialogContent>
-                        <Post post={this.state.posts[this.state.currentPostIdx]} closePost={this.handlePostClose} />
-                    </DialogContent>
+                <Modal open={this.state.isPostOpen} onClose={this.handlePostClose}>
+                    <Post post={this.state.posts[this.state.currentPostIdx]} closePost={this.handlePostClose} />
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
