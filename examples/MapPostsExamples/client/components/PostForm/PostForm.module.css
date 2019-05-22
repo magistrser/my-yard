@@ -1,7 +1,7 @@
 .form {
     max-width: 360px;
-    margin: 0 auto 40px;
-    padding: 45px;
+    margin: 0 auto;
+    padding: 20px;
     text-align: center;
 }
 
@@ -31,6 +31,7 @@
     padding: 15px;
     box-sizing: border-box;
     font-size: 14px;
+    resize: none;
 }
 .form button {
     font-family: "Roboto", sans-serif;

@@ -7,6 +7,9 @@ import axios from 'axios';
 import Post from '../Post/Post';
 import PostForm from '../PostForm/PostForm';
 import styles from './PostsMap.module.css';
+import Modal from '@material-ui/core/Modal';
+import DialogContent from '@material-ui/core/DialogContent';
+import Typography from '@material-ui/core/Typography';
 
 export default class PostsMap extends Component {
     constructor(props) {
@@ -17,13 +20,15 @@ export default class PostsMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
+            currentPostIdx: 0,
             inPostAddingMode: false,
+            isPostOpen: false,
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         console.log('This method is called twice every time'); // TODO: WHY componentDidMount is called twice? Because of redirect?
-        this.loadPosts();
+        await this.loadPosts();
     }
 
     async loadPosts() {
@@ -74,9 +79,28 @@ export default class PostsMap extends Component {
         this.mapInstance = map;
     };
 
+    handlePlacemarkClick = postIdx => ev => {
+        ev.preventDefault();
+        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx });
+    };
+
+    handlePostClose = ev => {
+        this.setState({ isPostOpen: false });
+    };
+
     render() {
         return (
             <div className={styles.mapContainer}>
+                <Modal
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    open={this.state.isPostOpen}
+                    onClose={this.handlePostClose}
+                >
+                    <DialogContent>
+                        <Post post={this.state.posts[this.state.currentPostIdx]} closePost={this.handlePostClose} />
+                    </DialogContent>
+                </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
                         onClick={this.handleMapClick}
@@ -86,17 +110,11 @@ export default class PostsMap extends Component {
                         width="100%"
                         height="100%"
                     >
-                        {this.state.posts.map((post, i) => (
+                        {this.state.posts.map((post, postIdx) => (
                             <Placemark
                                 key={post.id}
                                 defaultGeometry={[post.latitude, post.longitude]}
-                                properties={{
-                                    balloonContentBody: ReactDOMServer.renderToString(
-                                        <>
-                                            <Post post={post} />
-                                        </>
-                                    ),
-                                }}
+                                onClick={this.handlePlacemarkClick(postIdx)}
                             />
                         ))}
                     </Map>

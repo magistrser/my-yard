@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../Header/Header';
-import Posts from '../Posts/Posts';
 import './App.css';
 import PostsMap from '../PostsMap/PostsMap';
 

@@ -2,6 +2,7 @@
 
 import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
+import { v4 as generateGuid } from 'uuid';
 
 export default class Storage {
     static _dbLocation = './examples/MapPostsExamples/server/db.sqlite';
@@ -108,22 +109,57 @@ export default class Storage {
                         }
                     }
                 );
+            // TODO: Problem with lack of transactions is obvious here: User can create post, but images won't be saved if error occures
+            if (post.images.length > 0) {
+                const sql = 'insert into Images (rowId, postId, name) values' + post.images.map(imgName => ' (?,?,?)').join();
+                const vals = [];
+                post.images.forEach(imgName => {
+                    // Looks like shit, but I couldn't find a way to do this in a less ugly way
+                    vals.push(generateGuid());
+                    vals.push(post.id);
+                    vals.push(imgName);
+                });
+
+                this._db.run(sql, vals, err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            }
         });
     }
 
     static getPosts() {
         return new Promise((resolve, reject) => {
-            this._db.all(
-                'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic, pgp.latitude, pgp.longitude ' +
-                    'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
-                (err, rows) => {
+            // TODO: no idea how to do this in one query
+            let posts = [];
+            this._db
+                .all(
+                    'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic, pgp.latitude, pgp.longitude ' +
+                        'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
+                    (err, rows) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            posts = [...rows];
+                        }
+                    }
+                )
+                .all('select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId', (err, rows) => {
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(rows);
+                        posts.forEach(post => {
+                            post.images = [];
+                            rows.filter(row => post.id === row.id).forEach(row => {
+                                post.images.push(row.imageName);
+                            });
+                        });
+                        resolve(posts);
                     }
-                }
-            );
+                });
         });
     }
 }

@@ -12,8 +12,10 @@ import secrets from './config/secrets';
 import { v4 as generateGuid } from 'uuid';
 import sqlite3 from 'sqlite3';
 import Storage from './config/dbconfig';
+import ImageManager from './utils/ImageManager';
+import multer from 'multer';
 
-import type { $Request, $Response, NextFunction, Middleware } from 'express';
+import { $Request, $Response, NextFunction, Middleware } from 'express';
 
 const app = express();
 
@@ -29,6 +31,9 @@ app.use(
     })
 );
 
+/* File uploading middleware */
+const upload = multer({ storage: multer.memoryStorage() });
+
 /* Passport configuration */
 configurePassport(passport);
 app.use(passport.initialize());
@@ -36,6 +41,7 @@ app.use(passport.session());
 
 /* Serve static files */
 app.use(express.static('dist'));
+app.use('/api/img', express.static(`${__dirname}/__images`));
 
 /* Passport authentication */
 // VK strat:
@@ -92,18 +98,42 @@ app.get('/api/get-userpic/:id', async (req, res) => {
 });
 
 // Creates new post
-app.post('/api/create-post', ensureAuthenticated, async (req, res) => {
+app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), async (req, res) => {
+    // TODO: Should we save images from here and pass names to database helper class
+    // or should we pass images to database helper class and it should save them itself?
+
+    const postId = generateGuid();
+    const images = [];
+    try {
+        const imageArray = req.files.map(file => {
+            if (file.size > 99999999) {
+                // Do something about files that are too large
+            }
+            return file.buffer;
+        });
+        for (let imgBuf of imageArray) {
+            const imageName = await ImageManager.saveImage(imgBuf);
+            images.push(imageName);
+        }
+    } catch {
+        res.status(500).send();
+        return;
+    }
+
     const post = {
-        id: generateGuid(),
+        id: postId,
         userId: req.user.id,
         text: req.body.text,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
+        images,
     };
     try {
         await Storage.insertPost(post);
     } catch (err) {
-        res.status(500).send();
+        console.error('>>>', err);
+        res.status(500).end('Error occured during post insertion');
+        return;
     }
 
     res.redirect('back');
@@ -119,12 +149,29 @@ app.get('/api/get-posts', async (req, res) => {
     }
 });
 
+// Image debug route
+app.get('/api/img-debug', async (req, res) => {
+    const imgResponse = await axios.get('https://pp.userapi.com/c844417/v844417738/1f5a01/pQyVzijwg-I.jpg', {
+        responseType: 'arraybuffer',
+    });
+    const name = await ImageManager.saveImage(imgResponse.data);
+    try {
+        const savedImage = await ImageManager.getImageByName(name);
+        res.contentType('jpg');
+        res.end(savedImage, 'binary');
+    } catch (err) {
+        res.status('404').send();
+    }
+});
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
     res.redirect('http://localhost:80/'); // HACK: A workaround
 });
 
-/* Start web server */
+/**
+ *  Start web server
+ * */
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
 
 // Middleware that checks if user is authenticated
