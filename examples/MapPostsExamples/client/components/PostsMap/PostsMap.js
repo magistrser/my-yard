@@ -92,7 +92,11 @@ export default class PostsMap extends Component {
         return (
             <div className={styles.mapContainer}>
                 <Modal open={this.state.isPostOpen} onClose={this.handlePostClose}>
-                    <Post post={this.state.posts[this.state.currentPostIdx]} closePost={this.handlePostClose} />
+                    <Post
+                        post={this.state.posts[this.state.currentPostIdx]}
+                        isAuthorized={this.props.isAuthorized}
+                        closePost={this.handlePostClose}
+                    />
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map

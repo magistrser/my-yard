@@ -11,7 +11,6 @@ import Fab from '@material-ui/core/Fab';
 import SubscribeButton from '../SubscribeButton/SubscribeButton';
 
 export default function Post(props) {
-    console.log('>>', props.post);
     return (
         <div className={styles.post}>
             <Grid container direction="column" justify="center" alignItems="center">
@@ -42,7 +41,7 @@ export default function Post(props) {
                     </Typography>
                 </Grid>
                 <Grid item container>
-                    <SubscribeButton />
+                    <SubscribeButton isAuthorized={props.isAuthorized} />
                 </Grid>
             </Grid>
             <Fab
