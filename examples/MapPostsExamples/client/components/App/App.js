@@ -19,7 +19,7 @@ export default class App extends Component {
             const authResult = await axios.get('/api/check-authentication');
             this.setState({ isAuthorized: authResult.data.isAuthenticated });
         } catch (err) {
-            console.log(err);
+            console.error(err);
             this.setState({ isAuthorized: false });
         }
     }
