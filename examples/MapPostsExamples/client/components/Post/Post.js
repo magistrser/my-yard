@@ -8,6 +8,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
+import SubscribeButton from '../SubscribeButton/SubscribeButton';
 
 export default function Post(props) {
     console.log('>>', props.post);
@@ -40,10 +41,8 @@ export default function Post(props) {
                         {props.post.text}
                     </Typography>
                 </Grid>
-                <Grid item container justify="flex-end">
-                    <Button variant="contained" color="primary">
-                        Subscribe
-                    </Button>
+                <Grid item container>
+                    <SubscribeButton />
                 </Grid>
             </Grid>
             <Fab
