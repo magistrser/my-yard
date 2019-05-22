@@ -36,7 +36,9 @@ export default function Post(props) {
                 </Grid>
                 <Grid item container direction="column" className={styles.inner}>
                     <hr />
-                    <Typography>{props.post.text}</Typography>
+                    <Typography className align="justify" className={styles.postText}>
+                        {props.post.text}
+                    </Typography>
                 </Grid>
                 <Grid item container justify="flex-end">
                     <Button variant="contained" color="primary">
