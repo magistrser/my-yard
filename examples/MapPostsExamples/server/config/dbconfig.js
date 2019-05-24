@@ -157,9 +157,38 @@ export default class Storage {
                                 post.images.push(row.imageName);
                             });
                         });
-                        resolve(posts);
                     }
-                });
+                })
+                .all(
+                    `select 
+                        posts.id as postId, 
+                        subs.id as subId, 
+                        subs.email, 
+                        subs.fullName, 
+                        p.url as photoUrl 
+                    from Posts posts 
+                        join PostsSubscribersMap psm on posts.id = psm.postId 
+                        join Users subs on psm.userId = subs.id 
+                        left join Photos p on subs.id=p.userId;`,
+                    (err, rows) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            posts.forEach(post => {
+                                const subs = [];
+                                rows.filter(row => row.postId === post.id).forEach(row =>
+                                    subs.push({
+                                        email: row.email,
+                                        fullName: row.fullName,
+                                        photoUrl: row.photoUrl,
+                                    })
+                                );
+                                post.subs = subs;
+                            });
+                            resolve(posts);
+                        }
+                    }
+                );
         });
     }
 
