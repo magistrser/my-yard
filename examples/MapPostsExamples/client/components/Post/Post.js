@@ -41,7 +41,7 @@ export default function Post(props) {
                     </Typography>
                 </Grid>
                 <Grid item container>
-                    <SubscribeButton isAuthorized={props.isAuthorized} />
+                    <SubscribeButton isAuthorized={props.isAuthorized} post={props.post} />
                 </Grid>
             </Grid>
             <Fab

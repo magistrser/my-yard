@@ -14,6 +14,7 @@ import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
+import axios from 'axios';
 
 export default class SubscribeButton extends Component {
     constructor(props) {
@@ -32,9 +33,13 @@ export default class SubscribeButton extends Component {
         });
     }
 
-    handleSubscribeButtonClick = ev => {
+    handleSubscribeButtonClick = async ev => {
         ev.preventDefault();
         // TODO: subscribe/unsubscribe user
+        const endpoint = `/api/${this.state.subscribed ? 'usubscribe' : 'subscribe'}`;
+        const result = await axios.post('/api/subscribe', {
+            postId: this.props.post.id,
+        });
         const newUsers = this.getSubscribedUsers();
         newUsers.push({
             userName: '*YOU*',

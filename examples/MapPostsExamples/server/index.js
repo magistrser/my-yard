@@ -164,6 +164,24 @@ app.get('/api/img-debug', async (req, res) => {
     }
 });
 
+/**
+ * Subscriptions
+ */
+
+// Subscribe user
+app.post('/api/subscribe', ensureAuthenticated, async (req, res) => {
+    const userId = req.user.id;
+    const postId = req.body.postId;
+    try {
+        await Storage.subscribeUser(userId, postId);
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).end('Could not subscribe user');
+        return;
+    }
+    res.status(200).end('User successfuly subscribed');
+});
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
     res.redirect('http://localhost:80/'); // HACK: A workaround

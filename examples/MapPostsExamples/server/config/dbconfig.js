@@ -162,4 +162,30 @@ export default class Storage {
                 });
         });
     }
+
+    static subscribeUser(userId, postId) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                `insert into PostsSubscribersMap (postId, userId) 
+                 select $postId, $userId 
+                 where not exists ( 
+                      select * from PostsSubscribersMap 
+                     where postId = $postId and userId = $userId 
+                     );`,
+                {
+                    $postId: postId,
+                    $userId: userId,
+                },
+                err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+        });
+    }
+
+    static unsubscribeUser(userId, postId) {}
 }
