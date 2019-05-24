@@ -35,7 +35,6 @@ export default class SubscribeButton extends Component {
 
     handleSubscribeButtonClick = async ev => {
         ev.preventDefault();
-        // TODO: subscribe/unsubscribe user
         const endpoint = `/api/${this.state.subscribed ? 'unsubscribe' : 'subscribe'}`;
         const result = await axios.post(endpoint, {
             postId: this.props.post.id,
