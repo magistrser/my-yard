@@ -187,5 +187,22 @@ export default class Storage {
         });
     }
 
-    static unsubscribeUser(userId, postId) {}
+    static unsubscribeUser(userId, postId) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                `delete from PostsSubscribersMap where postId = $postId and userId = $userId;`,
+                {
+                    $postId: postId,
+                    $userId: userId,
+                },
+                err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+        });
+    }
 }

@@ -179,7 +179,23 @@ app.post('/api/subscribe', ensureAuthenticated, async (req, res) => {
         res.status(500).end('Could not subscribe user');
         return;
     }
+    console.info('[INFO] ', 'Successfully subscribed');
     res.status(200).end('User successfuly subscribed');
+});
+
+// Unsubscribe user
+app.post('/api/unsubscribe', ensureAuthenticated, async (req, res) => {
+    const userId = req.user.id;
+    const postId = req.body.postId;
+    try {
+        await Storage.unsubscribeUser(userId, postId);
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).end('Could not unsubscribe user');
+        return;
+    }
+    console.info('[INFO] ', 'Successfully unsubscribed');
+    res.status(200).end('User successfuly unsubscribed');
 });
 
 // Handles any requests that don't match the ones above
