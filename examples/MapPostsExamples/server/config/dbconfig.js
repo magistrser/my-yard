@@ -134,6 +134,8 @@ export default class Storage {
     static getPosts() {
         return new Promise((resolve, reject) => {
             // TODO: no idea how to do this in one query
+            // TODO: I think i caught a race condition here - promise may resolve before all of three queiries are executed.
+            // Need to find a way to sync them or do it all in one transaction 
             let posts = [];
             this._db
                 .all(
