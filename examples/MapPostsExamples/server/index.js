@@ -205,7 +205,7 @@ app.get('/api/img-debug', async (req, res) => {
 // Subscribe user
 app.post('/api/subscribe', ensureAuthenticated, async (req, res) => {
     const userId = req.user.id;
-    const postId = req.body.postId;
+    const postId = req.body.postid;
     try {
         await Storage.subscribeUser(userId, postId);
     } catch (err) {
@@ -220,7 +220,7 @@ app.post('/api/subscribe', ensureAuthenticated, async (req, res) => {
 // Unsubscribe user
 app.post('/api/unsubscribe', ensureAuthenticated, async (req, res) => {
     const userId = req.user.id;
-    const postId = req.body.postId;
+    const postId = req.body.postid;
     try {
         await Storage.unsubscribeUser(userId, postId);
     } catch (err) {
