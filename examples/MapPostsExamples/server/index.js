@@ -131,7 +131,7 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
     try {
         await Storage.insertPost(post);
     } catch (err) {
-        console.error('>>>', err);
+        console.error('[ERROR] ', err);
         res.status(500).end('Error occured during post insertion');
         return;
     }
@@ -139,12 +139,46 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
     res.redirect('back');
 });
 
-// Sends posts
+/**
+ * Posts
+ */
 app.get('/api/get-posts', async (req, res) => {
     try {
         const posts = await Storage.getPosts();
         res.json(posts);
     } catch (err) {
+        res.status(500).send();
+    }
+});
+
+app.get('/api/get-post-positions', async (req, res) => {
+    try {
+        const postPositions = await Storage.getPostPositions();
+        res.json(postPositions);
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).send();
+    }
+});
+
+app.get('/api/get-post-info', async (req, res) => {
+    try {
+        const postId = req.query.id;
+        const postInfo = await Storage.getPostInfoById(postId);
+        res.json(postInfo);
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).send();
+    }
+});
+
+app.get('/api/get-subscribers', async (req, res) => {
+    try {
+        const postId = req.query.id;
+        const postInfo = await Storage.getSubscribersByPostId(postId);
+        res.json(postInfo);
+    } catch (err) {
+        console.error('[ERROR] ', err);
         res.status(500).send();
     }
 });

@@ -139,7 +139,7 @@ export default class Storage {
             let posts = [];
             this._db
                 .all(
-                    'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as userPic, pgp.latitude, pgp.longitude ' +
+                    'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
                         'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
                     (err, rows) => {
                         if (err) {
@@ -214,12 +214,14 @@ export default class Storage {
 
     static getPostInfoById(postId) {
         return new Promise((resolve, reject) => {
-            this._db.get(
-                `select p.id, 
+            let post = {};
+            this._db
+                .get(
+                    `select p.id, 
                             p.text, 
                             p.timestamp, 
                             u.fullName as author, 
-                            ph.url as userPic, 
+                            ph.url as avatar, 
                             pgp.latitude, 
                             pgp.longitude, 
                             s.subCount 
@@ -235,17 +237,34 @@ export default class Storage {
                             where p.id = $postId 
                         ) s 
                     where p.id = $postId `,
-                {
-                    $postId: postId,
-                },
-                (err, row) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(row);
+                    {
+                        $postId: postId,
+                    },
+                    (err, row) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            post = { ...row };
+                        }
                     }
-                }
-            );
+                )
+                .all(
+                    'select i.name as imageName from Posts as p join Images as i on p.id = i.postId where p.id = $postId',
+                    {
+                        $postId: postId,
+                    },
+                    (err, rows) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            post.images = [];
+                            rows.forEach(row => {
+                                post.images.push(row.imageName);
+                            });
+                            resolve(post);
+                        }
+                    }
+                );
         });
     }
 
