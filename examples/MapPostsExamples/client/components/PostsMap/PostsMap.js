@@ -32,7 +32,7 @@ export default class PostsMap extends Component {
     }
 
     async loadPosts() {
-        const posts = await axios.get('/api/get-posts');
+        const posts = await axios.get('/api/get-post-positions');
         this.setState({ posts: posts.data });
     }
 
@@ -92,11 +92,13 @@ export default class PostsMap extends Component {
         return (
             <div className={styles.mapContainer}>
                 <Modal open={this.state.isPostOpen} onClose={this.handlePostClose}>
-                    <Post
-                        post={this.state.posts[this.state.currentPostIdx]}
-                        isAuthorized={this.props.isAuthorized}
-                        closePost={this.handlePostClose}
-                    />
+                    {this.state.isPostOpen ? (
+                        <Post
+                            postId={this.state.posts[this.state.currentPostIdx].id}
+                            isAuthorized={this.props.isAuthorized}
+                            closePost={this.handlePostClose}
+                        />
+                    ) : null}
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map

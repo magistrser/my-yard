@@ -21,15 +21,20 @@ export default class SubscribeButton extends Component {
         super(props);
         this.state = {
             subscribed: false,
-            subscribedUsers: [],
             isSubscribersModalOpen: false,
+            subscriptionStatusLoaded: false,
         };
     }
 
-    componentDidMount() {
-        const newUsers = this.getSubscribedUsers();
+    async componentDidMount() {
+        const response = await axios.get('/api/check-subscription-status', {
+            params: {
+                postid: this.props.postId,
+            },
+        });
         this.setState({
-            subscribedUsers: newUsers,
+            subscribed: response.data.subscribed,
+            subscriptionStatusLoaded: true,
         });
     }
 
@@ -37,15 +42,14 @@ export default class SubscribeButton extends Component {
         ev.preventDefault();
         const endpoint = `/api/${this.state.subscribed ? 'unsubscribe' : 'subscribe'}`;
         const result = await axios.post(endpoint, {
-            postId: this.props.post.id,
+            postid: this.props.postId,
         });
-        const newUsers = this.getSubscribedUsers();
-        newUsers.push({
-            userName: '*YOU*',
-        });
-        this.setState({
-            subscribedUsers: newUsers,
-        });
+        if ((result.status = 200)) {
+            this.props.onSubscribeButtonClick();
+            this.setState({
+                subscribed: !this.state.subscribed,
+            });
+        }
     };
 
     handleCurrentSubscribersClick = ev => {
@@ -55,27 +59,11 @@ export default class SubscribeButton extends Component {
         });
     };
 
-    getSubscribedUsers = () => {
-        // TODO: Talk to api, get subscribers
-        const newUsers = [
-            {
-                userName: 'JOHN DOE',
-            },
-            {
-                userName: 'DOHN JOE',
-            },
-            {
-                userName: 'FOO BAR',
-            },
-        ];
-        return newUsers;
-    };
-
     render() {
         const buttonColor = this.state.subscribed ? 'secondary' : 'primary';
         return (
             <Grid container justify="flex-end">
-                <Dialog
+                {/*<Dialog
                     open={this.state.isSubscribersModalOpen}
                     onClose={() => {
                         this.setState({ isSubscribersModalOpen: false });
@@ -94,15 +82,15 @@ export default class SubscribeButton extends Component {
                             );
                         })}
                     </List>
-                </Dialog>
+                    </Dialog>*/}
                 <Grid item>
                     <Button onClick={this.handleCurrentSubscribersClick}>
-                        Subscribed users: {this.state.subscribedUsers.length}
+                        Subscribed users: {this.props.subCount}
                         <DirectionsWalkIcon />
                     </Button>
                 </Grid>
                 <Grid item>
-                    {this.props.isAuthorized ? (
+                    {this.props.isAuthorized && this.state.subscriptionStatusLoaded ? (
                         <Button variant="contained" color={buttonColor} onClick={this.handleSubscribeButtonClick}>
                             {this.state.subscribed ? 'Unsubscribe' : 'Subscribe'}
                         </Button>
