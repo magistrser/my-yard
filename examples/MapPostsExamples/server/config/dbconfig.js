@@ -295,6 +295,51 @@ export default class Storage {
         });
     }
 
+    static getSubscribersCount(postId) {
+        return new Promise((resolve, reject) => {
+            this._db.get(
+                `select count(*) as subCount 
+                from Users u 
+                join PostsSubscribersMap pum on u.id = pum.userId 
+                join Posts p on p.id = pum.postId 
+                where p.id = $postId`,
+                {
+                    $postId: postId,
+                },
+                (err, row) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(row.subCount);
+                    }
+                }
+            );
+        });
+    }
+
+    static checkSubscriptionStatus(userId, postId) {
+        return new Promise((resolve, reject) => {
+            this._db.get(
+                `select 1 
+                from Users u 
+                join PostsSubscribersMap pum on u.id = pum.userId 
+                join Posts p on p.id = pum.postId 
+                where p.id = $postId and u.id = $userId `,
+                {
+                    $postId: postId,
+                    $userId: userId,
+                },
+                (err, row) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(row ? true : false);
+                    }
+                }
+            );
+        });
+    }
+
     static subscribeUser(userId, postId) {
         return new Promise((resolve, reject) => {
             this._db.run(

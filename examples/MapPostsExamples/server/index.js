@@ -232,6 +232,34 @@ app.post('/api/unsubscribe', ensureAuthenticated, async (req, res) => {
     res.status(200).end('User successfuly unsubscribed');
 });
 
+app.get('/api/check-subscription-status', ensureAuthenticated, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const postId = req.query.postid;
+        const isSubscribed = await Storage.checkSubscriptionStatus(userId, postId);
+        res.json({
+            subscribed: isSubscribed,
+        });
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).end();
+        return;
+    }
+});
+
+app.get('/api/get-subscribers-count', async (req, res) => {
+    try {
+        const postId = req.params.postid;
+        const subCount = await getSubscribersCount(postId);
+        res.json({
+            subCount,
+        });
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).end();
+        return;
+    }
+});
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
     res.redirect('http://localhost:80/'); // HACK: A workaround
