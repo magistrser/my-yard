@@ -134,8 +134,13 @@ export default class Storage {
     static getPosts() {
         return new Promise((resolve, reject) => {
             // TODO: no idea how to do this in one query
-            // TODO: I think i caught a race condition here - promise may resolve before all of three queiries are executed.
-            // Need to find a way to sync them or do it all in one transaction
+            /**
+             * TODO: I think i caught a race condition here - promise may resolve before all of three queiries are executed.
+             * Need to find a way to sync them or do it all in one transaction. I leave it like this for now
+             * since this method is not in use at the current api version. May be there is a way to perform
+             * a transaction here in more elegant way than callback-in-callback
+             *  */
+
             let posts = [];
             this._db
                 .all(
@@ -215,9 +220,8 @@ export default class Storage {
     static getPostInfoById(postId) {
         return new Promise((resolve, reject) => {
             let post = {};
-            this._db
-                .get(
-                    `select p.id, 
+            this._db.get(
+                `select p.id, 
                             p.text, 
                             p.timestamp, 
                             u.fullName as author, 
@@ -237,34 +241,34 @@ export default class Storage {
                             where p.id = $postId 
                         ) s 
                     where p.id = $postId `,
-                    {
-                        $postId: postId,
-                    },
-                    (err, row) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            post = { ...row };
-                        }
+                {
+                    $postId: postId,
+                },
+                (err, row) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        post = { ...row };
+                        this._db.all(
+                            'select i.name as imageName from Posts as p join Images as i on p.id = i.postId where p.id = $postId',
+                            {
+                                $postId: postId,
+                            },
+                            (err, rows) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    post.images = [];
+                                    rows.forEach(row => {
+                                        post.images.push(row.imageName);
+                                    });
+                                    resolve(post);
+                                }
+                            }
+                        );
                     }
-                )
-                .all(
-                    'select i.name as imageName from Posts as p join Images as i on p.id = i.postId where p.id = $postId',
-                    {
-                        $postId: postId,
-                    },
-                    (err, rows) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            post.images = [];
-                            rows.forEach(row => {
-                                post.images.push(row.imageName);
-                            });
-                            resolve(post);
-                        }
-                    }
-                );
+                }
+            );
         });
     }
 
