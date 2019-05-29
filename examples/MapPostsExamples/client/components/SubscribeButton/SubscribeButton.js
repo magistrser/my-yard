@@ -27,6 +27,9 @@ export default class SubscribeButton extends Component {
     }
 
     async componentDidMount() {
+        if (!this.props.isAuthorized) {
+            return;
+        }
         const response = await axios.get('/api/check-subscription-status', {
             params: {
                 postid: this.props.postId,
