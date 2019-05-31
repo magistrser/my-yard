@@ -172,17 +172,6 @@ app.get('/api/get-post-info', async (req, res) => {
     }
 });
 
-app.get('/api/get-subscribers', async (req, res) => {
-    try {
-        const postId = req.query.id;
-        const postInfo = await Storage.getSubscribersByPostId(postId);
-        res.json(postInfo);
-    } catch (err) {
-        console.error('[ERROR] ', err);
-        res.status(500).send();
-    }
-});
-
 // Image debug route
 app.get('/api/img-debug', async (req, res) => {
     const imgResponse = await axios.get('https://pp.userapi.com/c844417/v844417738/1f5a01/pQyVzijwg-I.jpg', {
@@ -201,6 +190,18 @@ app.get('/api/img-debug', async (req, res) => {
 /**
  * Subscriptions
  */
+
+app.get('/api/get-subscribers', async (req, res) => {
+    try {
+        const postId = req.query.postid;
+        const postInfo = await Storage.getSubscribersByPostId(postId);
+        console.log('>>>', postId);
+        res.json(postInfo);
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).send();
+    }
+});
 
 // Subscribe user
 app.post('/api/subscribe', ensureAuthenticated, async (req, res) => {
