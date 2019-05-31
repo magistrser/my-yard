@@ -47,11 +47,12 @@ export default class Storage {
             // TODO: Find a way to do this in transaction. This implementation sucks
             this._db
                 .run(
-                    `insert into Users (id, email, fullName) values ($id, $email, $fullName);`,
+                    `insert into Users (id, email, fullName, vkProfileUrl) values ($id, $email, $fullName, $vkProfileUrl);`,
                     {
                         $id: user.id,
                         $email: user.email,
                         $fullName: user.fullName,
+                        $vkProfileUrl: user.vkProfileUrl,
                     },
                     err => {
                         if (err) {
@@ -275,7 +276,7 @@ export default class Storage {
     static getSubscribersByPostId(postId) {
         return new Promise((resolve, reject) => {
             this._db.all(
-                `select u.id, u.email, u.fullName, ph.url as avatar 
+                `select u.id, u.email, u.fullName, u.vkProfileUrl, ph.url as avatar 
                 from Users u 
                 join PostsSubscribersMap pum on u.id = pum.userId 
                 join Posts p on p.id = pum.postId 

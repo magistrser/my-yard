@@ -33,6 +33,7 @@ export default passport => {
                             email: params.email,
                             fullName: profile.displayName,
                             photoUrl: profile.photos[0].value, // Save img url from vk storage for now
+                            vkProfileUrl: profile.profileUrl,
                         };
                         Storage.insertUser(user);
                     }
