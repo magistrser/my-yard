@@ -195,7 +195,6 @@ app.get('/api/get-subscribers', async (req, res) => {
     try {
         const postId = req.query.postid;
         const postInfo = await Storage.getSubscribersByPostId(postId);
-        console.log('>>>', postId);
         res.json(postInfo);
     } catch (err) {
         console.error('[ERROR] ', err);

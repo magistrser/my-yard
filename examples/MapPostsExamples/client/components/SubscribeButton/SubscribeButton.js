@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import Modal from '@material-ui/core/Modal';
-
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -67,6 +66,7 @@ export default class SubscribeButton extends Component {
                     onClose={() => {
                         this.setState({ isSubscribersModalOpen: false });
                     }}
+                    postId={this.props.postId}
                 />
 
                 <Grid item>

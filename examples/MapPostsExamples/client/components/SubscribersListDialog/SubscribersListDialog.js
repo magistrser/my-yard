@@ -7,21 +7,51 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import axios from 'axios';
 
 export default class SubscribersListDialog extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            subscribers: [],
+            subscribersLoaded: false,
+        };
+    }
+
+    loadSubscribers = async () => {
+        const { data: subs } = await axios.get('/api/get-subscribers', {
+            params: {
+                postid: this.props.postId,
+            },
+        });
+        console.log('>>>', subs);
+        return subs;
+    };
+
+    async componentWillReceiveProps(nextProps) {
+        console.log('>>> WILL RECEIVE PROPS');
+        if (nextProps.open) {
+            const subscribers = await this.loadSubscribers();
+            this.setState({
+                subscribers,
+                subscribersLoaded: true,
+            });
+        }
+    }
+
     render() {
-        return this.props.open ? (
+        return this.state.subscribersLoaded ? (
             <Dialog open={this.props.open} onClose={this.props.onClose}>
                 <DialogTitle>Subscribed users:</DialogTitle>
                 <DialogContent>
                     <List>
-                        {['a', 'b', 'c'].map(user => {
+                        {this.state.subscribers.map(user => {
                             return (
                                 <ListItem alignItems="flex-start">
                                     <ListItemAvatar>
-                                        <Avatar src="http://minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg" />
+                                        <Avatar src={user.avatar} />
                                     </ListItemAvatar>
-                                    <ListItemText primary={user} secondary="email@example.com" />
+                                    <ListItemText primary={user.fullName} secondary={user.email} />
                                 </ListItem>
                             );
                         })}
