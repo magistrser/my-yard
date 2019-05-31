@@ -4,16 +4,12 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import Modal from '@material-ui/core/Modal';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
+import SubscribersListDialog from '../SubscribersListDialog/SubscribersListDialog';
 import axios from 'axios';
 
 export default class SubscribeButton extends Component {
@@ -66,26 +62,13 @@ export default class SubscribeButton extends Component {
         const buttonColor = this.state.subscribed ? 'secondary' : 'primary';
         return (
             <Grid container justify="flex-end">
-                {/*<Dialog
+                <SubscribersListDialog
                     open={this.state.isSubscribersModalOpen}
                     onClose={() => {
                         this.setState({ isSubscribersModalOpen: false });
                     }}
-                >
-                    <DialogTitle>Subscribed users:</DialogTitle>
-                    <List>
-                        {this.state.subscribedUsers.map(user => {
-                            return (
-                                <ListItem alignItems="flex-start">
-                                    <ListItemAvatar>
-                                        <Avatar src="http://minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg" />
-                                    </ListItemAvatar>
-                                    <ListItemText primary={user.userName} />
-                                </ListItem>
-                            );
-                        })}
-                    </List>
-                    </Dialog>*/}
+                />
+
                 <Grid item>
                     <Button onClick={this.handleCurrentSubscribersClick}>
                         Subscribed users: {this.props.subCount}
