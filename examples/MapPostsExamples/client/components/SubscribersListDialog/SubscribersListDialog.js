@@ -7,6 +7,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
@@ -39,6 +40,11 @@ export default class SubscribersListDialog extends Component {
         }
     }
 
+    handleSubscriberClick = profileUrl => ev => {
+        ev.preventDefault();
+        window.open(profileUrl, '_blank');
+    };
+
     render() {
         return (
             <Dialog open={this.props.open} onClose={this.props.onClose}>
@@ -48,12 +54,15 @@ export default class SubscribersListDialog extends Component {
                         <List>
                             {this.state.subscribers.map(user => {
                                 return (
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemAvatar>
-                                            <Avatar src={user.avatar} />
-                                        </ListItemAvatar>
-                                        <ListItemText primary={user.fullName} secondary={user.email} />
-                                    </ListItem>
+                                    <>
+                                        <ListItem button alignItems="flex-start" onClick={this.handleSubscriberClick(user.vkProfileUrl)}>
+                                            <ListItemAvatar>
+                                                <Avatar src={user.avatar} />
+                                            </ListItemAvatar>
+                                            <ListItemText primary={user.fullName} secondary={user.email} />
+                                        </ListItem>
+                                        <Divider variant="inset" component="li" />
+                                    </>
                                 );
                             })}
                         </List>
