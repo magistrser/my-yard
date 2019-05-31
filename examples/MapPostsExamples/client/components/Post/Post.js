@@ -97,9 +97,7 @@ export default class Post extends Component {
         ) : (
             <div className={styles.post}>
                 <Grid container direction="row" justify="center" alignItems="center">
-                    <Grid item>
-                        <CircularProgress />
-                    </Grid>
+                    <CircularProgress />
                 </Grid>
             </div>
         );

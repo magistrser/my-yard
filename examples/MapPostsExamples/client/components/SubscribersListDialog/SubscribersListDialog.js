@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -7,6 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 export default class SubscribersListDialog extends Component {
@@ -24,12 +26,10 @@ export default class SubscribersListDialog extends Component {
                 postid: this.props.postId,
             },
         });
-        console.log('>>>', subs);
         return subs;
     };
 
     async componentWillReceiveProps(nextProps) {
-        console.log('>>> WILL RECEIVE PROPS');
         if (nextProps.open) {
             const subscribers = await this.loadSubscribers();
             this.setState({
@@ -40,24 +40,30 @@ export default class SubscribersListDialog extends Component {
     }
 
     render() {
-        return this.state.subscribersLoaded ? (
+        return (
             <Dialog open={this.props.open} onClose={this.props.onClose}>
                 <DialogTitle>Subscribed users:</DialogTitle>
                 <DialogContent>
-                    <List>
-                        {this.state.subscribers.map(user => {
-                            return (
-                                <ListItem alignItems="flex-start">
-                                    <ListItemAvatar>
-                                        <Avatar src={user.avatar} />
-                                    </ListItemAvatar>
-                                    <ListItemText primary={user.fullName} secondary={user.email} />
-                                </ListItem>
-                            );
-                        })}
-                    </List>
+                    {this.state.subscribersLoaded ? (
+                        <List>
+                            {this.state.subscribers.map(user => {
+                                return (
+                                    <ListItem alignItems="flex-start">
+                                        <ListItemAvatar>
+                                            <Avatar src={user.avatar} />
+                                        </ListItemAvatar>
+                                        <ListItemText primary={user.fullName} secondary={user.email} />
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    ) : (
+                        <Grid container direction="row" justify="center" alignItems="center">
+                            <CircularProgress />
+                        </Grid>
+                    )}
                 </DialogContent>
             </Dialog>
-        ) : null;
+        );
     }
 }
