@@ -28,6 +28,7 @@ app.use(
         secret: 'secret', // TODO: Generate guid or something
         resave: true,
         saveUninitialized: true,
+        // TODO: consider using some type of storage (others do that)
     })
 );
 
@@ -247,6 +248,7 @@ app.get('/api/check-subscription-status', ensureAuthenticated, async (req, res) 
     }
 });
 
+// TODO: add :postid to root
 app.get('/api/get-subscribers-count', async (req, res) => {
     try {
         const postId = req.params.postid;

@@ -341,6 +341,7 @@ export default class Storage {
         });
     }
 
+    // TODO: Use INSERT OR IGNORE instead?
     static subscribeUser(userId, postId) {
         return new Promise((resolve, reject) => {
             this._db.run(

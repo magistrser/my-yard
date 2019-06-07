@@ -50,13 +50,13 @@ export default passport => {
      * the user by ID when deserializing.
      */
     passport.serializeUser((user, done) => {
-        done(null, user.id);
+        done(null, user.id); // second arg is what is in req.session.user
     });
 
     passport.deserializeUser(async (id, done) => {
         try {
             const user = await Storage.getUserById(id);
-            return done(null, user ? user : false);
+            return done(null, user ? user : false); // second arg here is what is in req.user
         } catch (err) {
             return done(err);
         }
