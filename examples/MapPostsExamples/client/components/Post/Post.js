@@ -11,6 +11,7 @@ import Fab from '@material-ui/core/Fab';
 import SubscribeButton from '../SubscribeButton/SubscribeButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
+import Comment from '../Comment/Comment';
 
 export default class Post extends Component {
     constructor(props) {
@@ -71,6 +72,10 @@ export default class Post extends Component {
                         <Typography align="justify" className={styles.postText}>
                             {this.state.post.text}
                         </Typography>
+                        <hr />
+                    </Grid>
+                    <Grid item container>
+                        <Comment />
                     </Grid>
                     <Grid item container>
                         <SubscribeButton
