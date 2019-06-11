@@ -12,6 +12,7 @@ import SubscribeButton from '../SubscribeButton/SubscribeButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import Comment from '../Comment/Comment';
+import CommentBox from '../CommentBox/CommentBox';
 
 export default class Post extends Component {
     constructor(props) {
@@ -44,6 +45,29 @@ export default class Post extends Component {
     };
 
     render() {
+        // Test variable with comments
+        const comments = [
+            {
+                id: 'guid-guid-guid-guid-1',
+                author: 'Username 1',
+                avatar: null,
+                date: '00:00:00 01.01.2007',
+                replyTo: null,
+                text: 'Bla bla bla bla bla bla bla bla bla bla bla bla bla',
+            },
+            {
+                id: 'guid-guid-guid-guid-2',
+                author: 'Username 2',
+                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
+                date: '00:00:00 01.01.2007',
+                replyTo: {
+                    author: 'Username 1',
+                    commentId: 'guid-guid-guid-guid-1',
+                },
+                text: 'Big red fox jumps over french bulochki',
+            },
+        ];
+
         return this.state.isLoaded ? (
             <div className={styles.post}>
                 <Grid container direction="column" justify="center" alignItems="center">
@@ -75,7 +99,7 @@ export default class Post extends Component {
                         <hr />
                     </Grid>
                     <Grid item container>
-                        <Comment />
+                        <CommentBox comments={comments} />
                     </Grid>
                     <Grid item container>
                         <SubscribeButton
