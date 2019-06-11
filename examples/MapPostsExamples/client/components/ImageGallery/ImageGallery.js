@@ -75,8 +75,8 @@ export default class ImageGallery extends Component {
             <div
                 style={{
                     margin: 'auto',
-                    'max-width': '500px',
-                    'max-height': '400px',
+                    maxWidth: '500px',
+                    maxHeight: '400px',
                 }}
             >
                 <div
