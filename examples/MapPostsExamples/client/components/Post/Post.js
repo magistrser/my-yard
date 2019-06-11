@@ -66,6 +66,61 @@ export default class Post extends Component {
                 },
                 text: 'Big red fox jumps over french bulochki',
             },
+            {
+                id: 'guid-guid-guid-guid-2',
+                author: 'Username 2',
+                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
+                date: '00:00:00 01.01.2007',
+                replyTo: {
+                    author: 'Username 1',
+                    commentId: 'guid-guid-guid-guid-1',
+                },
+                text: 'Big red fox jumps over french bulochki',
+            },
+            {
+                id: 'guid-guid-guid-guid-2',
+                author: 'Username 2',
+                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
+                date: '00:00:00 01.01.2007',
+                replyTo: {
+                    author: 'Username 1',
+                    commentId: 'guid-guid-guid-guid-1',
+                },
+                text: 'Big red fox jumps over french bulochki',
+            },
+            {
+                id: 'guid-guid-guid-guid-2',
+                author: 'Username 2',
+                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
+                date: '00:00:00 01.01.2007',
+                replyTo: {
+                    author: 'Username 1',
+                    commentId: 'guid-guid-guid-guid-1',
+                },
+                text: 'Big red fox jumps over french bulochki',
+            },
+            {
+                id: 'guid-guid-guid-guid-2',
+                author: 'Username 2',
+                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
+                date: '00:00:00 01.01.2007',
+                replyTo: {
+                    author: 'Username 1',
+                    commentId: 'guid-guid-guid-guid-1',
+                },
+                text: 'Big red fox jumps over french bulochki',
+            },
+            {
+                id: 'guid-guid-guid-guid-2',
+                author: 'Username 2',
+                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
+                date: '00:00:00 01.01.2007',
+                replyTo: {
+                    author: 'Username 1',
+                    commentId: 'guid-guid-guid-guid-1',
+                },
+                text: 'Big red fox jumps over french bulochki',
+            },
         ];
 
         return this.state.isLoaded ? (

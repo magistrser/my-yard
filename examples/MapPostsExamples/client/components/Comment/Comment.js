@@ -61,7 +61,7 @@ export default class Comment extends Component {
             </Grid>
         );
         const commentOnListItem = (
-            <ListItem alignItems="flex-start">
+            <ListItem alignItems="flex-start" selected={this.props.selected}>
                 <ListItemAvatar>
                     <Avatar style={styles.avatar} src={this.props.comment.avatar}>
                         AVA
@@ -83,7 +83,14 @@ export default class Comment extends Component {
                             </Typography>
                             {this.props.comment.replyTo ? (
                                 <Typography color="textSecondary" variant="caption" gutterBottom>
-                                    <a href={this.props.comment.replyTo.commentId} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <a
+                                        onClick={ev => {
+                                            ev.preventDefault();
+                                            this.props.highlightComment(this.props.comment.replyTo.commentId);
+                                        }}
+                                        href=""
+                                        style={{ textDecoration: 'none', color: 'inherit' }}
+                                    >
                                         Reply to: {this.props.comment.replyTo?.author}
                                     </a>
                                 </Typography>
