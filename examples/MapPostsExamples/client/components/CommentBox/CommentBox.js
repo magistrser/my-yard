@@ -10,14 +10,23 @@ export default class CommentBox extends Component {
         super(props);
         this.state = {
             highlightedComment: null,
+            highlightedRef: null,
         };
     }
 
     highlightComment = commentId => {
-        this.setState({ highlightedComment: commentId });
-        // TODO: Roll to the comment
+        const highlightedRef = React.createRef();
+        this.props.comments.filter(comment => comment.id === commentId)[0].ref = highlightedRef;
+        this.setState({ highlightedComment: commentId, highlightedRef });
         // TODO: Make selection disappear
     };
+
+    componentDidUpdate() {
+        this.state.highlightedRef?.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+        });
+    }
 
     render() {
         return (
@@ -32,11 +41,14 @@ export default class CommentBox extends Component {
                 }}
             >
                 {this.props.comments.map(comment => (
-                    <Comment
-                        comment={comment}
-                        selected={this.state.highlightedComment == comment.id}
-                        highlightComment={this.highlightComment}
-                    />
+                    <>
+                        <hr ref={comment.ref} />
+                        <Comment
+                            comment={comment}
+                            selected={this.state.highlightedComment === comment.id}
+                            highlightComment={this.highlightComment}
+                        />
+                    </>
                 ))}
             </List>
         );
