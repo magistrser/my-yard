@@ -88,13 +88,17 @@ app.get('/api/logout', (req, res) => {
 });
 
 // Sends userpic by userId
-app.get('/api/get-userpic/:id', async (req, res) => {
-    const userId = req.params.id;
-    const user = await Storage.getUserById(userId);
-    if (user) {
-        res.redirect(user.photoUrl);
-    } else {
-        res.status(404).send();
+app.get('/api/get-userpic/', async (req, res) => {
+    try {
+        const userId = req.params.id || req.user.id;
+        const photoUrl = await Storage.getUserAvatarById(userId);
+        if (photoUrl) {
+            res.redirect(photoUrl);
+        } else {
+            res.status(404).send();
+        }
+    } catch {
+        res.status(500).send('No such user id');
     }
 });
 

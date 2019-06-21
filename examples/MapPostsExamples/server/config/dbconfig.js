@@ -42,6 +42,18 @@ export default class Storage {
         });
     }
 
+    static getUserAvatarById(id) {
+        return new Promise((resolve, reject) => {
+            this._db.get('select p.url as photoUrl from Users u inner join Photos p on u.id=p.userId where u.id=?', [id], (err, row) => {
+                if (err) {
+                    console.err(`[ERROR] ${err}`);
+                    reject(err);
+                }
+                resolve(row.photoUrl);
+            });
+        });
+    }
+
     static insertUser(user) {
         return new Promise((resolve, reject) => {
             // TODO: Find a way to do this in transaction. This implementation sucks
