@@ -285,6 +285,26 @@ export default class Storage {
         });
     }
 
+    static getCommentsByPostId(postId) {
+        return new Promise((resolve, reject) => {
+            this._db.all(
+                `select c.id, c.authorId, u.fullName, p.url as photoUrl, c.replyToCommentId, c.text, c.timestamp 
+                from Comments c inner join Users u on c.authorId=u.id inner join Photos p on u.id=p.userId 
+                where c.postId=?; `,
+                [postId],
+                (err, rows) => {
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    } else {
+                        console.log('FUCK YOU', rows);
+                        resolve(rows);
+                    }
+                }
+            );
+        });
+    }
+
     static getSubscribersByPostId(postId) {
         return new Promise((resolve, reject) => {
             this._db.all(

@@ -90,7 +90,8 @@ app.get('/api/logout', (req, res) => {
 // Sends userpic by userId
 app.get('/api/get-userpic/', async (req, res) => {
     try {
-        const userId = req.params.id || req.user.id;
+        console.log('>>>>', req.query.id);
+        const userId = req.query.id || req.user.id;
         const photoUrl = await Storage.getUserAvatarById(userId);
         if (photoUrl) {
             res.redirect(photoUrl);
@@ -101,6 +102,10 @@ app.get('/api/get-userpic/', async (req, res) => {
         res.status(500).send('No such user id');
     }
 });
+
+/**
+ * Posts
+ */
 
 // Creates new post
 app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), async (req, res) => {
@@ -143,10 +148,6 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
 
     res.redirect('back');
 });
-
-/**
- * Posts
- */
 app.get('/api/get-posts', async (req, res) => {
     try {
         const posts = await Storage.getPosts();
@@ -174,6 +175,21 @@ app.get('/api/get-post-info', async (req, res) => {
     } catch (err) {
         console.error('[ERROR] ', err);
         res.status(500).send();
+    }
+});
+
+/**
+ * Comments
+ */
+
+// Gets comments for post
+app.get('/api/get-comments/', async (req, res) => {
+    try {
+        const { postid } = req.query;
+        const comments = await Storage.getCommentsByPostId(postid);
+        res.status(200).json(comments);
+    } catch {
+        res.status(500).send('No such postid');
     }
 });
 
