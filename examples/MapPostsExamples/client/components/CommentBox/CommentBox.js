@@ -33,9 +33,11 @@ export default class CommentBox extends Component {
     render() {
         return (
             <Grid container direction="column">
-                <Grid item container>
-                    <CommentReplyField />
-                </Grid>
+                {this.props.isAuthorized ? (
+                    <Grid item container>
+                        <CommentReplyField />
+                    </Grid>
+                ) : null}
                 <Grid item>
                     <List // TODO: Move this list into its own component (like CommentList) ?
                         component="nav"
