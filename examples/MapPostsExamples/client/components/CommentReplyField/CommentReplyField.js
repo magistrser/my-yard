@@ -13,21 +13,23 @@ export default class CommentReplyField extends Component {
     }
 
     render() {
+        console.dir(this.props.replyTo);
+
         return (
             <Grid container direction="row" justify="space-around" alignItems="stretch">
                 <Grid item xs={2} justify="center">
                     <Avatar style={{ margin: 'auto' }}>AVA</Avatar>
                 </Grid>
                 <Grid xs={10} item container direction="row" justify="flex-end" alignItems="flex-end">
-                    {false ? (
+                    {this.props.replyTo ? (
                         <Grid item xs={1}>
-                            <IconButton size="small">
+                            <IconButton size="small" onClick={this.props.cancelReplyTo}>
                                 <CancelIcon fontSize="small" />
                             </IconButton>
                         </Grid>
                     ) : null}
                     <Grid item xs={10}>
-                        <TextField label={false ? 'Reply to' : null} fullWidth />
+                        <TextField label={this.props.replyTo ? `Reply to: ${this.props.replyTo.author}` : null} fullWidth />
                     </Grid>
                     <Grid item xs={1}>
                         <IconButton variant="contained" color="primary">

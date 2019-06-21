@@ -13,6 +13,7 @@ export default class CommentBox extends Component {
         this.state = {
             highlightedComment: null,
             highlightedRef: null,
+            replyTo: null,
         };
     }
 
@@ -35,7 +36,7 @@ export default class CommentBox extends Component {
             <Grid container direction="column">
                 {this.props.isAuthorized ? (
                     <Grid item container>
-                        <CommentReplyField />
+                        <CommentReplyField replyTo={this.state.replyTo} cancelReplyTo={() => this.setState({ replyTo: null })} />
                     </Grid>
                 ) : null}
                 <Grid item>
@@ -56,6 +57,7 @@ export default class CommentBox extends Component {
                                     comment={comment}
                                     selected={this.state.highlightedComment === comment.id}
                                     highlightComment={this.highlightComment}
+                                    onAuthorNameClick={comment => this.setState({ replyTo: comment })}
                                 />
                             </>
                         ))}

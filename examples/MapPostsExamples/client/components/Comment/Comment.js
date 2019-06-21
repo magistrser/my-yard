@@ -74,10 +74,12 @@ export default class Comment extends Component {
                                 component="span"
                                 color="textPrimary"
                                 variant="subtitle2"
-                                style={{ paddingRight: 10, display: 'inline' }}
+                                style={{ paddingRight: 10, display: 'inline', cursor: 'pointer' }}
+                                onClick={() => this.props.onAuthorNameClick(this.props.comment)}
                             >
                                 {this.props.comment.author}
                             </Typography>
+
                             <Typography component="span" color="textSecondary" variant="subtitle2" style={{ display: 'inline' }}>
                                 {this.props.comment.date}
                             </Typography>
