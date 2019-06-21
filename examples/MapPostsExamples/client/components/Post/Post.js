@@ -46,6 +46,7 @@ export default class Post extends Component {
 
     render() {
         // Test variable with comments
+        // Guarantee comments sorted by date in reversed order
         const comments = [
             {
                 id: 'guid-guid-guid-guid-1',
