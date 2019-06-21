@@ -13,8 +13,6 @@ export default class CommentReplyField extends Component {
     }
 
     render() {
-        console.dir(this.props.replyTo);
-
         return (
             <Grid container direction="row" justify="space-around" alignItems="stretch">
                 <Grid item xs={2} justify="center">
