@@ -43,7 +43,7 @@ export default class CommentBox extends Component {
                         style={{
                             width: '100%',
                             position: 'relative',
-                            overflow: 'auto',
+                            //overflow: 'auto',
                             maxHeight: 300,
                         }}
                     >

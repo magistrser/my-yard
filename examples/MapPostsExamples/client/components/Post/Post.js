@@ -136,6 +136,14 @@ export default class Post extends Component {
                             <Typography>{`Posted: ${this.state.post.timestamp}`}</Typography>
                         </Grid>
                     </Grid>
+                    <Grid item container>
+                        <SubscribeButton
+                            isAuthorized={this.props.isAuthorized}
+                            postId={this.props.postId}
+                            subCount={this.state.post.subCount}
+                            onSubscribeButtonClick={this.updatePost}
+                        />
+                    </Grid>
                     <Grid item>
                         <ImageGallery
                             images={this.state.post.images.map(imgName => {
@@ -156,14 +164,6 @@ export default class Post extends Component {
                     </Grid>
                     <Grid item container>
                         <CommentBox comments={comments} />
-                    </Grid>
-                    <Grid item container>
-                        <SubscribeButton
-                            isAuthorized={this.props.isAuthorized}
-                            postId={this.props.postId}
-                            subCount={this.state.post.subCount}
-                            onSubscribeButtonClick={this.updatePost}
-                        />
                     </Grid>
                 </Grid>
                 <Fab
