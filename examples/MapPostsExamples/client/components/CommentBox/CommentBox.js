@@ -12,23 +12,26 @@ export default class CommentBox extends Component {
         super(props);
         this.state = {
             highlightedComment: null,
-            highlightedRef: null,
+
             replyTo: null,
         };
+        this.highlightedRef = null;
     }
 
     highlightComment = commentId => {
         const highlightedRef = React.createRef();
         this.props.comments.filter(comment => comment.id === commentId)[0].ref = highlightedRef;
-        this.setState({ highlightedComment: commentId, highlightedRef });
+        this.setState({ highlightedComment: commentId });
+        this.highlightedRef = highlightedRef;
         // TODO: Make selection disappear
     };
 
     componentDidUpdate() {
-        this.state.highlightedRef?.current?.scrollIntoView({
+        this.highlightedRef?.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'start',
         });
+        this.highlightedRef = null;
     }
 
     render() {
