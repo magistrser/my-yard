@@ -28,44 +28,10 @@ export default class Comment extends Component {
     }
 
     render() {
-        // Not sure which one to use
-        const commentOnGrids = (
-            <Grid container justify="flex-start" alignItems="stretch" style={{ margin: 10 }}>
-                <Grid item xs={3}>
-                    <Avatar style={styles.avatar} src={this.props.comment.avatar}>
-                        AVA
-                    </Avatar>
-                </Grid>
-                <Grid item container direction="column" xs={9}>
-                    <Grid item container>
-                        <Typography color="textPrimary" variant="subtitle2" style={{ paddingRight: 10 }}>
-                            {this.props.comment.author}
-                        </Typography>
-                        <Typography color="textSecondary" variant="subtitle2">
-                            {this.props.comment.date}
-                        </Typography>
-                    </Grid>
-                    <Grid item>
-                        {this.props.comment.replyTo ? (
-                            <Typography color="textSecondary" variant="caption" gutterBottom>
-                                <a href={this.props.comment.replyTo.commentId} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    Reply to: {this.props.comment.replyTo?.author}
-                                </a>
-                            </Typography>
-                        ) : null}
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body1">{this.props.comment.text}</Typography>
-                    </Grid>
-                </Grid>
-            </Grid>
-        );
         const commentOnListItem = (
             <ListItem alignItems="flex-start" selected={this.props.selected}>
                 <ListItemAvatar>
-                    <Avatar style={styles.avatar} src={this.props.comment.avatar}>
-                        AVA
-                    </Avatar>
+                    <Avatar style={styles.avatar} src={this.props.comment.photoUrl} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={
@@ -77,23 +43,23 @@ export default class Comment extends Component {
                                 style={{ paddingRight: 10, display: 'inline', cursor: 'pointer' }}
                                 onClick={() => this.props.onAuthorNameClick(this.props.comment)}
                             >
-                                {this.props.comment.author}
+                                {this.props.comment.fullName}
                             </Typography>
 
                             <Typography component="span" color="textSecondary" variant="subtitle2" style={{ display: 'inline' }}>
-                                {this.props.comment.date}
+                                {this.props.comment.timestamp}
                             </Typography>
-                            {this.props.comment.replyTo ? (
+                            {this.props.comment.replyToCommentId ? (
                                 <Typography color="textSecondary" variant="caption" gutterBottom>
                                     <a
                                         onClick={ev => {
                                             ev.preventDefault();
-                                            this.props.highlightComment(this.props.comment.replyTo.commentId);
+                                            this.props.highlightComment(this.props.comment.replyToCommentId);
                                         }}
                                         href=""
                                         style={{ textDecoration: 'none', color: 'inherit' }}
                                     >
-                                        Reply to: {this.props.comment.replyTo?.author}
+                                        Reply to: {this.props.comment.replyToName}
                                     </a>
                                 </Typography>
                             ) : null}

@@ -19,6 +19,7 @@ export default class Post extends Component {
         super(props);
         this.state = {
             post: {},
+            comments: [],
             isLoaded: false,
         };
     }
@@ -29,8 +30,10 @@ export default class Post extends Component {
 
     updatePost = async () => {
         const post = await this.loadPost(this.props.postId);
+        const comments = await this.loadPostComments(this.props.postId);
         this.setState({
-            post: post.data,
+            post,
+            comments,
             isLoaded: true,
         });
     };
@@ -41,89 +44,19 @@ export default class Post extends Component {
                 id: postId,
             },
         });
-        return postInfo;
+        return postInfo.data;
+    };
+
+    loadPostComments = async postId => {
+        const comments = await axios.get('/api/get-comments/', {
+            params: {
+                postid: postId,
+            },
+        });
+        return comments.data;
     };
 
     render() {
-        // Test variable with comments
-        // Guarantee comments sorted by date in reversed order
-        const comments = [
-            {
-                id: 'guid-guid-guid-guid-1',
-                author: 'Username 1',
-                avatar: null,
-                date: '00:00:00 01.01.2007',
-                replyTo: null,
-                text: 'Bla bla bla bla bla bla bla bla bla bla bla bla bla',
-            },
-            {
-                id: 'guid-guid-guid-guid-2',
-                author: 'Username 2',
-                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
-                date: '00:00:00 01.01.2007',
-                replyTo: {
-                    author: 'Username 1',
-                    commentId: 'guid-guid-guid-guid-1',
-                },
-                text: 'Big red fox jumps over french bulochki',
-            },
-            {
-                id: 'guid-guid-guid-guid-2',
-                author: 'Username 2',
-                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
-                date: '00:00:00 01.01.2007',
-                replyTo: {
-                    author: 'Username 1',
-                    commentId: 'guid-guid-guid-guid-1',
-                },
-                text: 'Big red fox jumps over french bulochki',
-            },
-            {
-                id: 'guid-guid-guid-guid-2',
-                author: 'Username 2',
-                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
-                date: '00:00:00 01.01.2007',
-                replyTo: {
-                    author: 'Username 1',
-                    commentId: 'guid-guid-guid-guid-1',
-                },
-                text: 'Big red fox jumps over french bulochki',
-            },
-            {
-                id: 'guid-guid-guid-guid-2',
-                author: 'Username 2',
-                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
-                date: '00:00:00 01.01.2007',
-                replyTo: {
-                    author: 'Username 1',
-                    commentId: 'guid-guid-guid-guid-1',
-                },
-                text: 'Big red fox jumps over french bulochki',
-            },
-            {
-                id: 'guid-guid-guid-guid-2',
-                author: 'Username 2',
-                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
-                date: '00:00:00 01.01.2007',
-                replyTo: {
-                    author: 'Username 1',
-                    commentId: 'guid-guid-guid-guid-1',
-                },
-                text: 'Big red fox jumps over french bulochki',
-            },
-            {
-                id: 'guid-guid-guid-guid-2',
-                author: 'Username 2',
-                avatar: 'https://pp.userapi.com/c841529/v841529614/3c85c/fjMZYRTxIgI.jpg',
-                date: '00:00:00 01.01.2007',
-                replyTo: {
-                    author: 'Username 1',
-                    commentId: 'guid-guid-guid-guid-1',
-                },
-                text: 'Big red fox jumps over french bulochki',
-            },
-        ];
-
         return this.state.isLoaded ? (
             <div className={styles.post}>
                 <Grid container direction="column" justify="center" alignItems="center">
@@ -163,7 +96,7 @@ export default class Post extends Component {
                         <hr />
                     </Grid>
                     <Grid item container>
-                        <CommentBox comments={comments} isAuthorized={this.props.isAuthorized} />
+                        <CommentBox comments={this.state.comments} isAuthorized={this.props.isAuthorized} />
                     </Grid>
                 </Grid>
                 <Fab

@@ -27,7 +27,7 @@ export default class CommentReplyField extends Component {
                         </Grid>
                     ) : null}
                     <Grid item xs={10}>
-                        <TextField label={this.props.replyTo ? `Reply to: ${this.props.replyTo.author}` : null} fullWidth />
+                        <TextField label={this.props.replyTo ? `Reply to: ${this.props.replyTo.fullName}` : null} fullWidth />
                     </Grid>
                     <Grid item xs={1}>
                         <IconButton variant="contained" color="primary">
