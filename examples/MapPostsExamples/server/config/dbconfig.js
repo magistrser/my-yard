@@ -290,7 +290,8 @@ export default class Storage {
             this._db.all(
                 `select c.id, c.authorId, u.fullName, p.url as photoUrl, c.replyToCommentId, c.text, c.timestamp 
                 from Comments c inner join Users u on c.authorId=u.id inner join Photos p on u.id=p.userId 
-                where c.postId=?; `,
+                where c.postId=? 
+                order by c.timestamp desc; `,
                 [postId],
                 (err, rows) => {
                     if (err) {
