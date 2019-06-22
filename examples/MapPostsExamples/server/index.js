@@ -193,11 +193,7 @@ app.get('/api/get-comments/', async (req, res) => {
     }
 });
 
-app.post('/api/create-comment/', async (req, res) => {
-    // if (!req.user) {
-    //     res.status(403).send('forbidden');
-    //     return;
-    // }
+app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
     req.user = { id: 'f24c4380-7cb6-4f6b-b3e6-e0df34fcdc09' };
     const comment = {
         postId: req.body.postid,
