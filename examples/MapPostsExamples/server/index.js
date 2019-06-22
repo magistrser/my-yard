@@ -193,6 +193,26 @@ app.get('/api/get-comments/', async (req, res) => {
     }
 });
 
+app.post('/api/create-comment/', async (req, res) => {
+    // if (!req.user) {
+    //     res.status(403).send('forbidden');
+    //     return;
+    // }
+    req.user = { id: 'f24c4380-7cb6-4f6b-b3e6-e0df34fcdc09' };
+    const comment = {
+        postId: req.body.postid,
+        authorId: req.user.id,
+        text: req.body.text,
+        replyToCommentId: req.body['reply-to-comment-id'],
+    };
+    try {
+        await Storage.insertComment(comment);
+        res.status(200).send('Success');
+    } catch {
+        res.status(500).send('Error occured');
+    }
+});
+
 // Image debug route
 app.get('/api/img-debug', async (req, res) => {
     const imgResponse = await axios.get('https://pp.userapi.com/c844417/v844417738/1f5a01/pQyVzijwg-I.jpg', {
