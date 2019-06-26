@@ -90,7 +90,6 @@ app.get('/api/logout', (req, res) => {
 // Sends userpic by userId
 app.get('/api/get-userpic/', async (req, res) => {
     try {
-        console.log('>>>>', req.query.id);
         const userId = req.query.id || req.user.id;
         const photoUrl = await Storage.getUserAvatarById(userId);
         if (photoUrl) {

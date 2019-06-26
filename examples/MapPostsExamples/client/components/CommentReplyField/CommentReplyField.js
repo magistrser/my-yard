@@ -6,6 +6,8 @@ import SendIcon from '@material-ui/icons/Send';
 import CancelIcon from '@material-ui/icons/Cancel';
 import Avatar from '@material-ui/core/Avatar';
 import { basename } from 'path';
+import Axios from 'axios';
+import { Typography } from '@material-ui/core';
 
 export default class CommentReplyField extends Component {
     constructor(props) {
@@ -15,8 +17,8 @@ export default class CommentReplyField extends Component {
     render() {
         return (
             <Grid container direction="row" justify="space-around" alignItems="stretch">
-                <Grid item xs={2} justify="center">
-                    <Avatar style={{ margin: 'auto' }}>AVA</Avatar>
+                <Grid item container xs={2} justify="flex-end">
+                    <Avatar src={'/api/get-userpic/' /* Is that ok? */} />
                 </Grid>
                 <Grid xs={10} item container direction="row" justify="flex-end" alignItems="flex-end">
                     {this.props.replyTo ? (
