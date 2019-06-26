@@ -96,7 +96,7 @@ export default class Post extends Component {
                         <hr />
                     </Grid>
                     <Grid item container>
-                        <CommentBox comments={this.state.comments} isAuthorized={this.props.isAuthorized} />
+                        <CommentBox postId={this.props.postId} comments={this.state.comments} isAuthorized={this.props.isAuthorized} />
                     </Grid>
                 </Grid>
                 <Fab

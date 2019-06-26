@@ -39,7 +39,11 @@ export default class CommentBox extends Component {
             <Grid container direction="column">
                 {this.props.isAuthorized ? (
                     <Grid item container>
-                        <CommentReplyField replyTo={this.state.replyTo} cancelReplyTo={() => this.setState({ replyTo: null })} />
+                        <CommentReplyField
+                            postId={this.props.postId}
+                            replyTo={this.state.replyTo}
+                            cancelReplyTo={() => this.setState({ replyTo: null })}
+                        />
                     </Grid>
                 ) : null}
                 <Grid item>

@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Send as SendIcon } from '@material-ui/icons';
 import { Cancel as CancelIcon } from '@material-ui/icons';
 import Avatar from '@material-ui/core/Avatar';
+import Axios from 'axios';
 
 export default class CommentReplyField extends Component {
     constructor(props) {
@@ -12,10 +13,30 @@ export default class CommentReplyField extends Component {
         this.commentTextRef = null;
     }
 
-    onSendButtonClick = ev => {
+    onSendButtonClick = async ev => {
         ev.preventDefault();
-        console.log('>>>', this.commentTextRef.value);
+
+        const comment = {
+            postid: this.props.postId,
+            text: this.commentTextRef.value,
+            'reply-to-comment-id': this.props.replyTo.id,
+        };
+        if (!this.validateComment(comment)) {
+            // fuck off
+            return;
+        }
+        try {
+            await Axios.post('/api/create-comment/', comment);
+        } catch (e) {
+            console.error(e);
+            // Server said to fuck off
+        }
     };
+
+    validateComment(comment) {
+        // TODO: Validation
+        return true;
+    }
 
     render() {
         return (
