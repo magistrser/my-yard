@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import SendIcon from '@material-ui/icons/Send';
-import CancelIcon from '@material-ui/icons/Cancel';
+import { Send as SendIcon } from '@material-ui/icons';
+import { Cancel as CancelIcon } from '@material-ui/icons';
 import Avatar from '@material-ui/core/Avatar';
-import { basename } from 'path';
-import Axios from 'axios';
-import { Typography } from '@material-ui/core';
 
 export default class CommentReplyField extends Component {
     constructor(props) {
