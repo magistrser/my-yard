@@ -9,7 +9,13 @@ import Avatar from '@material-ui/core/Avatar';
 export default class CommentReplyField extends Component {
     constructor(props) {
         super(props);
+        this.commentTextRef = null;
     }
+
+    onSendButtonClick = ev => {
+        ev.preventDefault();
+        console.log('>>>', this.commentTextRef.value);
+    };
 
     render() {
         return (
@@ -26,10 +32,14 @@ export default class CommentReplyField extends Component {
                         </Grid>
                     ) : null}
                     <Grid item xs={10}>
-                        <TextField label={this.props.replyTo ? `Reply to: ${this.props.replyTo.fullName}` : null} fullWidth />
+                        <TextField
+                            label={this.props.replyTo ? `Reply to: ${this.props.replyTo.fullName}` : null}
+                            fullWidth
+                            inputRef={input => (this.commentTextRef = input)}
+                        />
                     </Grid>
                     <Grid item xs={1}>
-                        <IconButton variant="contained" color="primary">
+                        <IconButton variant="contained" color="primary" onClick={this.onSendButtonClick}>
                             <SendIcon />
                         </IconButton>
                     </Grid>
