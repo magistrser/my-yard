@@ -34,6 +34,15 @@ export default class CommentBox extends Component {
         this.highlightedRef = null;
     }
 
+    cancelReplyTo = () => {
+        this.setState({ replyTo: null });
+    };
+
+    onCommentSent = () => {
+        this.cancelReplyTo();
+        this.props.onCommentsUpdate();
+    };
+
     render() {
         return (
             <Grid container direction="column">
@@ -42,7 +51,8 @@ export default class CommentBox extends Component {
                         <CommentReplyField
                             postId={this.props.postId}
                             replyTo={this.state.replyTo}
-                            cancelReplyTo={() => this.setState({ replyTo: null })}
+                            cancelReplyTo={this.cancelReplyTo}
+                            onCommentSent={this.onCommentSent}
                         />
                     </Grid>
                 ) : null}

@@ -19,18 +19,22 @@ export default class CommentReplyField extends Component {
         const comment = {
             postid: this.props.postId,
             text: this.commentTextRef.value,
-            'reply-to-comment-id': this.props.replyTo.id,
+            'reply-to-comment-id': this.props.replyTo?.id,
         };
         if (!this.validateComment(comment)) {
-            // fuck off
+            // TODO: Tell user to fuck off
             return;
         }
         try {
             await Axios.post('/api/create-comment/', comment);
         } catch (e) {
             console.error(e);
-            // Server said to fuck off
+            // TODO: Server said to fuck off
         }
+
+        this.commentTextRef.value = '';
+        this.props.onCommentSent();
+        this.forceUpdate(); // Because value of input was changed. Consider use state instead of ref?
     };
 
     validateComment(comment) {
