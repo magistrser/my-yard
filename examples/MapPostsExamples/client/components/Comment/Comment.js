@@ -54,6 +54,7 @@ export default class Comment extends Component {
                     text,
                 });
             } catch (err) {
+                // TODO: validation and shit
                 console.error(err);
             }
             this.props.onUpdate();
