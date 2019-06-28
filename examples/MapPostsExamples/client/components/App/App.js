@@ -10,17 +10,17 @@ export default class App extends Component {
         super();
     }
     state = {
-        isAuthorized: false,
+        isAuthenticated: false,
         // TODO: Maybe add isLoaded here to prevent redundant rendering
     };
 
     async componentDidMount() {
         try {
             const authResult = await axios.get('/api/check-authentication');
-            this.setState({ isAuthorized: authResult.data.isAuthenticated });
+            this.setState({ isAuthenticated: authResult.data.isAuthenticated });
         } catch (err) {
             console.error(err);
-            this.setState({ isAuthorized: false });
+            this.setState({ isAuthenticated: false });
         }
     }
 
