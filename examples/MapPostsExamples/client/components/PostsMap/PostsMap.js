@@ -38,7 +38,7 @@ export default class PostsMap extends Component {
 
     handleMapClick = async ev => {
         ev.preventDefault();
-        if (!this.state.inPostAddingMode || !this.props.isAuthorized || !this.ymapsAPI || !this.mapInstance) {
+        if (!this.state.inPostAddingMode || !this.props.isAuthenticated || !this.ymapsAPI || !this.mapInstance) {
             return;
         }
         this.togglePostAddingMode();
@@ -48,7 +48,7 @@ export default class PostsMap extends Component {
 
     handleYmapsAPILoaded = ymaps => {
         this.ymapsAPI = ymaps;
-        if (this.props.isAuthorized) {
+        if (this.props.isAuthenticated) {
             // Add "add post" button
             const addPostBtn = new ymaps.control.Button({
                 data: {
@@ -95,7 +95,7 @@ export default class PostsMap extends Component {
                     {this.state.isPostOpen ? (
                         <Post
                             postId={this.state.posts[this.state.currentPostIdx].id}
-                            isAuthorized={this.props.isAuthorized}
+                            isAuthenticated={this.props.isAuthenticated}
                             closePost={this.handlePostClose}
                         />
                     ) : null}

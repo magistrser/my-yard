@@ -71,7 +71,7 @@ export default class Post extends Component {
                     </Grid>
                     <Grid item container>
                         <SubscribeButton
-                            isAuthorized={this.props.isAuthorized}
+                            isAuthenticated={this.props.isAuthenticated}
                             postId={this.props.postId}
                             subCount={this.state.post.subCount}
                             onSubscribeButtonClick={this.updatePost}
@@ -100,7 +100,7 @@ export default class Post extends Component {
                             postId={this.props.postId}
                             comments={this.state.comments}
                             onCommentsUpdate={this.updatePost}
-                            isAuthorized={this.props.isAuthorized}
+                            isAuthenticated={this.props.isAuthenticated}
                         />
                     </Grid>
                 </Grid>

@@ -46,7 +46,7 @@ export default class CommentBox extends Component {
     render() {
         return (
             <Grid container direction="column">
-                {this.props.isAuthorized ? (
+                {this.props.isAuthenticated ? (
                     <Grid item container>
                         <CommentReplyField
                             postId={this.props.postId}

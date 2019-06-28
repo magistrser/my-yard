@@ -5,6 +5,8 @@ import Header from '../Header/Header';
 import './App.css';
 import PostsMap from '../PostsMap/PostsMap';
 
+import { Provider } from '../../context';
+
 export default class App extends Component {
     constructor() {
         super();
@@ -25,16 +27,22 @@ export default class App extends Component {
         }
     }
 
+    getContext = () => {
+        return { ...this.state };
+    };
+
     render() {
         return (
-            <Router>
-                <>
-                    <Header {...this.state} />
-                    <Switch>
-                        <Route component={() => <PostsMap {...this.state} />} />
-                    </Switch>
-                </>
-            </Router>
+            <Provider value={this.getContext()}>
+                <Router>
+                    <>
+                        <Header {...this.state} />
+                        <Switch>
+                            <Route component={() => <PostsMap {...this.state} />} />
+                        </Switch>
+                    </>
+                </Router>
+            </Provider>
         );
     }
 }
