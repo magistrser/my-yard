@@ -3,14 +3,18 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import card from '@material-ui/core/Card';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 const styles = {
     avatar: {
@@ -28,7 +32,7 @@ export default class Comment extends Component {
     }
 
     render() {
-        const commentOnListItem = (
+        return (
             <ListItem alignItems="flex-start" selected={this.props.selected}>
                 <ListItemAvatar>
                     <Avatar style={styles.avatar} src={this.props.comment.photoUrl} />
@@ -67,8 +71,15 @@ export default class Comment extends Component {
                     }
                     secondary={<Typography variant="body1">{this.props.comment.text}</Typography>}
                 />
+                <ListItemSecondaryAction>
+                    <IconButton edge="end">
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end">
+                        <DeleteIcon />
+                    </IconButton>
+                </ListItemSecondaryAction>
             </ListItem>
         );
-        return commentOnListItem;
     }
 }
