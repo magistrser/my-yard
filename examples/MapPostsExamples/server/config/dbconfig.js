@@ -362,16 +362,24 @@ export default class Storage {
         });
     }
 
-    static deleteCommentById(id) {
+    static deleteCommentByIdChecked(commentId, userId) {
         return new Promise((resolve, reject) => {
-            this._db.run(`delete from Comments where id=?`, [id], err => {
-                if (err) {
-                    console.error(`[ERROR] ${err}`);
-                    reject(err);
-                } else {
-                    resolve();
+            // TODO: if userId not admin reject
+            this._db.run(
+                `delete from Comments where id=? and authorId=?;`,
+                [commentId, userId],
+                // not lambda because brillian sqlite3 developer decided that passing data to callback using THIS is very conveniant
+                function(err) {
+                    if (err) {
+                        console.error(`[ERROR] ${err}`);
+                        reject(err);
+                    } else if (!this.changes) {
+                        reject('No deleted rows');
+                    } else {
+                        resolve();
+                    }
                 }
-            });
+            );
         });
     }
 

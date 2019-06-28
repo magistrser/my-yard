@@ -17,6 +17,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import { Consumer } from '../../context';
+import Axios from 'axios';
 
 const styles = {
     avatar: {
@@ -33,11 +34,30 @@ export default class Comment extends Component {
         super(props);
     }
 
+    onEditClick = ev => {
+        ev.preventDefault();
+    };
+
+    onDeleteClick = async ev => {
+        ev.preventDefault();
+        try {
+            await Axios.delete('/api/delete-comment', {
+                data: {
+                    id: this.props.comment.id,
+                },
+            });
+        } catch (err) {
+            console.error(err);
+        }
+
+        this.props.onDelete();
+    };
+
     render() {
         return (
             <Consumer>
                 {({ user }) => (
-                    <ListItem alignItems="flex-start" selected={this.props.selected}>
+                    <ListItem alignItems="flex-start" selected={this.props.selected} key={this.props.comment.id}>
                         <ListItemAvatar>
                             <Avatar style={styles.avatar} src={this.props.comment.photoUrl}>
                                 {this.props.comment.fullName[0]}
@@ -55,7 +75,6 @@ export default class Comment extends Component {
                                     >
                                         {this.props.comment.fullName}
                                     </Typography>
-
                                     <Typography component="span" color="textSecondary" variant="subtitle2" style={{ display: 'inline' }}>
                                         {this.props.comment.timestamp}
                                     </Typography>
@@ -79,10 +98,10 @@ export default class Comment extends Component {
                         />
                         {user?.id === this.props.comment.authorId ? (
                             <ListItemSecondaryAction>
-                                <IconButton edge="end">
+                                <IconButton edge="end" onClick={this.onEditClick}>
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton edge="end">
+                                <IconButton edge="end" onClick={this.onDeleteClick}>
                                     <DeleteIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>

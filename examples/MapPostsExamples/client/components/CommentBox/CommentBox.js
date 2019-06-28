@@ -75,6 +75,7 @@ export default class CommentBox extends Component {
                                     selected={this.state.highlightedComment === comment.id}
                                     highlightComment={this.highlightComment}
                                     onAuthorNameClick={comment => this.setState({ replyTo: comment })}
+                                    onDelete={this.props.onCommentsUpdate}
                                 />
                             </>
                         ))}

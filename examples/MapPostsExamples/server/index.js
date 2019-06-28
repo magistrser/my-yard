@@ -214,7 +214,7 @@ app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
     }
 });
 
-app.get('/api/update-comment/', ensureAuthenticated, async (req, res) => {
+app.put('/api/update-comment/', ensureAuthenticated, async (req, res) => {
     if (req.body.authorid != req.user.id /* TODO: or not admin */) {
         res.status(403).send('Forbidden');
         return;
@@ -238,16 +238,20 @@ app.get('/api/update-comment/', ensureAuthenticated, async (req, res) => {
 });
 
 app.delete('/api/delete-comment', ensureAuthenticated, async (req, res) => {
-    if (req.body.authorid != req.user.id /* TODO: or not admin */) {
-        res.status(403).send('Forbidden');
+    if (!req.body.id) {
+        res.status(400).send('Wrong data');
         return;
     }
     try {
-        await Storage.deleteCommentById(req.body.id);
+        await Storage.deleteCommentByIdChecked(req.body.id, req.user.id);
         res.status(200).send('Success');
     } catch (err) {
         console.error(`[ERROR] ${err}`);
-        res.status(500).send('Error occured');
+        if (err === 'No deleted rows') {
+            res.status(400).send('Wrong post id or insufficient rights');
+        } else {
+            res.status(500).send('Error occured');
+        }
     }
 });
 
