@@ -21,7 +21,7 @@ export default class App extends Component {
             this.setState({ ...authResult });
         } catch (err) {
             console.error(err);
-            this.setState({ isAuthenticated: false });
+            this.setState({ isAuthenticated: false, user: null });
         }
     }
 
