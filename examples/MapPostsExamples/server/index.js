@@ -78,7 +78,13 @@ app.get('/api/fail', (req, res) => {
 // Checks if user is authenticated
 app.get('/api/check-authentication', (req, res) => {
     const isAuthenticated = req.isAuthenticated();
-    res.send({ isAuthenticated });
+    let result = {
+        isAuthenticated,
+    };
+    if (isAuthenticated) {
+        result.user = req.user;
+    }
+    res.json(result);
 });
 
 // Logs user out
