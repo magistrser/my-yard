@@ -328,6 +328,53 @@ export default class Storage {
         });
     }
 
+    // Updates only columns defined in comment. Leaves other columns unchanged
+    static updateComment(comment) {
+        return new Promise((resolve, reject) => {
+            let sql = 'update Comments set ';
+            let columns = [];
+            let args = [];
+            for (let key in comment) {
+                if (comment[key]) {
+                    if (key === 'id') {
+                        args.push(comment[key]);
+                    } else {
+                        columns.push(`${key} = ?`);
+                        args.unshift(comment[key]);
+                    }
+                }
+            }
+            if (columns.length === 0) {
+                reject();
+                return;
+            }
+            sql += columns.join(',');
+            sql += ' where id=?;';
+
+            this._db.run(sql, args, err => {
+                if (err) {
+                    console.error(`[ERROR] ${err}`);
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    static deleteCommentById(id) {
+        return new Promise((resolve, reject) => {
+            this._db.run(`delete from Comments where id=?`, [id], err => {
+                if (err) {
+                    console.error(`[ERROR] ${err}`);
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
     static getSubscribersByPostId(postId) {
         return new Promise((resolve, reject) => {
             this._db.all(

@@ -208,16 +208,19 @@ app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
     }
 });
 
-app.put('/api/update-comment', ensureAuthenticated, async (req, res) => {
+app.get('/api/update-comment/', ensureAuthenticated, async (req, res) => {
     if (req.body.authorid != req.user.id /* TODO: or not admin */) {
         res.status(403).send('Forbidden');
         return;
     }
     const comment = {
-        postId: req.body.postid,
-        authorId: req.body.authorid,
+        id: req.body.id,
+        // TODO: User cannot change these two. Check for admin when we have admin
+        //postId: req.body.postid,
+        //authorId: req.body.authorid,
         text: req.body.text,
-        replyToCommentId: req.body['reply-to-comment-id'],
+        // TODO: Not sure if we need to change this. But if we do, than we need to figure out how do we distinguish NULL in sql from null and undefined here
+        // replyToCommentId: req.body['reply-to-comment-id'],
     };
     try {
         await Storage.updateComment(comment);
