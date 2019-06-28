@@ -329,13 +329,13 @@ export default class Storage {
     }
 
     // Updates only columns defined in comment. Leaves other columns unchanged
-    static updateComment(comment) {
+    static updateCommentChecked(comment, userId) {
         return new Promise((resolve, reject) => {
             let sql = 'update Comments set ';
             let columns = [];
             let args = [];
             for (let key in comment) {
-                if (comment[key]) {
+                if (comment[key] !== undefined) {
                     if (key === 'id') {
                         args.push(comment[key]);
                     } else {
@@ -345,11 +345,12 @@ export default class Storage {
                 }
             }
             if (columns.length === 0) {
-                reject();
+                reject('Post is unchanged');
                 return;
             }
+            args.push(userId);
             sql += columns.join(',');
-            sql += ' where id=?;';
+            sql += ' where id=? and authorId=?;';
 
             this._db.run(sql, args, err => {
                 if (err) {
@@ -364,7 +365,6 @@ export default class Storage {
 
     static deleteCommentByIdChecked(commentId, userId) {
         return new Promise((resolve, reject) => {
-            // TODO: if userId not admin reject
             this._db.run(
                 `delete from Comments where id=? and authorId=?;`,
                 [commentId, userId],

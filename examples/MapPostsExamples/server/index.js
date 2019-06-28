@@ -215,10 +215,6 @@ app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
 });
 
 app.put('/api/update-comment/', ensureAuthenticated, async (req, res) => {
-    if (req.body.authorid != req.user.id /* TODO: or not admin */) {
-        res.status(403).send('Forbidden');
-        return;
-    }
     const comment = {
         id: req.body.id,
         // TODO: User cannot change these two. Check for admin when we have admin
@@ -229,7 +225,7 @@ app.put('/api/update-comment/', ensureAuthenticated, async (req, res) => {
         // replyToCommentId: req.body['reply-to-comment-id'],
     };
     try {
-        await Storage.updateComment(comment);
+        await Storage.updateCommentChecked(comment, req.user.id);
         res.status(200).send('Success');
     } catch (err) {
         console.error(`[ERROR] ${err}`);

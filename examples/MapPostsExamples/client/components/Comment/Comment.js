@@ -15,9 +15,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Axios from 'axios';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 import { Consumer } from '../../context';
-import Axios from 'axios';
 
 const styles = {
     avatar: {
@@ -32,10 +34,31 @@ const styles = {
 export default class Comment extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isEditorOpen: false,
+        };
+        this.editFieldRef = React.createRef();
     }
 
     onEditClick = ev => {
         ev.preventDefault();
+        this.setState({ isEditorOpen: true });
+    };
+
+    onEditorClose = isCancelled => {
+        if (!isCancelled) {
+            const text = this.editFieldRef.current.value;
+            try {
+                Axios.put('/api/update-comment/', {
+                    id: this.props.comment.id,
+                    text,
+                });
+            } catch (err) {
+                console.error(err);
+            }
+            this.props.onUpdate();
+        }
+        this.setState({ isEditorOpen: false });
     };
 
     onDeleteClick = async ev => {
@@ -49,15 +72,14 @@ export default class Comment extends Component {
         } catch (err) {
             console.error(err);
         }
-
-        this.props.onDelete();
+        this.props.onUpdate();
     };
 
     render() {
         return (
             <Consumer>
                 {({ user }) => (
-                    <ListItem alignItems="flex-start" selected={this.props.selected} key={this.props.comment.id}>
+                    <ListItem alignItems="flex-start" selected={this.props.selected}>
                         <ListItemAvatar>
                             <Avatar style={styles.avatar} src={this.props.comment.photoUrl}>
                                 {this.props.comment.fullName[0]}
@@ -96,6 +118,29 @@ export default class Comment extends Component {
                             }
                             secondary={<Typography variant="body1">{this.props.comment.text}</Typography>}
                         />
+                        {/* TODO: Make promt-like component out of it */}
+                        <Dialog open={this.state.isEditorOpen} onClose={() => this.onEditorClose(true)}>
+                            <DialogTitle>Edit comment</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>Edit comment text:</DialogContentText>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    multiline
+                                    fullWidth
+                                    defaultValue={this.props.comment.text}
+                                    inputRef={this.editFieldRef}
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => this.onEditorClose(true)} color="primary">
+                                    Cancel
+                                </Button>
+                                <Button onClick={() => this.onEditorClose(false)} color="primary">
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                         {user?.id === this.props.comment.authorId ? (
                             <ListItemSecondaryAction>
                                 <IconButton edge="end" onClick={this.onEditClick}>

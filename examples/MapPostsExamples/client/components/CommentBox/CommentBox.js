@@ -68,16 +68,16 @@ export default class CommentBox extends Component {
                         }}
                     >
                         {this.props.comments.map(comment => (
-                            <>
+                            <div key={comment.id}>
                                 <hr ref={comment.ref} />
                                 <Comment
                                     comment={comment}
                                     selected={this.state.highlightedComment === comment.id}
                                     highlightComment={this.highlightComment}
                                     onAuthorNameClick={comment => this.setState({ replyTo: comment })}
-                                    onDelete={this.props.onCommentsUpdate}
+                                    onUpdate={this.props.onCommentsUpdate}
                                 />
-                            </>
+                            </div>
                         ))}
                     </List>
                 </Grid>
