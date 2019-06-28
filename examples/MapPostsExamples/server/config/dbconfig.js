@@ -42,6 +42,18 @@ export default class Storage {
         });
     }
 
+    static getUserAvatarById(id) {
+        return new Promise((resolve, reject) => {
+            this._db.get('select p.url as photoUrl from Users u inner join Photos p on u.id=p.userId where u.id=?', [id], (err, row) => {
+                if (err) {
+                    console.err(`[ERROR] ${err}`);
+                    reject(err);
+                }
+                resolve(row.photoUrl);
+            });
+        });
+    }
+
     static insertUser(user) {
         return new Promise((resolve, reject) => {
             // TODO: Find a way to do this in transaction. This implementation sucks
@@ -267,6 +279,49 @@ export default class Storage {
                                 }
                             }
                         );
+                    }
+                }
+            );
+        });
+    }
+
+    static getCommentsByPostId(postId) {
+        return new Promise((resolve, reject) => {
+            this._db.all(
+                `select c.id, c.authorId, u.fullName, p.url as photoUrl, c.replyToCommentId, ru.fullName as replyToName, c.text, c.timestamp 
+                from Comments c inner join Users u on c.authorId=u.id inner join Photos p on u.id=p.userId left outer join Comments rc on c.replyToCommentId=rc.id left outer join Users ru on rc.authorId=ru.id 
+                where c.postId=? 
+                order by c.timestamp desc; `,
+                [postId],
+                (err, rows) => {
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                }
+            );
+        });
+    }
+
+    static insertComment(comment) {
+        const id = generateGuid();
+        const { postId, authorId, text, replyToCommentId } = comment;
+
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                `insert into Comments 
+                (id, postId, authorId, text, replyToCommentId) 
+                values
+                (?, ?, ?, ?, ?)`,
+                [id, postId, authorId, text, replyToCommentId],
+                err => {
+                    if (err) {
+                        console.error(`[ERROR] ${err}`);
+                        reject(err);
+                    } else {
+                        resolve();
                     }
                 }
             );

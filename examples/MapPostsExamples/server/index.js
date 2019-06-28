@@ -88,15 +88,23 @@ app.get('/api/logout', (req, res) => {
 });
 
 // Sends userpic by userId
-app.get('/api/get-userpic/:id', async (req, res) => {
-    const userId = req.params.id;
-    const user = await Storage.getUserById(userId);
-    if (user) {
-        res.redirect(user.photoUrl);
-    } else {
-        res.status(404).send();
+app.get('/api/get-userpic/', async (req, res) => {
+    try {
+        const userId = req.query.id || req.user.id;
+        const photoUrl = await Storage.getUserAvatarById(userId);
+        if (photoUrl) {
+            res.redirect(photoUrl);
+        } else {
+            res.status(404).send();
+        }
+    } catch {
+        res.status(500).send('No such user id');
     }
 });
+
+/**
+ * Posts
+ */
 
 // Creates new post
 app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), async (req, res) => {
@@ -139,10 +147,6 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
 
     res.redirect('back');
 });
-
-/**
- * Posts
- */
 app.get('/api/get-posts', async (req, res) => {
     try {
         const posts = await Storage.getPosts();
@@ -170,6 +174,36 @@ app.get('/api/get-post-info', async (req, res) => {
     } catch (err) {
         console.error('[ERROR] ', err);
         res.status(500).send();
+    }
+});
+
+/**
+ * Comments
+ */
+
+// Gets comments for post
+app.get('/api/get-comments/', async (req, res) => {
+    try {
+        const { postid } = req.query;
+        const comments = await Storage.getCommentsByPostId(postid);
+        res.status(200).json(comments);
+    } catch {
+        res.status(500).send('No such postid');
+    }
+});
+
+app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
+    const comment = {
+        postId: req.body.postid,
+        authorId: req.user.id,
+        text: req.body.text,
+        replyToCommentId: req.body['reply-to-comment-id'],
+    };
+    try {
+        await Storage.insertComment(comment);
+        res.status(200).send('Success');
+    } catch {
+        res.status(500).send('Error occured');
     }
 });
 

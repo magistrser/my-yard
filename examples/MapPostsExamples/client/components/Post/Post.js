@@ -11,12 +11,15 @@ import Fab from '@material-ui/core/Fab';
 import SubscribeButton from '../SubscribeButton/SubscribeButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
+import Comment from '../Comment/Comment';
+import CommentBox from '../CommentBox/CommentBox';
 
 export default class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
             post: {},
+            comments: [],
             isLoaded: false,
         };
     }
@@ -27,8 +30,10 @@ export default class Post extends Component {
 
     updatePost = async () => {
         const post = await this.loadPost(this.props.postId);
+        const comments = await this.loadPostComments(this.props.postId);
         this.setState({
-            post: post.data,
+            post,
+            comments,
             isLoaded: true,
         });
     };
@@ -39,7 +44,16 @@ export default class Post extends Component {
                 id: postId,
             },
         });
-        return postInfo;
+        return postInfo.data;
+    };
+
+    loadPostComments = async postId => {
+        const comments = await axios.get('/api/get-comments/', {
+            params: {
+                postid: postId,
+            },
+        });
+        return comments.data;
     };
 
     render() {
@@ -54,6 +68,14 @@ export default class Post extends Component {
                             <h3>{this.state.post.author}</h3>
                             <Typography>{`Posted: ${this.state.post.timestamp}`}</Typography>
                         </Grid>
+                    </Grid>
+                    <Grid item container>
+                        <SubscribeButton
+                            isAuthorized={this.props.isAuthorized}
+                            postId={this.props.postId}
+                            subCount={this.state.post.subCount}
+                            onSubscribeButtonClick={this.updatePost}
+                        />
                     </Grid>
                     <Grid item>
                         <ImageGallery
@@ -71,13 +93,14 @@ export default class Post extends Component {
                         <Typography align="justify" className={styles.postText}>
                             {this.state.post.text}
                         </Typography>
+                        <hr />
                     </Grid>
                     <Grid item container>
-                        <SubscribeButton
-                            isAuthorized={this.props.isAuthorized}
+                        <CommentBox
                             postId={this.props.postId}
-                            subCount={this.state.post.subCount}
-                            onSubscribeButtonClick={this.updatePost}
+                            comments={this.state.comments}
+                            onCommentsUpdate={this.updatePost}
+                            isAuthorized={this.props.isAuthorized}
                         />
                     </Grid>
                 </Grid>
