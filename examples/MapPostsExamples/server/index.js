@@ -202,7 +202,42 @@ app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
     try {
         await Storage.insertComment(comment);
         res.status(200).send('Success');
-    } catch {
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
+        res.status(500).send('Error occured');
+    }
+});
+
+app.put('/api/update-comment', ensureAuthenticated, async (req, res) => {
+    if (req.body.authorid != req.user.id /* TODO: or not admin */) {
+        res.status(403).send('Forbidden');
+        return;
+    }
+    const comment = {
+        postId: req.body.postid,
+        authorId: req.body.authorid,
+        text: req.body.text,
+        replyToCommentId: req.body['reply-to-comment-id'],
+    };
+    try {
+        await Storage.updateComment(comment);
+        res.status(200).send('Success');
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
+        res.status(500).send('Error occured');
+    }
+});
+
+app.delete('/api/delete-comment', ensureAuthenticated, async (req, res) => {
+    if (req.body.authorid != req.user.id /* TODO: or not admin */) {
+        res.status(403).send('Forbidden');
+        return;
+    }
+    try {
+        await Storage.deleteCommentById(req.body.id);
+        res.status(200).send('Success');
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
         res.status(500).send('Error occured');
     }
 });
