@@ -16,6 +16,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
+import { Consumer } from '../../context';
+
 const styles = {
     avatar: {
         margin: 10,
@@ -33,53 +35,59 @@ export default class Comment extends Component {
 
     render() {
         return (
-            <ListItem alignItems="flex-start" selected={this.props.selected}>
-                <ListItemAvatar>
-                    <Avatar style={styles.avatar} src={this.props.comment.photoUrl} />
-                </ListItemAvatar>
-                <ListItemText
-                    primary={
-                        <>
-                            <Typography
-                                component="span"
-                                color="textPrimary"
-                                variant="subtitle2"
-                                style={{ paddingRight: 10, display: 'inline', cursor: 'pointer' }}
-                                onClick={() => this.props.onAuthorNameClick(this.props.comment)}
-                            >
-                                {this.props.comment.fullName}
-                            </Typography>
-
-                            <Typography component="span" color="textSecondary" variant="subtitle2" style={{ display: 'inline' }}>
-                                {this.props.comment.timestamp}
-                            </Typography>
-                            {this.props.comment.replyToCommentId ? (
-                                <Typography color="textSecondary" variant="caption" gutterBottom>
-                                    <a
-                                        onClick={ev => {
-                                            ev.preventDefault();
-                                            this.props.highlightComment(this.props.comment.replyToCommentId);
-                                        }}
-                                        href=""
-                                        style={{ textDecoration: 'none', color: 'inherit' }}
+            <Consumer>
+                {({ user }) => (
+                    <ListItem alignItems="flex-start" selected={this.props.selected}>
+                        <ListItemAvatar>
+                            <Avatar style={styles.avatar} src={this.props.comment.photoUrl} />
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={
+                                <>
+                                    <Typography
+                                        component="span"
+                                        color="textPrimary"
+                                        variant="subtitle2"
+                                        style={{ paddingRight: 10, display: 'inline', cursor: 'pointer' }}
+                                        onClick={() => this.props.onAuthorNameClick(this.props.comment)}
                                     >
-                                        Reply to: {this.props.comment.replyToName}
-                                    </a>
-                                </Typography>
-                            ) : null}
-                        </>
-                    }
-                    secondary={<Typography variant="body1">{this.props.comment.text}</Typography>}
-                />
-                <ListItemSecondaryAction>
-                    <IconButton edge="end">
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton edge="end">
-                        <DeleteIcon />
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
+                                        {this.props.comment.fullName}
+                                    </Typography>
+
+                                    <Typography component="span" color="textSecondary" variant="subtitle2" style={{ display: 'inline' }}>
+                                        {this.props.comment.timestamp}
+                                    </Typography>
+                                    {this.props.comment.replyToCommentId ? (
+                                        <Typography color="textSecondary" variant="caption" gutterBottom>
+                                            <a
+                                                onClick={ev => {
+                                                    ev.preventDefault();
+                                                    this.props.highlightComment(this.props.comment.replyToCommentId);
+                                                }}
+                                                href=""
+                                                style={{ textDecoration: 'none', color: 'inherit' }}
+                                            >
+                                                Reply to: {this.props.comment.replyToName}
+                                            </a>
+                                        </Typography>
+                                    ) : null}
+                                </>
+                            }
+                            secondary={<Typography variant="body1">{this.props.comment.text}</Typography>}
+                        />
+                        {user?.id === this.props.comment.authorId ? (
+                            <ListItemSecondaryAction>
+                                <IconButton edge="end">
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton edge="end">
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                        ) : null}
+                    </ListItem>
+                )}
+            </Consumer>
         );
     }
 }
