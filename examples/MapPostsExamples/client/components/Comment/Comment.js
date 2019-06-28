@@ -39,7 +39,9 @@ export default class Comment extends Component {
                 {({ user }) => (
                     <ListItem alignItems="flex-start" selected={this.props.selected}>
                         <ListItemAvatar>
-                            <Avatar style={styles.avatar} src={this.props.comment.photoUrl} />
+                            <Avatar style={styles.avatar} src={this.props.comment.photoUrl}>
+                                {this.props.comment.fullName[0]}
+                            </Avatar>
                         </ListItemAvatar>
                         <ListItemText
                             primary={
