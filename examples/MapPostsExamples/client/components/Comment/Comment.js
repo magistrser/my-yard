@@ -40,14 +40,10 @@ export default class Comment extends Component {
         this.editFieldRef = React.createRef();
     }
 
-    onEditClick = ev => {
-        ev.preventDefault();
-        this.setState({ isEditorOpen: true });
-    };
-
     onEditorClose = isCancelled => {
         if (!isCancelled) {
             const text = this.editFieldRef.current.value;
+            // TODO: validation and shit
             try {
                 Axios.put('/api/update-comment/', {
                     id: this.props.comment.id,
@@ -60,6 +56,11 @@ export default class Comment extends Component {
             this.props.onUpdate();
         }
         this.setState({ isEditorOpen: false });
+    };
+
+    onEditClick = ev => {
+        ev.preventDefault();
+        this.setState({ isEditorOpen: true });
     };
 
     onDeleteClick = async ev => {
@@ -117,31 +118,29 @@ export default class Comment extends Component {
                                     ) : null}
                                 </>
                             }
-                            secondary={<Typography variant="body1">{this.props.comment.text}</Typography>}
+                            secondary={
+                                this.state.isEditorOpen ? (
+                                    <>
+                                        <TextField
+                                            autoFocus
+                                            margin="dense"
+                                            multiline
+                                            fullWidth
+                                            defaultValue={this.props.comment.text}
+                                            inputRef={this.editFieldRef}
+                                        />
+                                        <Button onClick={() => this.onEditorClose(false)} color="primary">
+                                            OK
+                                        </Button>
+                                        <Button onClick={() => this.onEditorClose(true)} color="primary">
+                                            Cancel
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Typography variant="body1">{this.props.comment.text}</Typography>
+                                )
+                            }
                         />
-                        {/* TODO: Make promt-like component out of it */}
-                        <Dialog open={this.state.isEditorOpen} onClose={() => this.onEditorClose(true)}>
-                            <DialogTitle>Edit comment</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>Edit comment text:</DialogContentText>
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    multiline
-                                    fullWidth
-                                    defaultValue={this.props.comment.text}
-                                    inputRef={this.editFieldRef}
-                                />
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={() => this.onEditorClose(true)} color="primary">
-                                    Cancel
-                                </Button>
-                                <Button onClick={() => this.onEditorClose(false)} color="primary">
-                                    OK
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
                         {user?.id === this.props.comment.authorId ? (
                             <ListItemSecondaryAction>
                                 <IconButton edge="end" onClick={this.onEditClick}>
