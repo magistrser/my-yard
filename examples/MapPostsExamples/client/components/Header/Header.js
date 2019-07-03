@@ -24,21 +24,6 @@ const useStyles = makeStyles(theme => ({
 export default function Header(props) {
     const classes = useStyles();
 
-    const handmadeHeader = (
-        <header className={styles.header}>
-            <h1>Posts and comments</h1>
-            {!props.isAuthenticated ? (
-                <a className={styles.btn} href="/api/auth/vkontakte">
-                    Login
-                </a>
-            ) : (
-                <a className={styles.btnRed} href="/api/logout">
-                    Logout
-                </a>
-            )}
-        </header>
-    );
-
     return (
         <div className={classes.root}>
             <AppBar position="static">

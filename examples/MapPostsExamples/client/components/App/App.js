@@ -4,12 +4,21 @@ import axios from 'axios';
 import Header from '../Header/Header';
 import './App.css';
 import PostsMap from '../PostsMap/PostsMap';
+import { withStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { Provider } from '../../context';
 
-export default class App extends Component {
-    constructor() {
-        super();
+const useStyles = makeStyles(theme => {
+    console.log('theme>>', theme);
+    return { myClass: { aaaa: 'bbbb' } };
+});
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+
+        console.log('props>>', props);
     }
     state = {
         isAuthenticated: false,
@@ -46,3 +55,5 @@ export default class App extends Component {
         );
     }
 }
+
+export default withStyles(useStyles)(App);
