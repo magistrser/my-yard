@@ -5,35 +5,44 @@ import Header from '../Header/Header';
 import './App.css';
 import PostsMap from '../PostsMap/PostsMap';
 
+import { Provider } from '../../context';
+
 export default class App extends Component {
     constructor() {
         super();
     }
     state = {
-        isAuthorized: false,
+        isAuthenticated: false,
+        user: null,
         // TODO: Maybe add isLoaded here to prevent redundant rendering
     };
 
     async componentDidMount() {
         try {
-            const authResult = await axios.get('/api/check-authentication');
-            this.setState({ isAuthorized: authResult.data.isAuthenticated });
+            const { data: authResult } = await axios.get('/api/check-authentication');
+            this.setState({ ...authResult });
         } catch (err) {
             console.error(err);
-            this.setState({ isAuthorized: false });
+            this.setState({ isAuthenticated: false, user: null });
         }
     }
 
+    getContext = () => {
+        return { ...this.state };
+    };
+
     render() {
         return (
-            <Router>
-                <>
-                    <Header {...this.state} />
-                    <Switch>
-                        <Route component={() => <PostsMap {...this.state} />} />
-                    </Switch>
-                </>
-            </Router>
+            <Provider value={this.getContext()}>
+                <Router>
+                    <>
+                        <Header {...this.state} />
+                        <Switch>
+                            <Route component={() => <PostsMap {...this.state} />} />
+                        </Switch>
+                    </>
+                </Router>
+            </Provider>
         );
     }
 }

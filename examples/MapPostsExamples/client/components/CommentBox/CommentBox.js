@@ -46,7 +46,7 @@ export default class CommentBox extends Component {
     render() {
         return (
             <Grid container direction="column">
-                {this.props.isAuthorized ? (
+                {this.props.isAuthenticated ? (
                     <Grid item container>
                         <CommentReplyField
                             postId={this.props.postId}
@@ -68,15 +68,16 @@ export default class CommentBox extends Component {
                         }}
                     >
                         {this.props.comments.map(comment => (
-                            <>
+                            <div key={comment.id}>
                                 <hr ref={comment.ref} />
                                 <Comment
                                     comment={comment}
                                     selected={this.state.highlightedComment === comment.id}
                                     highlightComment={this.highlightComment}
                                     onAuthorNameClick={comment => this.setState({ replyTo: comment })}
+                                    onUpdate={this.props.onCommentsUpdate}
                                 />
-                            </>
+                            </div>
                         ))}
                     </List>
                 </Grid>

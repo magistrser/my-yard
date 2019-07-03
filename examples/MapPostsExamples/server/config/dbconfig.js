@@ -289,7 +289,7 @@ export default class Storage {
         return new Promise((resolve, reject) => {
             this._db.all(
                 `select c.id, c.authorId, u.fullName, p.url as photoUrl, c.replyToCommentId, ru.fullName as replyToName, c.text, c.timestamp 
-                from Comments c inner join Users u on c.authorId=u.id inner join Photos p on u.id=p.userId left outer join Comments rc on c.replyToCommentId=rc.id left outer join Users ru on rc.authorId=ru.id 
+                from Comments c inner join Users u on c.authorId=u.id left outer join Photos p on u.id=p.userId left outer join Comments rc on c.replyToCommentId=rc.id left outer join Users ru on rc.authorId=ru.id 
                 where c.postId=? 
                 order by c.timestamp desc; `,
                 [postId],
@@ -320,6 +320,65 @@ export default class Storage {
                     if (err) {
                         console.error(`[ERROR] ${err}`);
                         reject(err);
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+        });
+    }
+
+    // Updates only columns defined in comment. Leaves other columns unchanged
+    static updateCommentChecked(comment, userId) {
+        return new Promise((resolve, reject) => {
+            // Build query
+            let sql = 'update Comments set ';
+            let columns = [];
+            let args = [];
+            for (let key in comment) {
+                // TODO: check what happens when value is null (should set NULL in db)
+                if (comment[key] !== undefined) {
+                    if (key === 'id') {
+                        args.push(comment[key]);
+                    } else {
+                        columns.unshift(`${key} = ?`);
+                        args.unshift(comment[key]);
+                    }
+                }
+            }
+            if (columns.length === 0) {
+                reject('Post is unchanged');
+                return;
+            }
+            sql += columns.join(',');
+            sql += ' where id=?';
+            // Add permissions validation
+            args.push(userId);
+            sql += ' and authorId=?'; // TODO: + ' or exists (select 1 from Users here id=? and isAdmin=1)'
+            this._db.run(sql, args, err => {
+                if (err) {
+                    console.error(`[ERROR] ${err}`);
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    static deleteCommentByIdChecked(commentId, userId) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                `delete from Comments where id=?1 and authorId=?2 
+                or exists (select 1 from Users where id=?2);`, //and isAdmin=1
+                [commentId, userId],
+                // not lambda because brilliant sqlite3 developer decided that passing data to callback using THIS is very conveniant
+                function(err) {
+                    if (err) {
+                        console.error(`[ERROR] ${err}`);
+                        reject(err);
+                    } else if (!this.changes) {
+                        reject('No deleted rows');
                     } else {
                         resolve();
                     }

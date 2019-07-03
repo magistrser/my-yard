@@ -78,7 +78,13 @@ app.get('/api/fail', (req, res) => {
 // Checks if user is authenticated
 app.get('/api/check-authentication', (req, res) => {
     const isAuthenticated = req.isAuthenticated();
-    res.send({ isAuthenticated });
+    let result = {
+        isAuthenticated,
+    };
+    if (isAuthenticated) {
+        result.user = req.user;
+    }
+    res.json(result);
 });
 
 // Logs user out
@@ -202,8 +208,46 @@ app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
     try {
         await Storage.insertComment(comment);
         res.status(200).send('Success');
-    } catch {
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
         res.status(500).send('Error occured');
+    }
+});
+
+app.put('/api/update-comment/', ensureAuthenticated, async (req, res) => {
+    const comment = {
+        id: req.body.id,
+        // TODO: User cannot change these two. Check for admin when we have admin
+        //postId: req.body.postid,
+        //authorId: req.body.authorid,
+        text: req.body.text,
+        // TODO: Not sure if we need to change this. But if we do, than we need to figure out how do we distinguish NULL in sql from null and undefined here
+        // replyToCommentId: req.body['reply-to-comment-id'],
+    };
+    try {
+        await Storage.updateCommentChecked(comment, req.user.id);
+        res.status(200).send('Success');
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
+        res.status(500).send('Error occured');
+    }
+});
+
+app.delete('/api/delete-comment', ensureAuthenticated, async (req, res) => {
+    if (!req.body.id) {
+        res.status(400).send('Wrong data');
+        return;
+    }
+    try {
+        await Storage.deleteCommentByIdChecked(req.body.id, req.user.id);
+        res.status(200).send('Success');
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
+        if (err === 'No deleted rows') {
+            res.status(400).send('Wrong post id or insufficient rights');
+        } else {
+            res.status(500).send('Error occured');
+        }
     }
 });
 
