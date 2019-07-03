@@ -41,16 +41,11 @@ class App extends Component {
     };
 
     render() {
+        const { classes } = this.props;
         return (
             <Provider value={this.getContext()}>
-                <Router>
-                    <>
-                        <Header {...this.state} />
-                        <Switch>
-                            <Route component={() => <PostsMap {...this.state} />} />
-                        </Switch>
-                    </>
-                </Router>
+                <Header {...this.state} />
+                <PostsMap {...this.state} />
             </Provider>
         );
     }
