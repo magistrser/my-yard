@@ -5,19 +5,25 @@ import Header from '../Header/Header';
 import './App.css';
 import PostsMap from '../PostsMap/PostsMap';
 import { withStyles } from '@material-ui/styles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
 
 import { Provider } from '../../context';
 
-const useStyles = makeStyles(theme => {
+const useStyles = theme => {
     console.log('theme>>', theme);
-    return { myClass: { aaaa: 'bbbb' } };
-});
+    return {
+        root: {
+            flexGrow: 1,
+            width: '100%',
+            height: '100%',
+        },
+    };
+};
 
 class App extends Component {
     constructor(props) {
         super(props);
-
         console.log('props>>', props);
     }
     state = {
@@ -44,8 +50,10 @@ class App extends Component {
         const { classes } = this.props;
         return (
             <Provider value={this.getContext()}>
-                <Header {...this.state} />
-                <PostsMap {...this.state} />
+                <div className={classes.root}>
+                    <Header {...this.state} />
+                    <PostsMap {...this.state} />
+                </div>
             </Provider>
         );
     }

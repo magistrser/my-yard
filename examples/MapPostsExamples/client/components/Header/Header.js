@@ -25,32 +25,32 @@ export default function Header(props) {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu">
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        Map with posts
-                    </Typography>
-                    {props.isAuthenticated && (
-                        <>
-                            <Typography style={{ paddingRight: 5 }}>{props.user.fullName}</Typography>
-                            <Avatar src={props.user.photoUrl}>D:</Avatar>
-                        </>
-                    )}
-                    {props.isAuthenticated ? (
-                        <Button color="inherit" href="/api/logout">
-                            Logout
-                        </Button>
-                    ) : (
-                        <Button color="inherit" href="/api/auth/vkontakte">
-                            Login
-                        </Button>
-                    )}
-                </Toolbar>
-            </AppBar>
-        </div>
+        // <div className={classes.root}>
+        <AppBar position="static">
+            <Toolbar>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu">
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                    Map with posts
+                </Typography>
+                {props.isAuthenticated && (
+                    <>
+                        <Typography style={{ paddingRight: 5 }}>{props.user.fullName}</Typography>
+                        <Avatar src={props.user.photoUrl}>D:</Avatar>
+                    </>
+                )}
+                {props.isAuthenticated ? (
+                    <Button color="inherit" href="/api/logout">
+                        Logout
+                    </Button>
+                ) : (
+                    <Button color="inherit" href="/api/auth/vkontakte">
+                        Login
+                    </Button>
+                )}
+            </Toolbar>
+        </AppBar>
+        // </div>
     );
 }
