@@ -90,7 +90,7 @@ export default class Post extends Component {
                     </Grid>
                     <Grid item container direction="column" className={styles.inner}>
                         <hr />
-                        <Typography align="justify" className={styles.postText}>
+                        <Typography component={'span'} align="justify" className={styles.postText}>
                             {this.state.post.text}
                         </Typography>
                         <hr />
