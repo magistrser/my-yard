@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
+import { Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,6 +49,12 @@ export default function Header(props) {
                     <Typography variant="h6" className={classes.title}>
                         Map with posts
                     </Typography>
+                    {props.isAuthenticated && (
+                        <>
+                            <Typography style={{ paddingRight: 5 }}>{props.user.fullName}</Typography>
+                            <Avatar src={props.user.photoUrl}>D:</Avatar>
+                        </>
+                    )}
                     {props.isAuthenticated ? (
                         <Button color="inherit" href="/api/logout">
                             Logout
