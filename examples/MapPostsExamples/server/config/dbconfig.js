@@ -331,15 +331,17 @@ export default class Storage {
     // Updates only columns defined in comment. Leaves other columns unchanged
     static updateCommentChecked(comment, userId) {
         return new Promise((resolve, reject) => {
+            // Build query
             let sql = 'update Comments set ';
             let columns = [];
             let args = [];
             for (let key in comment) {
+                // TODO: check what happens when value is null (should set NULL in db)
                 if (comment[key] !== undefined) {
                     if (key === 'id') {
                         args.push(comment[key]);
                     } else {
-                        columns.push(`${key} = ?`);
+                        columns.unshift(`${key} = ?`);
                         args.unshift(comment[key]);
                     }
                 }
@@ -348,10 +350,11 @@ export default class Storage {
                 reject('Post is unchanged');
                 return;
             }
-            args.push(userId);
             sql += columns.join(',');
-            sql += ' where id=? and authorId=?;';
-
+            sql += ' where id=?';
+            // Add permissions validation
+            args.push(userId);
+            sql += ' and authorId=?'; // TODO: + ' or exists (select 1 from Users here id=? and isAdmin=1)'
             this._db.run(sql, args, err => {
                 if (err) {
                     console.error(`[ERROR] ${err}`);
@@ -366,9 +369,10 @@ export default class Storage {
     static deleteCommentByIdChecked(commentId, userId) {
         return new Promise((resolve, reject) => {
             this._db.run(
-                `delete from Comments where id=? and authorId=?;`,
+                `delete from Comments where id=?1 and authorId=?2 
+                or exists (select 1 from Users where id=?2);`, //and isAdmin=1
                 [commentId, userId],
-                // not lambda because brillian sqlite3 developer decided that passing data to callback using THIS is very conveniant
+                // not lambda because brilliant sqlite3 developer decided that passing data to callback using THIS is very conveniant
                 function(err) {
                     if (err) {
                         console.error(`[ERROR] ${err}`);
