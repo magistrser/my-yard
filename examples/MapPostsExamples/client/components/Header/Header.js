@@ -83,6 +83,12 @@ const useStyles = makeStyles(theme => ({
         }),
         marginLeft: 0,
     },
+    loginButton: {},
+    userInfo: {
+        display: 'flex',
+        alignItems: 'center',
+        marginLeft: 'auto',
+    },
 }));
 
 export default function Header(props) {
@@ -113,21 +119,23 @@ export default function Header(props) {
                     <Typography variant="h6" noWrap>
                         Map with posts
                     </Typography>
-                    {props.isAuthenticated && (
-                        <>
-                            <Typography style={{ paddingRight: 5 }}>{props.user.fullName}</Typography>
-                            <Avatar src={props.user.photoUrl}>D:</Avatar>
-                        </>
-                    )}
-                    {props.isAuthenticated ? (
-                        <Button color="inherit" href="/api/logout">
-                            Logout
-                        </Button>
-                    ) : (
-                        <Button color="inherit" href="/api/auth/vkontakte">
-                            Login
-                        </Button>
-                    )}
+                    <div className={classes.userInfo}>
+                        {props.isAuthenticated && (
+                            <>
+                                <Typography style={{ paddingRight: 5 }}>{props.user.fullName}</Typography>
+                                <Avatar src={props.user.photoUrl}>D:</Avatar>
+                            </>
+                        )}
+                        {props.isAuthenticated ? (
+                            <Button color="inherit" href="/api/logout" className={classes.loginButton}>
+                                Logout
+                            </Button>
+                        ) : (
+                            <Button color="inherit" href="/api/auth/vkontakte" className={classes.loginButton}>
+                                Login
+                            </Button>
+                        )}
+                    </div>
                 </Toolbar>
             </AppBar>
             <Drawer
