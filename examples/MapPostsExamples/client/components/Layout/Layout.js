@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styles from './Header.module.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -83,7 +82,6 @@ const useStyles = makeStyles(theme => ({
         }),
         marginLeft: 0,
     },
-    loginButton: {},
     userInfo: {
         display: 'flex',
         alignItems: 'center',

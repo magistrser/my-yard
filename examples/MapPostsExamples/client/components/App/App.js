@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import axios from 'axios';
-import Header from '../Header/Header';
+import Layout from '../Layout/Layout';
 import './App.css';
 import PostsMap from '../PostsMap/PostsMap';
 import { withStyles } from '@material-ui/styles';
@@ -47,9 +47,9 @@ class App extends Component {
         const { classes } = this.props;
         return (
             <Provider value={this.getContext()}>
-                <Header {...this.state}>
+                <Layout {...this.state}>
                     <PostsMap {...this.state} />
-                </Header>
+                </Layout>
             </Provider>
         );
     }
