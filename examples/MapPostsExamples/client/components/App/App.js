@@ -13,10 +13,8 @@ import { Provider } from '../../context';
 const useStyles = theme => {
     console.log('theme>>', theme);
     return {
-        root: {
-            flexGrow: 1,
-            width: '100%',
-            height: '100%',
+        cssClass: {
+            cssProp1: 23,
         },
     };
 };
@@ -24,7 +22,6 @@ const useStyles = theme => {
 class App extends Component {
     constructor(props) {
         super(props);
-        console.log('props>>', props);
     }
     state = {
         isAuthenticated: false,
@@ -50,10 +47,9 @@ class App extends Component {
         const { classes } = this.props;
         return (
             <Provider value={this.getContext()}>
-                <div className={classes.root}>
-                    <Header {...this.state} />
+                <Header {...this.state}>
                     <PostsMap {...this.state} />
-                </div>
+                </Header>
             </Provider>
         );
     }
