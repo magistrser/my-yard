@@ -6,25 +6,18 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Avatar, Divider } from '@material-ui/core';
+import { Avatar, Divider, Grid, Paper, Card, CardContent } from '@material-ui/core';
 import { Drawer } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import clsx from 'clsx';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import { Autorenew } from '@material-ui/icons';
+import TextField from '@material-ui/core/TextField';
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
-    // root: {
-    //     flexGrow: 1,
-    //     width: '100%',
-    //     height: '100%',
-    // },
-    // menuButton: {
-    //     marginRight: theme.spacing(2),
-    // },
-    // title: {
-    //     flexGrow: 1,
-    // },
     root: {
         display: 'flex',
         width: '100%',
@@ -62,7 +55,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         padding: '0 8px',
         ...theme.mixins.toolbar,
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
     },
     content: {
         flexGrow: 1,
@@ -86,6 +79,9 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         marginLeft: 'auto',
+    },
+    searchResultsCard: {
+        cursor: 'pointer',
     },
 }));
 
@@ -146,12 +142,63 @@ export default function Header(props) {
                 }}
             >
                 <div className={classes.drawerHeader}>
+                    <Typography variant="h6">Search posts</Typography>
                     <IconButton onClick={onDrawerClose}>
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
                 <Divider />
-                <h1>СУКА</h1>
+                <Grid container>
+                    <Paper>
+                        <Grid container direction="column" justify="center" alignItems="flex-start" spacing={0} style={{ padding: '5%' }}>
+                            <Grid item>
+                                <Typography variant="subtitle1" gutterBottom>
+                                    Tags:
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <TextField placeholder="Comma separated list" onChange={ev => console.log(ev.target.value)} />
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="subtitle1" gutterBottom>
+                                    Date:
+                                </Typography>
+                            </Grid>
+                            <Grid item>DATE FIELD </Grid>
+                            <Grid item>
+                                <Typography variant="subtitle1" gutterBottom>
+                                    Distance:
+                                </Typography>
+                            </Grid>
+                            <Grid item>WHAT DISTANCE?</Grid>
+                            <Grid item>
+                                <Typography variant="subtitle1" gutterBottom>
+                                    Number of participants:
+                                </Typography>
+                            </Grid>
+                            <Grid item>NUMBER OF PARTICIPANTS FIELD </Grid>
+                        </Grid>
+                    </Paper>
+                    <Grid item>
+                        <Typography variant="h6" gutterBottom>
+                            Results:
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {new Array(10).fill(0).map(item => (
+                            <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
+                                <CardContent>
+                                    <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                                        Title
+                                    </Typography>
+                                    <Typography variant="body1" color="textSecondary" gutterBottom>
+                                        Bla bla bla bla bla bla
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </Grid>
+                </Grid>
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>{props.children}</main>
         </div>
