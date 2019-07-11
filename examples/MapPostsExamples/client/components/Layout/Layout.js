@@ -15,6 +15,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { Autorenew } from '@material-ui/icons';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
+import DrawerContent from './DrawerContent';
 
 const drawerWidth = 500;
 
@@ -81,16 +82,13 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         marginLeft: 'auto',
     },
-    searchResultsCard: {
-        cursor: 'pointer',
-    },
 }));
 
 export default function Header(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false); // React hooks. Hipster shit imo
-    const suka = [0, 0];
+    //const suka = [0, 0];
 
     function onDrawerOpen() {
         setOpen(true);
@@ -100,20 +98,6 @@ export default function Header(props) {
         setOpen(false);
     }
 
-    const marks = [
-        {
-            value: 1, // HACK: if 0, label centers itself on zero and overflows the container
-            label: '00:00',
-        },
-        {
-            value: 12,
-            label: '12:00',
-        },
-        {
-            value: 22,
-            label: '23:00',
-        },
-    ];
     return (
         <div className={classes.root}>
             <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: open })}>
@@ -164,105 +148,7 @@ export default function Header(props) {
                     </IconButton>
                 </div>
                 <Divider />
-                <Grid container justify="flex-start" alignItems="flex-start">
-                    <Grid
-                        item
-                        xs={9}
-                        container
-                        direction="column"
-                        justify="center"
-                        alignItems="flex-start"
-                        spacing={2}
-                        style={{ padding: '5%' }}
-                    >
-                        <Grid item>
-                            <Typography variant="h6">Tags:</Typography>
-                        </Grid>
-                        <Grid item container>
-                            <TextField fullWidth placeholder="Comma separated list" onChange={ev => console.log(ev.target.value)} />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6" gutterBottom>
-                                Date:
-                            </Typography>
-                        </Grid>
-                        <Grid item container>
-                            <TextField
-                                fullWidth
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onChange={ev => console.log(ev.target.value)}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6">Time:</Typography>
-                        </Grid>
-                        <Grid item container>
-                            <Slider
-                                defaultValue={[0, 23]}
-                                step={1}
-                                min={0}
-                                max={23}
-                                component={'div'}
-                                marks={marks}
-                                valueLabelDisplay="auto"
-                                onChangeCommitted={(ev, newValue) => console.log(newValue)}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6">Distance:</Typography>
-                        </Grid>
-                        <Grid item>WHAT DISTANCE?</Grid>
-                        <Grid item>
-                            <Typography variant="h6">Number of participants:</Typography>
-                        </Grid>
-                        <Grid item container>
-                            <Grid item container alignItems="flex-end">
-                                <Typography variant="subtitle2">More than:</Typography>
-                                <TextField
-                                    onChange={ev => console.log(ev.target.value)}
-                                    type="number"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item container alignItems="flex-end">
-                                <Typography variant="subtitle2">Less than:</Typography>
-                                <TextField
-                                    onChange={ev => console.log(ev.target.value)}
-                                    type="number"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={3} container style={{ maxHeight: '100%', overflow: 'auto' }}>
-                        <Grid item container xs={12}>
-                            <Typography variant="h6" gutterBottom>
-                                Results:
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            {new Array(10).fill(0).map(item => (
-                                <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
-                                    <CardContent>
-                                        <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                                            Title
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary" gutterBottom>
-                                            Bla bla bla bla bla bla
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </Grid>
-                    </Grid>
-                </Grid>
+                <DrawerContent />
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>{props.children}</main>
         </div>
