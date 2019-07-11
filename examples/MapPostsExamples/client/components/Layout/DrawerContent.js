@@ -15,6 +15,8 @@ import ListItem from '@material-ui/core/ListItem';
 import { Autorenew } from '@material-ui/icons';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const useStyles = theme => ({
     searchResultsCard: {
@@ -23,6 +25,14 @@ const useStyles = theme => ({
 });
 
 class DrawerContent extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            currentTab: 0,
+        };
+    }
+
     render() {
         const marks = [
             {
@@ -43,103 +53,114 @@ class DrawerContent extends Component {
 
         return (
             <Grid container justify="flex-start" alignItems="flex-start">
-                <Grid
-                    item
-                    xs={9}
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="flex-start"
-                    spacing={2}
-                    style={{ padding: '5%' }}
-                >
-                    <Grid item>
-                        <Typography variant="h6">Tags:</Typography>
-                    </Grid>
-                    <Grid item container>
-                        <TextField fullWidth placeholder="Comma separated list" onChange={ev => console.log(ev.target.value)} />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h6" gutterBottom>
-                            Date:
-                        </Typography>
-                    </Grid>
-                    <Grid item container>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            onChange={ev => console.log(ev.target.value)}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h6">Time:</Typography>
-                    </Grid>
-                    <Grid item container>
-                        <Slider
-                            defaultValue={[0, 23]}
-                            step={1}
-                            min={0}
-                            max={23}
-                            component={'div'}
-                            marks={marks}
-                            valueLabelDisplay="auto"
-                            onChangeCommitted={(ev, newValue) => console.log(newValue)}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h6">Distance:</Typography>
-                    </Grid>
-                    <Grid item>WHAT DISTANCE?</Grid>
-                    <Grid item>
-                        <Typography variant="h6">Number of participants:</Typography>
-                    </Grid>
-                    <Grid item container>
-                        <Grid item container alignItems="flex-end">
-                            <Typography variant="subtitle2">More than:</Typography>
+                <Grid item xs={12} container>
+                    <AppBar position="static">
+                        <Tabs value={this.state.currentTab} onChange={(ev, tab) => this.setState({ currentTab: tab })}>
+                            <Tab label="Options" />
+                            <Tab label="Results" />
+                        </Tabs>
+                    </AppBar>
+                </Grid>
+                {this.state.currentTab === 0 ? (
+                    <Grid
+                        item
+                        xs={12}
+                        container
+                        direction="column"
+                        justify="center"
+                        alignItems="flex-start"
+                        spacing={2}
+                        style={{ padding: '5%' }}
+                    >
+                        <Grid item>
+                            <Typography variant="h6">Tags:</Typography>
+                        </Grid>
+                        <Grid item container>
+                            <TextField fullWidth placeholder="Comma separated list" onChange={ev => console.log(ev.target.value)} />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                                Date:
+                            </Typography>
+                        </Grid>
+                        <Grid item container>
                             <TextField
-                                onChange={ev => console.log(ev.target.value)}
-                                type="number"
+                                fullWidth
+                                type="date"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                            />
-                        </Grid>
-                        <Grid item container alignItems="flex-end">
-                            <Typography variant="subtitle2">Less than:</Typography>
-                            <TextField
                                 onChange={ev => console.log(ev.target.value)}
-                                type="number"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
                             />
                         </Grid>
+                        <Grid item>
+                            <Typography variant="h6">Time:</Typography>
+                        </Grid>
+                        <Grid item container>
+                            <Slider
+                                defaultValue={[0, 23]}
+                                step={1}
+                                min={0}
+                                max={23}
+                                component={'div'}
+                                marks={marks}
+                                valueLabelDisplay="auto"
+                                onChangeCommitted={(ev, newValue) => console.log(newValue)}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h6">Distance:</Typography>
+                        </Grid>
+                        <Grid item>WHAT DISTANCE?</Grid>
+                        <Grid item>
+                            <Typography variant="h6">Number of participants:</Typography>
+                        </Grid>
+                        <Grid item container>
+                            <Grid item container alignItems="flex-end">
+                                <Typography variant="subtitle2">More than:</Typography>
+                                <TextField
+                                    onChange={ev => console.log(ev.target.value)}
+                                    type="number"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item container alignItems="flex-end">
+                                <Typography variant="subtitle2">Less than:</Typography>
+                                <TextField
+                                    onChange={ev => console.log(ev.target.value)}
+                                    type="number"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid item xs={3} container style={{ maxHeight: '100%', overflow: 'auto' }}>
-                    <Grid item container xs={12}>
-                        <Typography variant="h6" gutterBottom>
-                            Results:
-                        </Typography>
+                ) : (
+                    <Grid item xs={12} container style={{ maxHeight: '100%', overflow: 'auto' }}>
+                        <Grid item container xs={12}>
+                            <Typography variant="h6" gutterBottom>
+                                Results:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {new Array(10).fill(0).map(item => (
+                                <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
+                                    <CardContent>
+                                        <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                                            Title
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary" gutterBottom>
+                                            Bla bla bla bla bla bla
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        {new Array(10).fill(0).map(item => (
-                            <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
-                                <CardContent>
-                                    <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                                        Title
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary" gutterBottom>
-                                        Bla bla bla bla bla bla
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </Grid>
-                </Grid>
+                )}
             </Grid>
         );
     }
