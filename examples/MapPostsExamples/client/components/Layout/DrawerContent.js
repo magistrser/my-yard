@@ -146,8 +146,6 @@ class DrawerContent extends Component {
                     </Grid>
                 ) : (
                     <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
-                        {' '}
-                        {/*//style={{ maxHeight: '100%', overflow: 'auto' }}*/}
                         <Grid item container xs={12}>
                             <Typography variant="h6" gutterBottom>
                                 Results:

@@ -17,7 +17,7 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import DrawerContent from './DrawerContent';
 
-const drawerWidth = 500;
+const drawerWidth = 400;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -88,7 +88,6 @@ export default function Header(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false); // React hooks. Hipster shit imo
-    //const suka = [0, 0];
 
     function onDrawerOpen() {
         setOpen(true);
@@ -141,18 +140,6 @@ export default function Header(props) {
                     paper: classes.drawerPaper,
                 }}
             >
-                {/* <div className={classes.drawerHeader}>
-                    <Typography variant="h6">Search posts</Typography>
-                    <IconButton onClick={onDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div> */}
-                {/* <AppBar position="sticky">
-                    <IconButton onClick={onDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </AppBar>
-                <Divider /> */}
                 <DrawerContent onDrawerClose={onDrawerClose} />
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>{props.children}</main>
