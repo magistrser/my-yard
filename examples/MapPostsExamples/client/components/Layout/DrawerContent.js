@@ -54,11 +54,17 @@ class DrawerContent extends Component {
         return (
             <Grid container justify="flex-start" alignItems="flex-start">
                 <Grid item xs={12} container>
-                    <AppBar position="static">
-                        <Tabs value={this.state.currentTab} onChange={(ev, tab) => this.setState({ currentTab: tab })}>
-                            <Tab label="Options" />
-                            <Tab label="Results" />
-                        </Tabs>
+                    <AppBar position="sticky">
+                        <Toolbar>
+                            <Tabs value={this.state.currentTab} centered onChange={(ev, tab) => this.setState({ currentTab: tab })}>
+                                <Tab label="Options" />
+                                <Tab label="Results" />
+                            </Tabs>
+                            <div style={{ flexGrow: 1 }} />
+                            <IconButton onClick={this.props.onDrawerClose}>
+                                <ChevronLeftIcon style={{ color: 'white' }} />
+                            </IconButton>
+                        </Toolbar>
                     </AppBar>
                 </Grid>
                 {this.state.currentTab === 0 ? (
@@ -139,7 +145,9 @@ class DrawerContent extends Component {
                         </Grid>
                     </Grid>
                 ) : (
-                    <Grid item xs={12} container style={{ maxHeight: '100%', overflow: 'auto' }}>
+                    <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
+                        {' '}
+                        {/*//style={{ maxHeight: '100%', overflow: 'auto' }}*/}
                         <Grid item container xs={12}>
                             <Typography variant="h6" gutterBottom>
                                 Results:

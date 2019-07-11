@@ -141,14 +141,19 @@ export default function Header(props) {
                     paper: classes.drawerPaper,
                 }}
             >
-                <div className={classes.drawerHeader}>
+                {/* <div className={classes.drawerHeader}>
                     <Typography variant="h6">Search posts</Typography>
                     <IconButton onClick={onDrawerClose}>
                         <ChevronLeftIcon />
                     </IconButton>
-                </div>
-                <Divider />
-                <DrawerContent />
+                </div> */}
+                {/* <AppBar position="sticky">
+                    <IconButton onClick={onDrawerClose}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </AppBar>
+                <Divider /> */}
+                <DrawerContent onDrawerClose={onDrawerClose} />
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>{props.children}</main>
         </div>
