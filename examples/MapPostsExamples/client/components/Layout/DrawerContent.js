@@ -17,6 +17,7 @@ import Slider from '@material-ui/core/Slider';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
+import ResultList from './ResultList';
 
 const useStyles = theme => ({
     searchResultsCard: {
@@ -149,28 +150,7 @@ class DrawerContent extends Component {
                     </Grid>
                 ) : (
                     <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
-                        <List style={{ width: '100%' }}>
-                            <ListSubheader className={classes.resultListSubheader}>
-                                <Typography variant="h6" gutterBottom>
-                                    Results:
-                                </Typography>
-                                <Divider />
-                            </ListSubheader>
-                            {new Array(10).fill(0).map(item => (
-                                <ListItem>
-                                    <ListItemText>
-                                        <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
-                                            <CardHeader title="Title" />
-                                            <CardContent>
-                                                <Typography variant="body2" color="textSecondary" gutterBottom>
-                                                    Bla bla bla bla bla bla
-                                                </Typography>
-                                            </CardContent>
-                                        </Card>
-                                    </ListItemText>
-                                </ListItem>
-                            ))}
-                        </List>
+                        <ResultList />
                     </Grid>
                 )}
             </Grid>
