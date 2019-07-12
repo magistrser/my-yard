@@ -158,7 +158,6 @@ class DrawerContent extends Component {
                             </ListSubheader>
                             {new Array(10).fill(0).map(item => (
                                 <ListItem>
-                                    {/*  */}
                                     <ListItemText>
                                         <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
                                             <CardHeader title="Title" />
