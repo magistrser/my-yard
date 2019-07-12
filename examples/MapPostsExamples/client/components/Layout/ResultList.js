@@ -16,7 +16,7 @@ const useStyles = theme => ({
 
 class ResultList extends Component {
     render() {
-        const { classes } = this.props;
+        const { classes, searchResults } = this.props;
 
         return (
             <List style={{ width: '100%' }}>
@@ -26,14 +26,14 @@ class ResultList extends Component {
                     </Typography>
                     <Divider />
                 </ListSubheader>
-                {new Array(10).fill(0).map(item => (
+                {searchResults.map(item => (
                     <ListItem>
                         <ListItemText>
                             <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
-                                <CardHeader title="Title" />
+                                <CardHeader title={item.title} />
                                 <CardContent>
                                     <Typography variant="body2" color="textSecondary" gutterBottom>
-                                        Bla bla bla bla bla bla
+                                        {item.description}
                                     </Typography>
                                 </CardContent>
                             </Card>

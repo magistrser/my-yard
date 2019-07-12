@@ -17,6 +17,7 @@ import Slider from '@material-ui/core/Slider';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import ResultList from './ResultList';
 
 const useStyles = theme => ({
@@ -26,6 +27,10 @@ const useStyles = theme => ({
     resultListSubheader: {
         background: theme.palette.background.default,
     },
+    progress: {
+        margin: 'auto',
+        paddingTop: '50%',
+    },
 });
 
 class DrawerContent extends Component {
@@ -34,8 +39,20 @@ class DrawerContent extends Component {
 
         this.state = {
             currentTab: 0,
+            isSearchResultsLoaded: false,
         };
+        this.searchResults = [];
     }
+
+    onTabChange = async (ev, tab) => {
+        this.setState({ currentTab: tab });
+        setTimeout(() => {
+            this.searchResults = new Array(10).fill(0).map((item, idx) => ({ title: 'Title ' + idx, description: 'bla bla bla bla' }));
+            this.setState({ isSearchResultsLoaded: true });
+        }, 3000);
+    };
+
+    loadSearchResults = async () => {};
 
     render() {
         const marks = [
@@ -60,7 +77,7 @@ class DrawerContent extends Component {
                 <Grid item xs={12} container>
                     <AppBar position="sticky">
                         <Toolbar>
-                            <Tabs value={this.state.currentTab} centered onChange={(ev, tab) => this.setState({ currentTab: tab })}>
+                            <Tabs value={this.state.currentTab} centered onChange={this.onTabChange}>
                                 <Tab label="Options" />
                                 <Tab label="Results" />
                             </Tabs>
@@ -147,10 +164,21 @@ class DrawerContent extends Component {
                                 />
                             </Grid>
                         </Grid>
+                        <Grid item container>
+                            <Button variant="contained" color="primary" onClick={ev => this.onTabChange(ev, 1)}>
+                                search
+                            </Button>
+                        </Grid>
                     </Grid>
                 ) : (
                     <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
-                        <ResultList />
+                        {this.state.isSearchResultsLoaded ? (
+                            <ResultList searchResults={this.searchResults} />
+                        ) : (
+                            <div className={classes.progress}>
+                                <CircularProgress />
+                            </div>
+                        )}
                     </Grid>
                 )}
             </Grid>
