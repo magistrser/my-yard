@@ -6,21 +6,24 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
-import { Avatar, Divider, Grid, Paper, Card, CardContent } from '@material-ui/core';
+import { Avatar, Divider, Grid, Paper } from '@material-ui/core';
+import { Card, CardContent, CardHeader } from '@material-ui/core';
 import { Drawer } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import clsx from 'clsx';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import { Autorenew } from '@material-ui/icons';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
 
 const useStyles = theme => ({
     searchResultsCard: {
         cursor: 'pointer',
+    },
+    resultListSubheader: {
+        background: theme.palette.background.default,
     },
 });
 
@@ -146,25 +149,29 @@ class DrawerContent extends Component {
                     </Grid>
                 ) : (
                     <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
-                        <Grid item container xs={12}>
-                            <Typography variant="h6" gutterBottom>
-                                Results:
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
+                        <List style={{ width: '100%' }}>
+                            <ListSubheader className={classes.resultListSubheader}>
+                                <Typography variant="h6" gutterBottom>
+                                    Results:
+                                </Typography>
+                                <Divider />
+                            </ListSubheader>
                             {new Array(10).fill(0).map(item => (
-                                <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
-                                    <CardContent>
-                                        <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                                            Title
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary" gutterBottom>
-                                            Bla bla bla bla bla bla
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
+                                <ListItem>
+                                    {/*  */}
+                                    <ListItemText>
+                                        <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
+                                            <CardHeader title="Title" />
+                                            <CardContent>
+                                                <Typography variant="body2" color="textSecondary" gutterBottom>
+                                                    Bla bla bla bla bla bla
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </ListItemText>
+                                </ListItem>
                             ))}
-                        </Grid>
+                        </List>
                     </Grid>
                 )}
             </Grid>
