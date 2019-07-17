@@ -142,6 +142,12 @@ export default class Storage {
                     }
                 });
             }
+            if (post.tags.length > 0) {
+                const sqlInsertTags = `insert or ignore into Tags (name) values ${post.tags.map(tag => `(${tag})`).join(', ')};`;
+                const sqlAddTagsToPost = `insert into PostsTagsMap select 
+                    ${post.id} as postId, t.id as tagId from 
+                    (select id from Tags where name in ${post.tags.map(tag => `'${tag}'`).join(', ')} ) as t`;
+            }
         });
     }
 
