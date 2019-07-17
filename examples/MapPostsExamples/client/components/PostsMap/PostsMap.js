@@ -57,10 +57,15 @@ export default class PostsMap extends Component {
                 options: {
                     maxWidth: [30, 100, 150],
                     selectOnClick: false,
+                    position: {
+                        // 'auto' not working
+                        right: '10px',
+                        top: '100px',
+                    },
                 },
             });
             addPostBtn.events.add('click', this.togglePostAddingMode);
-            this.mapInstance.controls.add(addPostBtn, { float: 'right' });
+            this.mapInstance.controls.add(addPostBtn /*, { float: 'right' }*/); // float right not working for reason unclear
         }
     };
 
