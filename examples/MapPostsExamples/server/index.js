@@ -138,6 +138,7 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
     const post = {
         id: postId,
         userId: req.user.id,
+        title: req.body.title,
         text: req.body.text,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
