@@ -140,6 +140,7 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
         userId: req.user.id,
         title: req.body.title,
         text: req.body.text,
+        tags: req.body.tags.trim().split(/\s+/),
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         images,
