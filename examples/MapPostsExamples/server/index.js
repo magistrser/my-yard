@@ -185,6 +185,21 @@ app.get('/api/get-post-info', async (req, res) => {
     }
 });
 
+app.post('/api/search-posts', async (req, res) => {
+    try {
+        const tags = req.body.tags && req.body.tags.trim().split(/\s+/);
+        const participantsRange =
+            req.body.participantsFrom && req.body.participantsTo
+                ? [Number(req.body.participantsFrom), Number(req.body.participantsTo)]
+                : undefined;
+        const searchResults = await Storage.searchPosts({ tags, participantsRange });
+        res.json({ searchResults, tags, participantsRange });
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).send();
+    }
+});
+
 /**
  * Comments
  */
