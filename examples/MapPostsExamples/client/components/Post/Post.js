@@ -13,6 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import Comment from '../Comment/Comment';
 import CommentBox from '../CommentBox/CommentBox';
+import Chip from '@material-ui/core/Chip';
 
 export default class Post extends Component {
     constructor(props) {
@@ -97,6 +98,17 @@ export default class Post extends Component {
                             {this.state.post.text}
                         </Typography>
                         <hr />
+                    </Grid>
+                    <Grid item container>
+                        {this.state.post.tags.map(tag => (
+                            <Chip
+                                label={tag}
+                                variant="default"
+                                size="small"
+                                color="primary"
+                                style={{ marginRight: 10, marginBottom: 10 }}
+                            />
+                        ))}
                     </Grid>
                     <Grid item container>
                         <CommentBox
