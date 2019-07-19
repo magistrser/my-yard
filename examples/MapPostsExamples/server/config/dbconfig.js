@@ -280,14 +280,14 @@ export default class Storage {
             let post = {};
             this._db.get(
                 `select p.id,
-                            p.title, 
-                            p.text, 
-                            p.timestamp, 
-                            u.fullName as author, 
-                            ph.url as avatar, 
-                            pgp.latitude, 
-                            pgp.longitude, 
-                            s.subCount 
+                        p.title, 
+                        p.text, 
+                        p.timestamp, 
+                        u.fullName as author, 
+                        ph.url as avatar, 
+                        pgp.latitude, 
+                        pgp.longitude, 
+                        s.subCount 
                     from Posts p 
                         join Users u on p.userId = u.id 
                         join Photos ph on p.userId = ph.userId 
@@ -315,13 +315,33 @@ export default class Storage {
                             },
                             (err, rows) => {
                                 if (err) {
+                                    console.error('[ERROR] ', err);
                                     reject(err);
                                 } else {
                                     post.images = [];
                                     rows.forEach(row => {
                                         post.images.push(row.imageName);
                                     });
-                                    resolve(post);
+                                    this._db.all(
+                                        `select t.name as tagName 
+                                        from Posts p 
+                                        inner join PostsTagsMap ptm on p.id = ptm.postId 
+                                        inner join Tags t on ptm.tagId = t.id 
+                                        where p.id = ?; `,
+                                        postId,
+                                        (err, rows) => {
+                                            if (err) {
+                                                console.error('[ERROR] ', err);
+                                                reject(err);
+                                            } else {
+                                                post.tags = [];
+                                                rows.forEach(row => {
+                                                    post.tags.push(row.tagName);
+                                                });
+                                                resolve(post);
+                                            }
+                                        }
+                                    );
                                 }
                             }
                         );
