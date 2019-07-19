@@ -381,7 +381,7 @@ export default class Storage {
                     console.error(err);
                     reject(err);
                 } else {
-                    resolve({ rows });
+                    resolve(rows);
                 }
             });
         });
