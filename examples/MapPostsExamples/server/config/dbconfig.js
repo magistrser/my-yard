@@ -143,20 +143,21 @@ export default class Storage {
                 });
             }
             if (post.tags.length > 0) {
-                const sqlInsertTags = `insert or ignore into Tags (name) values ${post.tags.map(tag => `('${tag}')`).join(', ')} ; `;
+                const sqlInsertTags = `insert or ignore into Tags (name) values ${post.tags.map(tag => '(?)').join(', ')} ; `;
+                const insertTagsArgs = post.tags.map(tag => `${tag}`);
                 const sqlAddTagsToPost = `insert into PostsTagsMap select 
-                    '${post.id}' as postId, t.id as tagId from 
-                    (select id from Tags where name in (${post.tags.map(tag => `'${tag}'`).join(', ')}) ) as t `;
+                    ? as postId, t.id as tagId from 
+                    (select id from Tags where name in (${post.tags.map(tag => '?').join(', ')}) ) as t `;
+                const addTagsToPostArgs = [post.id, ...insertTagsArgs];
 
-                console.log('sqlInsertTags = ', sqlInsertTags);
-                console.log('sqlAddTagsToPost = `', sqlAddTagsToPost);
-                this._db.run(sqlInsertTags, err => {
+                this._db.run(sqlInsertTags, insertTagsArgs, err => {
                     if (err) {
+                        console.error('[ERROR] ', err);
                         reject(err);
                     } else {
-                        this._db.run(sqlAddTagsToPost, err => {
+                        this._db.run(sqlAddTagsToPost, addTagsToPostArgs, err => {
                             if (err) {
-                                console.log('BLJAD ');
+                                console.error('[ERROR] ', err);
                                 reject(err);
                             } else {
                                 resolve();
