@@ -22,7 +22,7 @@ export default class SubscribeButton extends Component {
     }
 
     async componentDidMount() {
-        if (!this.props.isAuthorized) {
+        if (!this.props.isAuthenticated) {
             return;
         }
         const response = await axios.get('/api/check-subscription-status', {
@@ -68,7 +68,6 @@ export default class SubscribeButton extends Component {
                     }}
                     postId={this.props.postId}
                 />
-
                 <Grid item>
                     <Button onClick={this.handleCurrentSubscribersClick}>
                         Subscribed users: {this.props.subCount}
@@ -76,7 +75,7 @@ export default class SubscribeButton extends Component {
                     </Button>
                 </Grid>
                 <Grid item>
-                    {this.props.isAuthorized && this.state.subscriptionStatusLoaded ? (
+                    {this.props.isAuthenticated && this.state.subscriptionStatusLoaded ? (
                         <Button variant="contained" color={buttonColor} onClick={this.handleSubscribeButtonClick}>
                             {this.state.subscribed ? 'Unsubscribe' : 'Subscribe'}
                         </Button>
