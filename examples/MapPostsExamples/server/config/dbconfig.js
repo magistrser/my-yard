@@ -194,6 +194,7 @@ export default class Storage {
                 )
                 .all('select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId', (err, rows) => {
                     if (err) {
+                        console.error('[ERROR] ', err);
                         reject(err);
                     } else {
                         posts.forEach(post => {
@@ -204,6 +205,25 @@ export default class Storage {
                         });
                     }
                 })
+                .all(
+                    `select p.id as postId, t.name as tagName 
+                    from Posts p 
+                    inner join PostsTagsMap ptm on p.id = ptm.postId 
+                    inner join Tags t on ptm.tagId = t.id; `,
+                    (err, rows) => {
+                        if (err) {
+                            console.error('[ERROR] ', err);
+                            reject(err);
+                        } else {
+                            posts.forEach(post => {
+                                post.tags = [];
+                                rows.filter(row => post.id === row.postId).forEach(row => {
+                                    post.tags.push(row.tagName);
+                                });
+                            });
+                        }
+                    }
+                )
                 .all(
                     `select 
                         posts.id as postId, 
