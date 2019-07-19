@@ -103,7 +103,7 @@ class DrawerContent extends Component {
                             <Typography variant="h6">Tags:</Typography>
                         </Grid>
                         <Grid item container>
-                            <TextField fullWidth placeholder="Comma separated list" onChange={ev => console.log(ev.target.value)} />
+                            <TextField fullWidth placeholder="Whitespace separated list" onChange={ev => console.log(ev.target.value)} />
                         </Grid>
                         <Grid item>
                             <Typography variant="h6" gutterBottom>
