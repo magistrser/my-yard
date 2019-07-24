@@ -55,10 +55,8 @@ class DrawerContent extends Component {
     onTabChange = async (ev, tab) => {
         this.setState({ currentTab: tab });
         if (tab != 0) {
-            console.log('form data: ', this.state.searchFormData);
             const { data: result } = await this.loadSearchResults();
-            console.log('result: ', result);
-            this.searchResults = new Array(10).fill(0).map((item, idx) => ({ title: 'Title ' + idx, description: 'bla bla bla bla' }));
+            this.searchResults = result.map(item => ({ title: item.title, description: item.text.slice(0, 50) }));
             this.setState({ isSearchResultsLoaded: true });
         }
     };
