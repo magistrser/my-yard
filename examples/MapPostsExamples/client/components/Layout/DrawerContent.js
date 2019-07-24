@@ -19,6 +19,7 @@ import Tab from '@material-ui/core/Tab';
 import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ResultList from './ResultList';
+import axios from 'axios';
 
 const useStyles = theme => ({
     searchResultsCard: {
@@ -40,16 +41,24 @@ class DrawerContent extends Component {
         this.state = {
             currentTab: 0,
             isSearchResultsLoaded: false,
+            searchFormData: {
+                tags: '',
+                date: '',
+                timeRange: [0, 23],
+                fromSubCount: '',
+                toSubCount: '',
+            },
         };
         this.searchResults = [];
     }
 
     onTabChange = async (ev, tab) => {
         this.setState({ currentTab: tab });
-        setTimeout(() => {
+        if (tab != 0) {
+            console.log('form data: ', this.state.searchFormData);
             this.searchResults = new Array(10).fill(0).map((item, idx) => ({ title: 'Title ' + idx, description: 'bla bla bla bla' }));
             this.setState({ isSearchResultsLoaded: true });
-        }, 3000);
+        }
     };
 
     loadSearchResults = async () => {};
@@ -103,7 +112,19 @@ class DrawerContent extends Component {
                             <Typography variant="h6">Tags:</Typography>
                         </Grid>
                         <Grid item container>
-                            <TextField fullWidth placeholder="Whitespace separated list" onChange={ev => console.log(ev.target.value)} />
+                            <TextField
+                                fullWidth
+                                placeholder="Whitespace separated list"
+                                value={this.state.searchFormData.tags}
+                                onChange={ev =>
+                                    this.setState({
+                                        searchFormData: {
+                                            ...this.state.searchFormData,
+                                            tags: ev.target.value,
+                                        },
+                                    })
+                                }
+                            />
                         </Grid>
                         <Grid item>
                             <Typography variant="h6" gutterBottom>
@@ -117,7 +138,15 @@ class DrawerContent extends Component {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                onChange={ev => console.log(ev.target.value)}
+                                value={this.state.searchFormData.date}
+                                onChange={ev =>
+                                    this.setState({
+                                        searchFormData: {
+                                            ...this.state.searchFormData,
+                                            date: ev.target.value,
+                                        },
+                                    })
+                                }
                             />
                         </Grid>
                         <Grid item>
@@ -125,14 +154,22 @@ class DrawerContent extends Component {
                         </Grid>
                         <Grid item container>
                             <Slider
-                                defaultValue={[0, 23]}
+                                //defaultValue={this.state.timeRange ? this.state.timeRange : [0, 23]}
+                                value={this.state.searchFormData.timeRange}
                                 step={1}
                                 min={0}
                                 max={23}
                                 component={'div'}
                                 marks={marks}
                                 valueLabelDisplay="auto"
-                                onChangeCommitted={(ev, newValue) => console.log(newValue)}
+                                onChange={(ev, newValue) =>
+                                    this.setState({
+                                        searchFormData: {
+                                            ...this.state.searchFormData,
+                                            timeRange: newValue,
+                                        },
+                                    })
+                                }
                             />
                         </Grid>
                         <Grid item>
@@ -146,7 +183,10 @@ class DrawerContent extends Component {
                             <Grid item container alignItems="flex-end">
                                 <Typography variant="subtitle2">More than:</Typography>
                                 <TextField
-                                    onChange={ev => console.log(ev.target.value)}
+                                    value={this.state.searchFormData.fromSubCount}
+                                    onChange={ev =>
+                                        this.setState({ searchFormData: { ...this.state.searchFormData, fromSubCount: ev.target.value } })
+                                    }
                                     type="number"
                                     InputLabelProps={{
                                         shrink: true,
@@ -156,7 +196,10 @@ class DrawerContent extends Component {
                             <Grid item container alignItems="flex-end">
                                 <Typography variant="subtitle2">Less than:</Typography>
                                 <TextField
-                                    onChange={ev => console.log(ev.target.value)}
+                                    value={this.state.searchFormData.toSubCount}
+                                    onChange={ev =>
+                                        this.setState({ searchFormData: { ...this.state.searchFormData, toSubCount: ev.target.value } })
+                                    }
                                     type="number"
                                     InputLabelProps={{
                                         shrink: true,
