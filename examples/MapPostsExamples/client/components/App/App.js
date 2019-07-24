@@ -11,7 +11,6 @@ import { ThemeProvider } from '@material-ui/styles';
 import { Provider } from '../../context';
 
 const useStyles = theme => {
-    console.log('theme>>', theme);
     return {
         cssClass: {
             cssProp1: 23,
