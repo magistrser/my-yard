@@ -354,7 +354,7 @@ export default class Storage {
     static searchPosts(searchQuery) {
         return new Promise((resolve, reject) => {
             const { tags, date, timeRange, participantsRange } = searchQuery;
-            let sqlSelect = 'select p.id as postId from Posts p ';
+            let sqlSelect = 'select p.id as postId, p.title, p.text from Posts p ';
             let sqlWhere = 'where 1 ';
             let sqlParams = [];
 
