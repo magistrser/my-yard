@@ -45,8 +45,8 @@ class DrawerContent extends Component {
                 tags: '',
                 date: '',
                 timeRange: [0, 23],
-                fromSubCount: '',
-                toSubCount: '',
+                participantsFrom: '',
+                participantsTo: '',
             },
         };
         this.searchResults = [];
@@ -56,12 +56,18 @@ class DrawerContent extends Component {
         this.setState({ currentTab: tab });
         if (tab != 0) {
             console.log('form data: ', this.state.searchFormData);
+            const { data: result } = await this.loadSearchResults();
+            console.log('result: ', result);
             this.searchResults = new Array(10).fill(0).map((item, idx) => ({ title: 'Title ' + idx, description: 'bla bla bla bla' }));
             this.setState({ isSearchResultsLoaded: true });
         }
     };
 
-    loadSearchResults = async () => {};
+    loadSearchResults = async () => {
+        return await axios.post('/api/search-posts', {
+            ...this.state.searchFormData,
+        });
+    };
 
     render() {
         const marks = [
@@ -183,9 +189,11 @@ class DrawerContent extends Component {
                             <Grid item container alignItems="flex-end">
                                 <Typography variant="subtitle2">More than:</Typography>
                                 <TextField
-                                    value={this.state.searchFormData.fromSubCount}
+                                    value={this.state.searchFormData.participantsFrom}
                                     onChange={ev =>
-                                        this.setState({ searchFormData: { ...this.state.searchFormData, fromSubCount: ev.target.value } })
+                                        this.setState({
+                                            searchFormData: { ...this.state.searchFormData, participantsFrom: ev.target.value },
+                                        })
                                     }
                                     type="number"
                                     InputLabelProps={{
@@ -196,9 +204,9 @@ class DrawerContent extends Component {
                             <Grid item container alignItems="flex-end">
                                 <Typography variant="subtitle2">Less than:</Typography>
                                 <TextField
-                                    value={this.state.searchFormData.toSubCount}
+                                    value={this.state.searchFormData.participantsTo}
                                     onChange={ev =>
-                                        this.setState({ searchFormData: { ...this.state.searchFormData, toSubCount: ev.target.value } })
+                                        this.setState({ searchFormData: { ...this.state.searchFormData, participantsTo: ev.target.value } })
                                     }
                                     type="number"
                                     InputLabelProps={{
