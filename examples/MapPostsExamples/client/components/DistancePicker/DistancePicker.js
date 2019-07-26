@@ -17,10 +17,12 @@ export default class DistancePicker extends Component {
     onCheckboxChange = async (ev, checked) => {
         try {
             const pos = await this.getCurrentPosition();
-            console.log('pos ', pos);
             this.setState({
                 checked: !this.state.checked,
-                currentPosition: pos,
+                currentPosition: {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude,
+                },
             });
             this.onChange();
         } catch {
@@ -55,10 +57,14 @@ export default class DistancePicker extends Component {
 
     onChange() {
         this.props.onChange &&
-            this.props.onChange({
-                currentPosition: this.state.currentPosition,
-                radius: this.state.radius,
-            });
+            this.props.onChange(
+                this.state.checked
+                    ? {
+                          currentPosition: this.state.currentPosition,
+                          radius: this.state.radius,
+                      }
+                    : null
+            );
     }
 
     render() {

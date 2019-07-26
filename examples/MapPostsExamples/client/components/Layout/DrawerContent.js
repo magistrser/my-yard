@@ -48,6 +48,7 @@ class DrawerContent extends Component {
                 timeRange: [0, 23],
                 participantsFrom: '',
                 participantsTo: '',
+                distanceInfo: null,
             },
         };
         this.searchResults = [];
@@ -181,7 +182,13 @@ class DrawerContent extends Component {
                             <Typography variant="h6">Distance:</Typography>
                         </Grid>
                         <Grid item container>
-                            <DistancePicker onChange={value => console.log('distance: ', value)} />
+                            <DistancePicker
+                                onChange={value =>
+                                    this.setState({
+                                        searchFormData: { ...this.state.searchFormData, distanceInfo: value },
+                                    })
+                                }
+                            />
                         </Grid>
                         <Grid item>
                             <Typography variant="h6">Number of participants:</Typography>
