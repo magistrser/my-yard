@@ -10,6 +10,7 @@ export default class DistancePicker extends Component {
         this.state = {
             checked: false,
             currentPosition: null,
+            radius: 0,
         };
     }
 
@@ -21,13 +22,20 @@ export default class DistancePicker extends Component {
                 checked: !this.state.checked,
                 currentPosition: pos,
             });
+            this.onChange();
         } catch {
             this.setState({
                 checked: false,
                 currentPosition: null,
             });
+            this.onChange();
             alert('Cannot get your position using Geolocation API');
         }
+    };
+
+    onTextFieldChange = ev => {
+        if (ev.target.value < 0) ev.target.value = 0;
+        this.onChange();
     };
 
     getCurrentPosition() {
@@ -45,11 +53,25 @@ export default class DistancePicker extends Component {
         });
     }
 
+    onChange() {
+        this.props.onChange &&
+            this.props.onChange({
+                currentPosition: this.state.currentPosition,
+                radius: this.state.radius,
+            });
+    }
+
     render() {
         return (
             <Grid item container>
                 <Checkbox checked={this.state.checked} onChange={this.onCheckboxChange} color="primary" />
-                <TextField type="number" label="From your location" placeholder="in meters" disabled={!this.state.checked} />
+                <TextField
+                    type="number"
+                    label="From your location"
+                    placeholder="in meters"
+                    disabled={!this.state.checked}
+                    onChange={this.onTextFieldChange}
+                />
             </Grid>
         );
     }

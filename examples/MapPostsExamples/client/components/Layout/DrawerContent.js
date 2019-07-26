@@ -181,7 +181,7 @@ class DrawerContent extends Component {
                             <Typography variant="h6">Distance:</Typography>
                         </Grid>
                         <Grid item container>
-                            <DistancePicker />
+                            <DistancePicker onChange={value => console.log('distance: ', value)} />
                         </Grid>
                         <Grid item>
                             <Typography variant="h6">Number of participants:</Typography>
