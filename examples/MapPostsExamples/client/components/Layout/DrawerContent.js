@@ -20,6 +20,7 @@ import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ResultList from './ResultList';
 import axios from 'axios';
+import DistancePicker from '../DistancePicker/DistancePicker';
 
 const useStyles = theme => ({
     searchResultsCard: {
@@ -179,7 +180,9 @@ class DrawerContent extends Component {
                         <Grid item>
                             <Typography variant="h6">Distance:</Typography>
                         </Grid>
-                        <Grid item>WHAT DISTANCE?</Grid>
+                        <Grid item container>
+                            <DistancePicker />
+                        </Grid>
                         <Grid item>
                             <Typography variant="h6">Number of participants:</Typography>
                         </Grid>
