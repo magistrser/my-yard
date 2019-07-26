@@ -37,6 +37,7 @@ export default class DistancePicker extends Component {
 
     onTextFieldChange = ev => {
         if (ev.target.value < 0) ev.target.value = 0;
+        this.setState({ radius: ev.target.value });
         this.onChange();
     };
 
@@ -72,6 +73,7 @@ export default class DistancePicker extends Component {
             <Grid item container>
                 <Checkbox checked={this.state.checked} onChange={this.onCheckboxChange} color="primary" />
                 <TextField
+                    value={this.state.radius}
                     type="number"
                     label="From your location"
                     placeholder="in meters"
