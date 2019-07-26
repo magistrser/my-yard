@@ -56,7 +56,7 @@ class DrawerContent extends Component {
         this.setState({ currentTab: tab });
         if (tab != 0) {
             const { data: result } = await this.loadSearchResults();
-            this.searchResults = result.map(item => ({ title: item.title, description: item.text.slice(0, 50) }));
+            this.searchResults = result.map(item => ({ postId: item.postId, title: item.title, description: item.text.slice(0, 50) }));
             this.setState({ isSearchResultsLoaded: true });
         }
     };
@@ -222,7 +222,7 @@ class DrawerContent extends Component {
                 ) : (
                     <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
                         {this.state.isSearchResultsLoaded ? (
-                            <ResultList searchResults={this.searchResults} />
+                            <ResultList searchResults={this.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
                         ) : (
                             <div className={classes.progress}>
                                 <CircularProgress />

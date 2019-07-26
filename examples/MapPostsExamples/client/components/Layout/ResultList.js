@@ -29,7 +29,12 @@ class ResultList extends Component {
                 {searchResults.map(item => (
                     <ListItem>
                         <ListItemText>
-                            <Card className={classes.searchResultsCard} onClick={() => alert('onSearchResultClick')}>
+                            <Card
+                                className={classes.searchResultsCard}
+                                onClick={() => {
+                                    this.props.onSearchResultClick(item.postId);
+                                }}
+                            >
                                 <CardHeader title={item.title} />
                                 <CardContent>
                                     <Typography variant="body2" color="textSecondary" gutterBottom>

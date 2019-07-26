@@ -20,6 +20,7 @@ export default class PostsMap extends Component {
             zoom: 7,
             controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
+            selectedPostId: null,
             currentPostIdx: 0,
             inPostAddingMode: false,
             isPostOpen: false,
@@ -29,6 +30,19 @@ export default class PostsMap extends Component {
     async componentDidMount() {
         console.log('This method is called twice every time'); // TODO: WHY componentDidMount is called twice? Because of redirect?
         await this.loadPosts();
+    }
+
+    componentDidUpdate(prevProps) {
+        const { selectedPostId } = this.props;
+        if (selectedPostId && prevProps.selectedPostId !== selectedPostId) {
+            const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
+            const coords = [selectedPost.latitude, selectedPost.longitude];
+            this.setState({
+                selectedPostId,
+                center: coords,
+                zoom: 13, // Works if user didnt change zoom manualy
+            });
+        }
     }
 
     async loadPosts() {
@@ -86,7 +100,7 @@ export default class PostsMap extends Component {
 
     handlePlacemarkClick = postIdx => ev => {
         ev.preventDefault();
-        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx });
+        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx, selectedPostId: null });
     };
 
     handlePostClose = ev => {
@@ -119,6 +133,9 @@ export default class PostsMap extends Component {
                                 key={post.id}
                                 defaultGeometry={[post.latitude, post.longitude]}
                                 onClick={this.handlePlacemarkClick(postIdx)}
+                                options={{
+                                    iconColor: post.id === this.state.selectedPostId ? 'red' : 'blue',
+                                }}
                             />
                         ))}
                     </Map>
