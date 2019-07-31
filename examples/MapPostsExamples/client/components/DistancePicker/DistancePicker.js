@@ -7,38 +7,49 @@ export default class DistancePicker extends Component {
     constructor(props) {
         super(props);
 
+        const { value } = props;
+
         this.state = {
-            checked: false,
-            currentPosition: null,
-            radius: 0,
+            checked: (value && true) || false,
+            currentPosition: (value && value.currentPosition) || null,
+            radius: (value && value.radius) || 0,
         };
     }
 
     onCheckboxChange = async (ev, checked) => {
         try {
             const pos = await this.getCurrentPosition();
-            this.setState({
-                checked: !this.state.checked,
-                currentPosition: {
-                    latitude: pos.coords.latitude,
-                    longitude: pos.coords.longitude,
+            this.setState(
+                {
+                    checked: !this.state.checked,
+                    currentPosition: {
+                        latitude: pos.coords.latitude,
+                        longitude: pos.coords.longitude,
+                    },
                 },
-            });
-            this.onChange();
+                () => {
+                    this.onChange();
+                }
+            );
         } catch {
-            this.setState({
-                checked: false,
-                currentPosition: null,
-            });
-            this.onChange();
-            alert('Cannot get your position using Geolocation API');
+            this.setState(
+                {
+                    checked: false,
+                    currentPosition: null,
+                },
+                () => {
+                    this.onChange();
+                    alert('Cannot get your position using Geolocation API');
+                }
+            );
         }
     };
 
     onTextFieldChange = ev => {
         if (ev.target.value < 0) ev.target.value = 0;
-        this.setState({ radius: ev.target.value });
-        this.onChange();
+        this.setState({ radius: ev.target.value }, () => {
+            this.onChange();
+        });
     };
 
     getCurrentPosition() {
