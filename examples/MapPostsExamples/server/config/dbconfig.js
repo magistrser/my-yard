@@ -368,10 +368,10 @@ export default class Storage {
                 let fromTime = '00:00:00';
                 let toTime = '23:59:59';
 
-                // if timerange filter is required and parameters are valid numbers
+                // if timerange filter is required and parameters are valid numbers, set timerange parameters accordingly
                 if (timeRange && timeRange.every(val => Number(val) >= 0 && Number(val) <= 24)) {
-                    const fromHours = Number(timeRange[0]);
-                    const toHours = Number(timeRange[1]);
+                    const fromHours = timeRange[0];
+                    const toHours = timeRange[1];
                     fromTime = fromHours === 24 ? '23:59:59' : `${fromHours.toString().padStart(2, '0')}:00:00`;
                     toTime = toHours === 24 ? '23:59:59' : `${toHours.toString().padStart(2, '0')}:00:00`;
                 }
