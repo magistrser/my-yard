@@ -183,6 +183,7 @@ class DrawerContent extends Component {
                         </Grid>
                         <Grid item container>
                             <DistancePicker
+                                value={this.state.searchFormData.distanceInfo}
                                 onChange={value =>
                                     this.setState({
                                         searchFormData: { ...this.state.searchFormData, distanceInfo: value },
