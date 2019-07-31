@@ -45,7 +45,7 @@ class DrawerContent extends Component {
             searchFormData: {
                 tags: '',
                 date: '',
-                timeRange: [0, 23],
+                timeRange: [0, 24],
                 participantsFrom: '',
                 participantsTo: '',
                 distanceInfo: null,
@@ -80,8 +80,8 @@ class DrawerContent extends Component {
                 label: '12:00',
             },
             {
-                value: 22,
-                label: '23:00',
+                value: 23,
+                label: '23:59',
             },
         ];
 
@@ -160,11 +160,10 @@ class DrawerContent extends Component {
                         </Grid>
                         <Grid item container>
                             <Slider
-                                //defaultValue={this.state.timeRange ? this.state.timeRange : [0, 23]}
                                 value={this.state.searchFormData.timeRange}
                                 step={1}
                                 min={0}
-                                max={23}
+                                max={24}
                                 component={'div'}
                                 marks={marks}
                                 valueLabelDisplay="auto"
