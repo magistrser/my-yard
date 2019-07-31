@@ -353,7 +353,7 @@ export default class Storage {
 
     static searchPosts(searchQuery) {
         return new Promise((resolve, reject) => {
-            const { tags, date, timeRange, participantsRange } = searchQuery;
+            const { tags, date, timeRange, participantsRange, distanceInfo } = searchQuery;
             let sqlSelect = 'select p.id as postId, p.title, p.text from Posts p ';
             let sqlWhere = 'where 1 ';
             let sqlParams = [];
@@ -364,7 +364,20 @@ export default class Storage {
                 sqlParams = [...sqlParams, ...tags];
             }
             if (date) {
-                // TODO: Figure out how to work with date in SQLITE
+                // Default timerage
+                let fromTime = '00:00:00';
+                let toTime = '23:59:59';
+
+                // if timerange filter is required and parameters are valid numbers
+                if (timeRange && timeRange.every(val => Number(val) >= 0 && Number(val) <= 24)) {
+                    const fromHours = Number(timeRange[0]);
+                    const toHours = Number(timeRange[1]);
+                    fromTime = fromHours === 24 ? '23:59:59' : `${fromHours.toString().padStart(2, '0')}:00:00`;
+                    toTime = toHours === 24 ? '23:59:59' : `${toHours.toString().padStart(2, '0')}:00:00`;
+                }
+
+                sqlWhere += `and strftime("%s", p.timestamp) between strftime("%s", ?) and strftime("%s", ?) `;
+                sqlParams = [...sqlParams, `${date} ${fromTime}`, `${date} ${toTime}`];
             }
             if (timeRange) {
                 // TODO: Figure out how to work with time in SQLITE
