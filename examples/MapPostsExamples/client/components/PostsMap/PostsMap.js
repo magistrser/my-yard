@@ -11,20 +11,26 @@ import Modal from '@material-ui/core/Modal';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 
+const defaultYMapState = {
+    center: [55.771707, 37.678784],
+    zoom: 7,
+    controls: ['zoomControl', 'fullscreenControl'],
+};
+
 export default class PostsMap extends Component {
     constructor(props) {
         super(props);
         this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`;
         this.state = {
-            center: [55.771707, 37.678784],
-            zoom: 7,
-            controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
             selectedPostId: null,
             currentPostIdx: 0,
             inPostAddingMode: false,
             isPostOpen: false,
         };
+
+        this.ymapsAPI = null;
+        this.mapInstance = null;
     }
 
     async componentDidMount() {
@@ -37,11 +43,14 @@ export default class PostsMap extends Component {
         if (selectedPostId && prevProps.selectedPostId !== selectedPostId) {
             const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
             const coords = [selectedPost.latitude, selectedPost.longitude];
+
             this.setState({
                 selectedPostId,
-                center: coords,
-                zoom: 13, // Works if user didnt change zoom manualy
+                //zoom: 13, // Works if user didnt change zoom manualy
             });
+            if (this.mapInstance) {
+                this.mapInstance.panTo(coords, { flying: true });
+            }
         }
     }
 
@@ -124,7 +133,7 @@ export default class PostsMap extends Component {
                         onClick={this.handleMapClick}
                         onLoad={this.handleYmapsAPILoaded}
                         instanceRef={this.handleMapLoaded}
-                        state={this.state}
+                        defaultState={defaultYMapState}
                         width="100%"
                         height="100%"
                     >
