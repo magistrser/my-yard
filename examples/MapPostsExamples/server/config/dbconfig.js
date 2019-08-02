@@ -363,7 +363,7 @@ export default class Storage {
                 sqlWhere += `and t.name in (${tags.map(tag => '?').join(', ')}) `;
                 sqlParams = [...sqlParams, ...tags];
             }
-            if (date) {
+            if (date || timeRange) {
                 // Default timerage
                 let fromTime = '00:00:00';
                 let toTime = '23:59:59';
@@ -376,11 +376,12 @@ export default class Storage {
                     toTime = toHours === 24 ? '23:59:59' : `${toHours.toString().padStart(2, '0')}:00:00`;
                 }
 
-                sqlWhere += `and strftime("%s", p.timestamp) between strftime("%s", ?) and strftime("%s", ?) `;
-                sqlParams = [...sqlParams, `${date} ${fromTime}`, `${date} ${toTime}`];
-            }
-            if (timeRange) {
-                // TODO: Figure out how to work with time in SQLITE
+                sqlWhere += `and ${
+                    date
+                        ? 'strftime("%s", p.timestamp)' // If date is specified, compare times since epoch
+                        : 'strftime("%s", time(p.timestamp))' // If not - time of day
+                } between strftime("%s", ?) and strftime("%s", ?) `;
+                sqlParams = [...sqlParams, `${date || ''} ${fromTime}`.trim(), `${date || ''} ${toTime}`.trim()];
             }
             if (participantsRange) {
                 sqlSelect +=
