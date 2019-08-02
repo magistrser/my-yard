@@ -3,6 +3,7 @@
 import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
 import { v4 as generateGuid } from 'uuid';
+import { withinArea } from '../utils/GeoDataUtils';
 
 export default class Storage {
     static _dbLocation = './examples/MapPostsExamples/server/db.sqlite';
@@ -354,10 +355,12 @@ export default class Storage {
     static searchPosts(searchQuery) {
         return new Promise((resolve, reject) => {
             const { tags, date, timeRange, participantsRange, distanceInfo } = searchQuery;
-            let sqlSelect = 'select p.id as postId, p.title, p.text from Posts p ';
+
+            let sqlSelect = `select p.id as postId, p.title, p.text ${distanceInfo ? ', pgp.latitude, pgp.longitude' : ''} from Posts p `;
             let sqlWhere = 'where 1 ';
             let sqlParams = [];
 
+            // Build a search query to filter by all requested params possible
             if (tags) {
                 sqlSelect += 'left join PostsTagsMap ptm on p.id = ptm.postId left join Tags t on ptm.tagId = t.id ';
                 sqlWhere += `and t.name in (${tags.map(tag => '?').join(', ')}) `;
@@ -389,12 +392,29 @@ export default class Storage {
                 sqlWhere += `and (s.subCount between ? and ? or s.subCount is ${participantsRange.includes(0) ? 'null' : 'not null'}) `; // zero participants = NULL in subCount
                 sqlParams = [...sqlParams, ...participantsRange.sort().slice(0, 2)]; // TODO: Redundant check?
             }
+            if (distanceInfo) {
+                // There is no fucking way to put that check into sql (without stored procedures at least, which is not a thing in sqlite)
+                sqlSelect += 'left join PostGeoPositions pgp on p.id = pgp.postId ';
+            }
 
             this._db.all(sqlSelect + sqlWhere, sqlParams, (err, rows) => {
                 if (err) {
                     console.error(err);
                     reject(err);
                 } else {
+                    // Filter by parameters not included into sql filters
+                    if (distanceInfo) {
+                        const { currentPosition, radius } = distanceInfo;
+                        rows = [
+                            ...rows.filter(row =>
+                                withinArea(currentPosition, Number(radius), {
+                                    latitude: row.latitude,
+                                    longitude: row.longitude,
+                                })
+                            ),
+                        ];
+                    }
+
                     resolve(rows);
                 }
             });
