@@ -11,24 +11,47 @@ import Modal from '@material-ui/core/Modal';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 
+const defaultYMapState = {
+    center: [55.771707, 37.678784],
+    zoom: 7,
+    controls: ['zoomControl', 'fullscreenControl'],
+};
+
 export default class PostsMap extends Component {
     constructor(props) {
         super(props);
         this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`;
         this.state = {
-            center: [55.771707, 37.678784],
-            zoom: 7,
-            controls: ['zoomControl', 'fullscreenControl'],
             posts: [],
+            selectedPostId: null,
             currentPostIdx: 0,
             inPostAddingMode: false,
             isPostOpen: false,
         };
+
+        this.ymapsAPI = null;
+        this.mapInstance = null;
     }
 
     async componentDidMount() {
         console.log('This method is called twice every time'); // TODO: WHY componentDidMount is called twice? Because of redirect?
         await this.loadPosts();
+    }
+
+    componentDidUpdate(prevProps) {
+        const { selectedPostId } = this.props;
+        if (selectedPostId && prevProps.selectedPostId !== selectedPostId) {
+            const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
+            const coords = [selectedPost.latitude, selectedPost.longitude];
+
+            this.setState({
+                selectedPostId,
+                //zoom: 13, // Works if user didnt change zoom manualy
+            });
+            if (this.mapInstance) {
+                this.mapInstance.panTo(coords, { flying: true });
+            }
+        }
     }
 
     async loadPosts() {
@@ -57,10 +80,15 @@ export default class PostsMap extends Component {
                 options: {
                     maxWidth: [30, 100, 150],
                     selectOnClick: false,
+                    position: {
+                        // 'auto' not working
+                        right: '10px',
+                        top: '100px',
+                    },
                 },
             });
             addPostBtn.events.add('click', this.togglePostAddingMode);
-            this.mapInstance.controls.add(addPostBtn, { float: 'right' });
+            this.mapInstance.controls.add(addPostBtn /*, { float: 'right' }*/); // float right not working for reason unclear
         }
     };
 
@@ -81,7 +109,7 @@ export default class PostsMap extends Component {
 
     handlePlacemarkClick = postIdx => ev => {
         ev.preventDefault();
-        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx });
+        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx, selectedPostId: null });
     };
 
     handlePostClose = ev => {
@@ -105,7 +133,7 @@ export default class PostsMap extends Component {
                         onClick={this.handleMapClick}
                         onLoad={this.handleYmapsAPILoaded}
                         instanceRef={this.handleMapLoaded}
-                        state={this.state}
+                        defaultState={defaultYMapState}
                         width="100%"
                         height="100%"
                     >
@@ -114,6 +142,9 @@ export default class PostsMap extends Component {
                                 key={post.id}
                                 defaultGeometry={[post.latitude, post.longitude]}
                                 onClick={this.handlePlacemarkClick(postIdx)}
+                                options={{
+                                    iconColor: post.id === this.state.selectedPostId ? 'red' : 'blue',
+                                }}
                             />
                         ))}
                     </Map>

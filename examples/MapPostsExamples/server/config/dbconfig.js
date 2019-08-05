@@ -3,6 +3,7 @@
 import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
 import { v4 as generateGuid } from 'uuid';
+import { withinArea } from '../utils/GeoDataUtils';
 
 export default class Storage {
     static _dbLocation = './examples/MapPostsExamples/server/db.sqlite';
@@ -93,11 +94,12 @@ export default class Storage {
         return new Promise((resolve, reject) => {
             this._db
                 .run(
-                    'insert into Posts (id, userId, text) values ($id, $userId, $text)',
+                    'insert into Posts (id, userId, text, title) values ($id, $userId, $text, $title)',
                     {
                         $id: post.id,
                         $userId: post.userId,
                         $text: post.text,
+                        $title: post.title,
                     },
                     err => {
                         if (err) {
@@ -141,6 +143,30 @@ export default class Storage {
                     }
                 });
             }
+            if (post.tags.length > 0) {
+                const sqlInsertTags = `insert or ignore into Tags (name) values ${post.tags.map(tag => '(?)').join(', ')} ; `;
+                const insertTagsArgs = post.tags.map(tag => `${tag}`);
+                const sqlAddTagsToPost = `insert into PostsTagsMap select 
+                    ? as postId, t.id as tagId from 
+                    (select id from Tags where name in (${post.tags.map(tag => '?').join(', ')}) ) as t `;
+                const addTagsToPostArgs = [post.id, ...insertTagsArgs];
+
+                this._db.run(sqlInsertTags, insertTagsArgs, err => {
+                    if (err) {
+                        console.error('[ERROR] ', err);
+                        reject(err);
+                    } else {
+                        this._db.run(sqlAddTagsToPost, addTagsToPostArgs, err => {
+                            if (err) {
+                                console.error('[ERROR] ', err);
+                                reject(err);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    }
+                });
+            }
         });
     }
 
@@ -157,7 +183,7 @@ export default class Storage {
             let posts = [];
             this._db
                 .all(
-                    'select p.id, p.text, p.timestamp, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
+                    'select p.id, p.title, p.text, p.timestamp, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
                         'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
                     (err, rows) => {
                         if (err) {
@@ -169,6 +195,7 @@ export default class Storage {
                 )
                 .all('select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId', (err, rows) => {
                     if (err) {
+                        console.error('[ERROR] ', err);
                         reject(err);
                     } else {
                         posts.forEach(post => {
@@ -179,6 +206,25 @@ export default class Storage {
                         });
                     }
                 })
+                .all(
+                    `select p.id as postId, t.name as tagName 
+                    from Posts p 
+                    inner join PostsTagsMap ptm on p.id = ptm.postId 
+                    inner join Tags t on ptm.tagId = t.id; `,
+                    (err, rows) => {
+                        if (err) {
+                            console.error('[ERROR] ', err);
+                            reject(err);
+                        } else {
+                            posts.forEach(post => {
+                                post.tags = [];
+                                rows.filter(row => post.id === row.postId).forEach(row => {
+                                    post.tags.push(row.tagName);
+                                });
+                            });
+                        }
+                    }
+                )
                 .all(
                     `select 
                         posts.id as postId, 
@@ -234,14 +280,15 @@ export default class Storage {
         return new Promise((resolve, reject) => {
             let post = {};
             this._db.get(
-                `select p.id, 
-                            p.text, 
-                            p.timestamp, 
-                            u.fullName as author, 
-                            ph.url as avatar, 
-                            pgp.latitude, 
-                            pgp.longitude, 
-                            s.subCount 
+                `select p.id,
+                        p.title, 
+                        p.text, 
+                        p.timestamp, 
+                        u.fullName as author, 
+                        ph.url as avatar, 
+                        pgp.latitude, 
+                        pgp.longitude, 
+                        s.subCount 
                     from Posts p 
                         join Users u on p.userId = u.id 
                         join Photos ph on p.userId = ph.userId 
@@ -269,19 +316,108 @@ export default class Storage {
                             },
                             (err, rows) => {
                                 if (err) {
+                                    console.error('[ERROR] ', err);
                                     reject(err);
                                 } else {
                                     post.images = [];
                                     rows.forEach(row => {
                                         post.images.push(row.imageName);
                                     });
-                                    resolve(post);
+                                    this._db.all(
+                                        `select t.name as tagName 
+                                        from Posts p 
+                                        inner join PostsTagsMap ptm on p.id = ptm.postId 
+                                        inner join Tags t on ptm.tagId = t.id 
+                                        where p.id = ?; `,
+                                        postId,
+                                        (err, rows) => {
+                                            if (err) {
+                                                console.error('[ERROR] ', err);
+                                                reject(err);
+                                            } else {
+                                                post.tags = [];
+                                                rows.forEach(row => {
+                                                    post.tags.push(row.tagName);
+                                                });
+                                                resolve(post);
+                                            }
+                                        }
+                                    );
                                 }
                             }
                         );
                     }
                 }
             );
+        });
+    }
+
+    static searchPosts(searchQuery) {
+        return new Promise((resolve, reject) => {
+            const { tags, date, timeRange, participantsRange, distanceInfo } = searchQuery;
+
+            let sqlSelect = `select p.id as postId, p.title, p.text ${distanceInfo ? ', pgp.latitude, pgp.longitude' : ''} from Posts p `;
+            let sqlWhere = 'where 1 ';
+            let sqlParams = [];
+
+            // Build a search query to filter by all requested params possible
+            if (tags) {
+                sqlSelect += 'left join PostsTagsMap ptm on p.id = ptm.postId left join Tags t on ptm.tagId = t.id ';
+                sqlWhere += `and t.name in (${tags.map(tag => '?').join(', ')}) `;
+                sqlParams = [...sqlParams, ...tags];
+            }
+            if (date || timeRange) {
+                // Default timerage
+                let fromTime = '00:00:00';
+                let toTime = '23:59:59';
+
+                // if timerange filter is required and parameters are valid numbers, set timerange parameters accordingly
+                if (timeRange && timeRange.every(val => Number(val) >= 0 && Number(val) <= 24)) {
+                    const fromHours = timeRange[0];
+                    const toHours = timeRange[1];
+                    fromTime = fromHours === 24 ? '23:59:59' : `${fromHours.toString().padStart(2, '0')}:00:00`;
+                    toTime = toHours === 24 ? '23:59:59' : `${toHours.toString().padStart(2, '0')}:00:00`;
+                }
+
+                sqlWhere += `and ${
+                    date
+                        ? 'strftime("%s", p.timestamp)' // If date is specified, compare times since epoch
+                        : 'strftime("%s", time(p.timestamp))' // If not - time of day
+                } between strftime("%s", ?) and strftime("%s", ?) `;
+                sqlParams = [...sqlParams, `${date || ''} ${fromTime}`.trim(), `${date || ''} ${toTime}`.trim()];
+            }
+            if (participantsRange) {
+                sqlSelect +=
+                    'left join (select postId, count(*) as subCount from PostsSubscribersMap group by postId) s on s.postId = p.id ';
+                sqlWhere += `and (s.subCount between ? and ? or s.subCount is ${participantsRange.includes(0) ? 'null' : 'not null'}) `; // zero participants = NULL in subCount
+                sqlParams = [...sqlParams, ...participantsRange.sort().slice(0, 2)]; // TODO: Redundant check?
+            }
+            if (distanceInfo) {
+                // There is no fucking way to put that check into sql (without stored procedures at least, which is not a thing in sqlite)
+                sqlSelect += 'left join PostGeoPositions pgp on p.id = pgp.postId ';
+            }
+
+            this._db.all(sqlSelect + sqlWhere, sqlParams, (err, rows) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    // Filter by parameters not included into sql filters
+                    if (distanceInfo) {
+                        const { currentPosition, radius } = distanceInfo;
+                        rows = [
+                            ...rows.filter(row =>
+                                withinArea(currentPosition, Number(radius), {
+                                    latitude: row.latitude,
+                                    longitude: row.longitude,
+                                })
+                            ),
+                        ];
+                    }
+
+                    resolve(rows);
+                }
+            });
         });
     }
 

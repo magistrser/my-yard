@@ -1,5 +1,5 @@
 .mapContainer {
     width: 100%;
-    height: calc(100% - 5vh);
-    
+    height: calc(100%);
+    display: flex;
 }

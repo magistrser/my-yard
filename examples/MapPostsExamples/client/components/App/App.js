@@ -1,15 +1,26 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import axios from 'axios';
-import Header from '../Header/Header';
+import Layout from '../Layout/Layout';
 import './App.css';
 import PostsMap from '../PostsMap/PostsMap';
+import { withStyles } from '@material-ui/styles';
+import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
 
 import { Provider } from '../../context';
 
-export default class App extends Component {
-    constructor() {
-        super();
+const useStyles = theme => {
+    return {
+        cssClass: {
+            cssProp1: 23,
+        },
+    };
+};
+
+class App extends Component {
+    constructor(props) {
+        super(props);
     }
     state = {
         isAuthenticated: false,
@@ -32,17 +43,15 @@ export default class App extends Component {
     };
 
     render() {
+        const { classes } = this.props;
         return (
             <Provider value={this.getContext()}>
-                <Router>
-                    <>
-                        <Header {...this.state} />
-                        <Switch>
-                            <Route component={() => <PostsMap {...this.state} />} />
-                        </Switch>
-                    </>
-                </Router>
+                <Layout {...this.state}>
+                    <PostsMap {...this.state} />
+                </Layout>
             </Provider>
         );
     }
 }
+
+export default withStyles(useStyles)(App);

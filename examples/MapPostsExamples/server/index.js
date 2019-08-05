@@ -138,7 +138,9 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
     const post = {
         id: postId,
         userId: req.user.id,
+        title: req.body.title,
         text: req.body.text,
+        tags: req.body.tags.trim().split(/\s+/),
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         images,
@@ -177,6 +179,22 @@ app.get('/api/get-post-info', async (req, res) => {
         const postId = req.query.id;
         const postInfo = await Storage.getPostInfoById(postId);
         res.json(postInfo);
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        res.status(500).send();
+    }
+});
+
+app.post('/api/search-posts', async (req, res) => {
+    try {
+        const tags = req.body.tags && req.body.tags.trim().split(/\s+/);
+        const participantsRange =
+            req.body.participantsFrom && req.body.participantsTo
+                ? [Number(req.body.participantsFrom), Number(req.body.participantsTo)]
+                : undefined;
+        const { date, timeRange, distanceInfo } = req.body;
+        const searchResults = await Storage.searchPosts({ tags, participantsRange, date, timeRange, distanceInfo });
+        res.json(searchResults);
     } catch (err) {
         console.error('[ERROR] ', err);
         res.status(500).send();
