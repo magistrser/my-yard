@@ -64,7 +64,7 @@ class DrawerContent extends Component {
     };
 
     loadSearchResults = async () => {
-        return await axios.post('/api/search-posts', {
+        return axios.post('/api/search-posts', {
             ...this.state.searchFormData,
         });
     };
