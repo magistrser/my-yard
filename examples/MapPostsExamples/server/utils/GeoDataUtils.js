@@ -9,14 +9,15 @@ export const EARTH_RADIUS = 6371e3; // metres
  * @param {{ latitude: Number, longitude: Number}} secondCoords
  */
 export const calcDistance = (firstCoords, secondCoords) => {
-    const { latitude: lat1, longitude: lon1 } = firstCoords;
-    const { latitude: lat2, longitude: lon2 } = secondCoords;
+    const lat1 = toRadians(firstCoords.latitude);
+    const lon1 = toRadians(firstCoords.longitude);
+    const lat2 = toRadians(secondCoords.latitude);
+    const lon2 = toRadians(secondCoords.longitude);
     const deltaLat = lat2 - lat1;
     const deltaLon = lon2 - lon1;
 
     const a =
-        Math.sin(toRadians(deltaLat) / 2) * Math.sin(toRadians(deltaLat) / 2) +
-        Math.cos(lat1) * Math.cos(lat2) * Math.sin(toRadians(deltaLon) / 2) * Math.sin(toRadians(deltaLon) / 2);
+        Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return EARTH_RADIUS * c;
