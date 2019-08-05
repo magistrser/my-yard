@@ -31,7 +31,7 @@ export default class DistancePicker extends Component {
                     this.onChange();
                 }
             );
-        } catch {
+        } catch (err) {
             this.setState(
                 {
                     checked: false,
@@ -39,6 +39,7 @@ export default class DistancePicker extends Component {
                 },
                 () => {
                     this.onChange();
+                    console.error(err);
                     alert('Cannot get your position using Geolocation API');
                 }
             );
@@ -57,12 +58,14 @@ export default class DistancePicker extends Component {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     pos => {
-                        resolve(pos);
+                        return resolve(pos);
                     },
                     err => {
-                        reject(err);
+                        return reject(err);
                     }
                 );
+            } else {
+                reject(new Error('No geolocation API supported'));
             }
         });
     }
