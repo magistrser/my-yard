@@ -40,15 +40,14 @@ export default class PostsMap extends Component {
 
     componentDidUpdate(prevProps) {
         const { selectedPostId } = this.props;
-        if (selectedPostId && prevProps.selectedPostId !== selectedPostId) {
-            const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
-            const coords = [selectedPost.latitude, selectedPost.longitude];
-
+        if (prevProps.selectedPostId !== selectedPostId) {
             this.setState({
                 selectedPostId,
                 //zoom: 13, // Works if user didnt change zoom manualy
             });
-            if (this.mapInstance) {
+            if (this.mapInstance && selectedPostId) {
+                const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
+                const coords = [selectedPost.latitude, selectedPost.longitude];
                 this.mapInstance.panTo(coords, { flying: true });
             }
         }
@@ -109,7 +108,7 @@ export default class PostsMap extends Component {
 
     handlePlacemarkClick = postIdx => ev => {
         ev.preventDefault();
-        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx, selectedPostId: null });
+        this.setState({ isPostOpen: !this.state.isPostOpen, currentPostIdx: postIdx });
     };
 
     handlePostClose = ev => {
