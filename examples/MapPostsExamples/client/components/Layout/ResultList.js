@@ -15,6 +15,14 @@ const useStyles = theme => ({
 });
 
 class ResultList extends Component {
+    state = {
+        selectedPostId: null,
+    };
+
+    componentWillUnmount() {
+        this.props.onSearchResultClick(null);
+    }
+
     render() {
         const { classes, searchResults } = this.props;
 
@@ -27,12 +35,18 @@ class ResultList extends Component {
                     <Divider />
                 </ListSubheader>
                 {searchResults.map(item => (
-                    <ListItem>
+                    <ListItem key={item.postId}>
                         <ListItemText>
                             <Card
                                 className={classes.searchResultsCard}
+                                raised={item.postId === this.state.selectedPostId}
                                 onClick={() => {
-                                    this.props.onSearchResultClick(item.postId);
+                                    this.setState(
+                                        {
+                                            selectedPostId: item.postId,
+                                        },
+                                        () => this.props.onSearchResultClick(item.postId)
+                                    );
                                 }}
                             >
                                 <CardHeader title={item.title} />
