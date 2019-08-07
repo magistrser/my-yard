@@ -42,7 +42,7 @@ export default class PostsMap extends Component {
         const { selectedPostId } = this.props;
         if (prevProps.selectedPostId !== selectedPostId) {
             this.setState({
-                selectedPostId,
+                selectedPostId, // TODO: We get it from props, should we dup it in state?
                 //zoom: 13, // Works if user didnt change zoom manualy
             });
             if (this.mapInstance && selectedPostId) {
@@ -139,16 +139,24 @@ export default class PostsMap extends Component {
                         width="100%"
                         height="100%"
                     >
-                        {this.state.posts.map((post, postIdx) => (
-                            <Placemark
-                                key={post.id}
-                                defaultGeometry={[post.latitude, post.longitude]}
-                                onClick={this.handlePlacemarkClick(postIdx)}
-                                options={{
-                                    iconColor: post.id === this.state.selectedPostId ? 'red' : 'blue',
-                                }}
-                            />
-                        ))}
+                        {this.state.posts.map((post, postIdx) => {
+                            let iconColor =
+                                post.id === this.state.selectedPostId
+                                    ? 'red'
+                                    : this.props.searchResults?.some(r => r.postId === post.id)
+                                    ? 'purple'
+                                    : 'blue';
+                            return (
+                                <Placemark
+                                    key={post.id}
+                                    defaultGeometry={[post.latitude, post.longitude]}
+                                    onClick={this.handlePlacemarkClick(postIdx)}
+                                    options={{
+                                        iconColor,
+                                    }}
+                                />
+                            );
+                        })}
                     </Map>
                 </YMaps>
             </div>
