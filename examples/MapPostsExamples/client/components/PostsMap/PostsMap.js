@@ -30,6 +30,7 @@ export default class PostsMap extends Component {
 
         this.ymapsAPI = null;
         this.mapInstance = null;
+        this.circle = null;
     }
 
     async componentDidMount() {
@@ -43,6 +44,17 @@ export default class PostsMap extends Component {
             const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
             const coords = [selectedPost.latitude, selectedPost.longitude];
             this.mapInstance.panTo(coords, { flying: true });
+        }
+        if (this.mapInstance) {
+            const { distanceInfo } = this.props;
+            let radius = 0;
+            let coords = [0, 0];
+            if (distanceInfo) {
+                radius = distanceInfo.radius;
+                coords = [distanceInfo.currentPosition.latitude, distanceInfo.currentPosition.longitude];
+            }
+            this.circle.geometry.setRadius(radius);
+            this.circle.geometry.setCoordinates(coords);
         }
     }
 
@@ -63,8 +75,8 @@ export default class PostsMap extends Component {
 
     handleYmapsAPILoaded = ymaps => {
         this.ymapsAPI = ymaps;
+        // Add "add post" button
         if (this.props.isAuthenticated) {
-            // Add "add post" button
             const addPostBtn = new ymaps.control.Button({
                 data: {
                     content: 'Добавить пост',
@@ -82,6 +94,11 @@ export default class PostsMap extends Component {
             addPostBtn.events.add('click', this.togglePostAddingMode);
             this.mapInstance.controls.add(addPostBtn /*, { float: 'right' }*/); // float right not working for reason unclear
         }
+        // Add initial circle
+        const coords = [0, 0];
+        const radius = 0;
+        this.circle = new this.ymapsAPI.Circle([coords, radius], undefined, { fillOpacity: 0.3 });
+        this.mapInstance.geoObjects.add(this.circle);
     };
 
     togglePostAddingMode = ev => {
