@@ -59,6 +59,7 @@ class DrawerContent extends Component {
         if (tab != 0) {
             const { data: result } = await this.loadSearchResults();
             this.searchResults = result.map(item => ({ postId: item.postId, title: item.title, description: item.text.slice(0, 50) }));
+            this.props.onSearchResultsLoaded(this.searchResults);
             this.setState({ isSearchResultsLoaded: true });
         }
     };

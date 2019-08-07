@@ -89,7 +89,8 @@ export default function Layout(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false); // React hooks. Hipster shit imo
-    const [selectedPostId, setSelectedPostId] = React.useState(false);
+    const [selectedPostId, setSelectedPostId] = React.useState(null);
+    const [searchResults, setSearchResults] = React.useState(null);
 
     function onDrawerOpen() {
         setOpen(true);
@@ -142,10 +143,14 @@ export default function Layout(props) {
                     paper: classes.drawerPaper,
                 }}
             >
-                <DrawerContent onDrawerClose={onDrawerClose} onSearchResultClick={postId => setSelectedPostId(postId)} />
+                <DrawerContent
+                    onDrawerClose={onDrawerClose}
+                    onSearchResultsLoaded={posts => setSearchResults(posts)}
+                    onSearchResultClick={postId => setSelectedPostId(postId)}
+                />
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>
-                {React.Children.map(props.children, child => React.cloneElement(child, { selectedPostId }))}
+                {React.Children.map(props.children, child => React.cloneElement(child, { selectedPostId, searchResults }))}
             </main>
         </div>
     );

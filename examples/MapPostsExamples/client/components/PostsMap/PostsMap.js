@@ -20,7 +20,7 @@ const defaultYMapState = {
 export default class PostsMap extends Component {
     constructor(props) {
         super(props);
-        this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`;
+        this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`; // TODO: move it to some kind of config
         this.state = {
             posts: [],
             selectedPostId: null,
