@@ -54,6 +54,17 @@ class DrawerContent extends Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.distanceInfo !== this.props.distanceInfo) {
+            this.setState({
+                searchFormData: {
+                    ...prevState.searchFormData,
+                    distanceInfo: this.props.distanceInfo,
+                },
+            });
+        }
+    }
+
     onTabChange = async (ev, tab) => {
         let searchResults = null;
         if (tab != 0) {
