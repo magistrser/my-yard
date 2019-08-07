@@ -119,13 +119,16 @@ export default class PostsMap extends Component {
         return (
             <div className={styles.mapContainer}>
                 <Modal open={this.state.isPostOpen} onClose={this.handlePostClose}>
-                    {this.state.isPostOpen ? (
+                    {this.state.isPostOpen ? ( // TODO: Use shouldComponentUpdate instead of this
                         <Post
                             postId={this.state.posts[this.state.currentPostIdx].id}
                             isAuthenticated={this.props.isAuthenticated}
                             closePost={this.handlePostClose}
                         />
-                    ) : null}
+                    ) : (
+                        // For PropTypes of Modal to fuck off
+                        <div />
+                    )}
                 </Modal>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
