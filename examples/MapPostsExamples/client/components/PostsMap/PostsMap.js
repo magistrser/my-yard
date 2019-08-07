@@ -133,12 +133,8 @@ export default class PostsMap extends Component {
                         height="100%"
                     >
                         {this.state.posts.map((post, postIdx) => {
-                            let iconColor =
-                                post.id === this.props.selectedPostId
-                                    ? 'red'
-                                    : this.props.searchResults?.some(r => r.postId === post.id)
-                                    ? 'purple'
-                                    : 'blue';
+                            const iconColor = post.id === this.props.selectedPostId ? 'red' : 'blue';
+                            const preset = this.props.searchResults?.some(r => r.postId === post.id) ? 'islands#blueDotIcon' : undefined;
                             return (
                                 <Placemark
                                     key={post.id}
@@ -146,6 +142,7 @@ export default class PostsMap extends Component {
                                     onClick={this.handlePlacemarkClick(postIdx)}
                                     options={{
                                         iconColor,
+                                        preset,
                                     }}
                                 />
                             );
