@@ -97,7 +97,12 @@ export default class PostsMap extends Component {
         // Add initial circle
         const coords = [0, 0];
         const radius = 0;
-        this.circle = new this.ymapsAPI.Circle([coords, radius], undefined, { fillOpacity: 0.3 });
+        this.circle = new this.ymapsAPI.Circle(
+            [coords, radius],
+            { hintContent: 'Drag to change search zone' },
+            { draggable: true, fillOpacity: 0.3 }
+        );
+        this.circle.events.add('dragend', () => console.log(this.circle.geometry.getCoordinates()));
         this.mapInstance.geoObjects.add(this.circle);
     };
 
