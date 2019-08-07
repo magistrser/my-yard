@@ -23,7 +23,6 @@ export default class PostsMap extends Component {
         this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`; // TODO: move it to some kind of config
         this.state = {
             posts: [],
-            selectedPostId: null,
             currentPostIdx: 0,
             inPostAddingMode: false,
             isPostOpen: false,
@@ -40,16 +39,10 @@ export default class PostsMap extends Component {
 
     componentDidUpdate(prevProps) {
         const { selectedPostId } = this.props;
-        if (prevProps.selectedPostId !== selectedPostId) {
-            this.setState({
-                selectedPostId, // TODO: We get it from props, should we dup it in state?
-                //zoom: 13, // Works if user didnt change zoom manualy
-            });
-            if (this.mapInstance && selectedPostId) {
-                const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
-                const coords = [selectedPost.latitude, selectedPost.longitude];
-                this.mapInstance.panTo(coords, { flying: true });
-            }
+        if (selectedPostId && prevProps.selectedPostId !== selectedPostId && this.mapInstance) {
+            const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
+            const coords = [selectedPost.latitude, selectedPost.longitude];
+            this.mapInstance.panTo(coords, { flying: true });
         }
     }
 
@@ -141,7 +134,7 @@ export default class PostsMap extends Component {
                     >
                         {this.state.posts.map((post, postIdx) => {
                             let iconColor =
-                                post.id === this.state.selectedPostId
+                                post.id === this.props.selectedPostId
                                     ? 'red'
                                     : this.props.searchResults?.some(r => r.postId === post.id)
                                     ? 'purple'
