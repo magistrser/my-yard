@@ -149,10 +149,18 @@ export default function Layout(props) {
                     onSearchResultsLoaded={posts => setSearchResults(posts)}
                     onSearchResultClick={postId => setSelectedPostId(postId)}
                     onDistanceInfoChange={distanceInfo => setDistanceInfo(distanceInfo)}
+                    distanceInfo={distanceInfo}
                 />
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>
-                {React.Children.map(props.children, child => React.cloneElement(child, { selectedPostId, searchResults, distanceInfo }))}
+                {React.Children.map(props.children, child =>
+                    React.cloneElement(child, {
+                        selectedPostId,
+                        searchResults,
+                        distanceInfo,
+                        onCurrentPositionChange: currentPosition => setDistanceInfo({ ...distanceInfo, currentPosition }),
+                    })
+                )}
             </main>
         </div>
     );
