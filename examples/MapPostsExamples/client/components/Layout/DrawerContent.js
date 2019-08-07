@@ -49,19 +49,20 @@ class DrawerContent extends Component {
                 participantsFrom: '',
                 participantsTo: '',
                 distanceInfo: null,
+                searchResults: [],
             },
         };
-        this.searchResults = [];
     }
 
     onTabChange = async (ev, tab) => {
-        this.setState({ currentTab: tab });
+        let searchResults = null;
         if (tab != 0) {
             const { data: result } = await this.loadSearchResults();
-            this.searchResults = result.map(item => ({ postId: item.postId, title: item.title, description: item.text.slice(0, 50) }));
-            this.props.onSearchResultsLoaded(this.searchResults);
-            this.setState({ isSearchResultsLoaded: true });
+            searchResults = result.map(item => ({ postId: item.postId, title: item.title, description: item.text.slice(0, 50) }));
         }
+        this.setState({ isSearchResultsLoaded: true, currentTab: tab, searchResults }, () => {
+            this.props.onSearchResultsLoaded(searchResults);
+        });
     };
 
     loadSearchResults = async () => {
@@ -233,7 +234,7 @@ class DrawerContent extends Component {
                 ) : (
                     <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
                         {this.state.isSearchResultsLoaded ? (
-                            <ResultList searchResults={this.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
+                            <ResultList searchResults={this.state.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
                         ) : (
                             <div className={classes.progress}>
                                 <CircularProgress />
