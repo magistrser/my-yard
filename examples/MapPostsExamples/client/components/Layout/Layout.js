@@ -91,6 +91,7 @@ export default function Layout(props) {
     const [open, setOpen] = React.useState(false); // React hooks. Hipster shit imo
     const [selectedPostId, setSelectedPostId] = React.useState(null);
     const [searchResults, setSearchResults] = React.useState(null);
+    const [distanceInfo, setDistanceInfo] = React.useState(null);
 
     function onDrawerOpen() {
         setOpen(true);
@@ -147,10 +148,11 @@ export default function Layout(props) {
                     onDrawerClose={onDrawerClose}
                     onSearchResultsLoaded={posts => setSearchResults(posts)}
                     onSearchResultClick={postId => setSelectedPostId(postId)}
+                    onDistanceInfoChange={distanceInfo => setDistanceInfo(distanceInfo)}
                 />
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>
-                {React.Children.map(props.children, child => React.cloneElement(child, { selectedPostId, searchResults }))}
+                {React.Children.map(props.children, child => React.cloneElement(child, { selectedPostId, searchResults, distanceInfo }))}
             </main>
         </div>
     );
