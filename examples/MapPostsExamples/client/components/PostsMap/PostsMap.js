@@ -102,7 +102,13 @@ export default class PostsMap extends Component {
             { hintContent: 'Drag to change search zone' },
             { draggable: true, fillOpacity: 0.3 }
         );
-        this.circle.events.add('dragend', () => console.log(this.circle.geometry.getCoordinates()));
+        this.circle.events.add('dragend', () => {
+            const coords = this.circle.geometry.getCoordinates();
+            this.props.onCurrentPositionChange({
+                latitude: coords[0],
+                longitude: coords[1],
+            });
+        });
         this.mapInstance.geoObjects.add(this.circle);
     };
 
