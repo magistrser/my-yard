@@ -87,6 +87,7 @@ export default class DistancePicker extends Component {
             <Grid item container>
                 <Checkbox checked={this.state.checked} onChange={this.onCheckboxChange} color="primary" />
                 <TextField
+                    inputProps={{ step: 100 }}
                     value={this.state.radius}
                     type="number"
                     label="From your location"
