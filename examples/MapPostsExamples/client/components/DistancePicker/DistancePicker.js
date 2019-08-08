@@ -8,12 +8,20 @@ export default class DistancePicker extends Component {
         super(props);
 
         const { value } = props;
-
         this.state = {
             checked: (value && true) || false,
             currentPosition: (value && value.currentPosition) || null,
             radius: (value && value.radius) || 0,
         };
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { value } = this.props;
+        if (value && value?.currentPosition !== prevProps?.value?.currentPosition) {
+            this.setState({
+                currentPosition: value.currentPosition,
+            });
+        }
     }
 
     onCheckboxChange = async (ev, checked) => {
@@ -87,6 +95,7 @@ export default class DistancePicker extends Component {
             <Grid item container>
                 <Checkbox checked={this.state.checked} onChange={this.onCheckboxChange} color="primary" />
                 <TextField
+                    inputProps={{ step: 100 }}
                     value={this.state.radius}
                     type="number"
                     label="From your location"

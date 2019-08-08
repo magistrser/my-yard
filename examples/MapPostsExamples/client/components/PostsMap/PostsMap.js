@@ -20,10 +20,9 @@ const defaultYMapState = {
 export default class PostsMap extends Component {
     constructor(props) {
         super(props);
-        this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`;
+        this.apikey = `9d4c59f1-72a1-418f-a219-a1734042cd50`; // TODO: move it to some kind of config
         this.state = {
             posts: [],
-            selectedPostId: null,
             currentPostIdx: 0,
             inPostAddingMode: false,
             isPostOpen: false,
@@ -31,6 +30,7 @@ export default class PostsMap extends Component {
 
         this.ymapsAPI = null;
         this.mapInstance = null;
+        this.circle = null;
     }
 
     async componentDidMount() {
@@ -40,16 +40,21 @@ export default class PostsMap extends Component {
 
     componentDidUpdate(prevProps) {
         const { selectedPostId } = this.props;
-        if (prevProps.selectedPostId !== selectedPostId) {
-            this.setState({
-                selectedPostId,
-                //zoom: 13, // Works if user didnt change zoom manualy
-            });
-            if (this.mapInstance && selectedPostId) {
-                const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
-                const coords = [selectedPost.latitude, selectedPost.longitude];
-                this.mapInstance.panTo(coords, { flying: true });
+        if (selectedPostId && prevProps.selectedPostId !== selectedPostId && this.mapInstance) {
+            const selectedPost = this.state.posts.find(p => p.id === selectedPostId);
+            const coords = [selectedPost.latitude, selectedPost.longitude];
+            this.mapInstance.panTo(coords, { flying: true });
+        }
+        if (this.mapInstance) {
+            const { distanceInfo } = this.props;
+            let radius = 0;
+            let coords = [0, 0];
+            if (distanceInfo) {
+                radius = distanceInfo.radius;
+                coords = [distanceInfo.currentPosition.latitude, distanceInfo.currentPosition.longitude];
             }
+            this.circle.geometry.setRadius(radius);
+            this.circle.geometry.setCoordinates(coords);
         }
     }
 
@@ -70,8 +75,8 @@ export default class PostsMap extends Component {
 
     handleYmapsAPILoaded = ymaps => {
         this.ymapsAPI = ymaps;
+        // Add "add post" button
         if (this.props.isAuthenticated) {
-            // Add "add post" button
             const addPostBtn = new ymaps.control.Button({
                 data: {
                     content: 'Добавить пост',
@@ -89,6 +94,22 @@ export default class PostsMap extends Component {
             addPostBtn.events.add('click', this.togglePostAddingMode);
             this.mapInstance.controls.add(addPostBtn /*, { float: 'right' }*/); // float right not working for reason unclear
         }
+        // Add initial circle
+        const coords = [0, 0];
+        const radius = 0;
+        this.circle = new this.ymapsAPI.Circle(
+            [coords, radius],
+            { hintContent: 'Drag to change search zone' },
+            { draggable: true, fillOpacity: 0.3 }
+        );
+        this.circle.events.add('dragend', () => {
+            const coords = this.circle.geometry.getCoordinates();
+            this.props.onCurrentPositionChange({
+                latitude: coords[0],
+                longitude: coords[1],
+            });
+        });
+        this.mapInstance.geoObjects.add(this.circle);
     };
 
     togglePostAddingMode = ev => {
@@ -139,16 +160,21 @@ export default class PostsMap extends Component {
                         width="100%"
                         height="100%"
                     >
-                        {this.state.posts.map((post, postIdx) => (
-                            <Placemark
-                                key={post.id}
-                                defaultGeometry={[post.latitude, post.longitude]}
-                                onClick={this.handlePlacemarkClick(postIdx)}
-                                options={{
-                                    iconColor: post.id === this.state.selectedPostId ? 'red' : 'blue',
-                                }}
-                            />
-                        ))}
+                        {this.state.posts.map((post, postIdx) => {
+                            const iconColor = post.id === this.props.selectedPostId ? 'red' : 'blue';
+                            const preset = this.props.searchResults?.some(r => r.postId === post.id) ? 'islands#blueDotIcon' : undefined;
+                            return (
+                                <Placemark
+                                    key={post.id}
+                                    defaultGeometry={[post.latitude, post.longitude]}
+                                    onClick={this.handlePlacemarkClick(postIdx)}
+                                    options={{
+                                        iconColor,
+                                        preset,
+                                    }}
+                                />
+                            );
+                        })}
                     </Map>
                 </YMaps>
             </div>
