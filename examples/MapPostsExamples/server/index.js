@@ -118,6 +118,7 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
     // or should we pass images to database helper class and it should save them itself?
 
     const postId = generateGuid();
+    // Save images and store their names into images array
     const images = [];
     try {
         const imageArray = req.files.map(file => {
@@ -134,13 +135,14 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
         res.status(500).send();
         return;
     }
-
+    // Store post in database
     const post = {
         id: postId,
         userId: req.user.id,
         title: req.body.title,
         text: req.body.text,
         tags: req.body.tags.trim().split(/\s+/),
+        eventDateTime: req.body.eventdate,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         images,
