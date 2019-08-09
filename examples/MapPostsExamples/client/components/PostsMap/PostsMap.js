@@ -141,7 +141,7 @@ export default class PostsMap extends Component {
                 const manager = btn.state; // Get data.Manager instance (representing state obviously)
                 const isSelected = !!manager.get('selected'); // Get 'selected' field. Returns true if selected, undefined othervise
                 this.setState({
-                    showEndedEvents: !isSelected, // And it also returns PREVIOUS state
+                    showEndedEvents: !isSelected, // ...and it also returns PREVIOUS state
                 });
             }
         ); // Yes, yandex maps are this fucked up
