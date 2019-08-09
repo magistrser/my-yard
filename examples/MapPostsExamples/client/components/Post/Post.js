@@ -102,6 +102,7 @@ export default class Post extends Component {
                     <Grid item container>
                         {this.state.post.tags.map(tag => (
                             <Chip
+                                key={tag}
                                 label={tag}
                                 variant="default"
                                 size="small"
