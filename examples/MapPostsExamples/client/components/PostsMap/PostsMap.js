@@ -181,7 +181,11 @@ export default class PostsMap extends Component {
                         height="100%"
                     >
                         {this.state.posts.map((post, postIdx) => {
-                            const iconColor = post.id === this.props.selectedPostId ? 'red' : 'blue';
+                            const eventHasEnded = new Date(post.eventDateTime) < new Date();
+                            if (!this.props.showEndedEvents && eventHasEnded) {
+                                return;
+                            }
+                            const iconColor = post.id === this.props.selectedPostId ? 'red' : eventHasEnded ? 'black' : 'blue';
                             const preset = this.props.searchResults?.some(r => r.postId === post.id) ? 'islands#blueDotIcon' : undefined;
                             return (
                                 <Placemark
