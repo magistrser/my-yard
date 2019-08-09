@@ -10,6 +10,7 @@ import styles from './PostsMap.module.css';
 import Modal from '@material-ui/core/Modal';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
+import { BrushTwoTone } from '@material-ui/icons';
 
 const defaultYMapState = {
     center: [55.771707, 37.678784],
@@ -26,6 +27,7 @@ export default class PostsMap extends Component {
             currentPostIdx: 0,
             inPostAddingMode: false,
             isPostOpen: false,
+            showEndedEvents: false,
         };
 
         this.ymapsAPI = null;
@@ -99,7 +101,7 @@ export default class PostsMap extends Component {
         if (this.props.isAuthenticated) {
             const addPostBtn = new ymaps.control.Button({
                 data: {
-                    content: 'Добавить пост',
+                    content: 'Add Event',
                 },
                 options: {
                     maxWidth: [30, 100, 150],
@@ -114,6 +116,38 @@ export default class PostsMap extends Component {
             addPostBtn.events.add('click', this.togglePostAddingMode);
             this.mapInstance.controls.add(addPostBtn /*, { float: 'right' }*/); // float right not working for reason unclear
         }
+        // Add "Show ended events" button
+        const showEndedEventsBtn = new ymaps.control.Button({
+            data: {
+                content: 'Show Ended Events',
+            },
+            options: {
+                maxWidth: [30, 100, 150],
+                selectOnClick: true,
+                position: {
+                    right: '10px',
+                    top: '150px',
+                },
+            },
+            state: {
+                selected: this.state.showEndedEvents,
+            },
+        });
+        // To get button to do something on check-uncheck, we should do following:
+        showEndedEventsBtn.events.add(
+            'click', // No 'changestate' event or something similar
+            ev => {
+                const btn = ev.get('target'); // Get button instance
+                const manager = btn.state; // Get data.Manager instance (representing state obviously)
+                const isSelected = !!manager.get('selected'); // Get 'selected' field. Returns true if selected, undefined othervise
+                this.setState({
+                    showEndedEvents: !isSelected, // And it also returns PREVIOUS state
+                });
+            }
+        ); // Yes, yandex maps are this fucked up
+        // We can just switch state on every click, but the only way to wire up our state and this button state is like this/
+        this.mapInstance.controls.add(showEndedEventsBtn);
+
         // Add initial circle
         const coords = [0, 0];
         const radius = 0;
@@ -182,7 +216,7 @@ export default class PostsMap extends Component {
                     >
                         {this.state.posts.map((post, postIdx) => {
                             const eventHasEnded = new Date(post.eventDateTime) < new Date();
-                            if (!this.props.showEndedEvents && eventHasEnded) {
+                            if (!this.state.showEndedEvents && eventHasEnded) {
                                 return;
                             }
                             const iconColor = post.id === this.props.selectedPostId ? 'red' : eventHasEnded ? 'black' : 'blue';
