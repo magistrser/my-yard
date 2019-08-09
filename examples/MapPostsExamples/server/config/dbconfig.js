@@ -259,11 +259,12 @@ export default class Storage {
         });
     }
 
+    // Gets minimal information about post (not only positions) TODO: What does RESTful paradigm think about it?
     static getPostPositions() {
         return new Promise((resolve, reject) => {
             let posts = [];
             this._db.all(
-                `select p.id, pgp.latitude, pgp.longitude 
+                `select p.id, p.eventDateTime, pgp.latitude, pgp.longitude 
                     from Posts p join PostGeoPositions pgp on p.id = pgp.postId`,
                 (err, rows) => {
                     if (err) {
