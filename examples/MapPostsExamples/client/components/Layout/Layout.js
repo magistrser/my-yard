@@ -92,6 +92,7 @@ export default function Layout(props) {
     const [selectedPostId, setSelectedPostId] = React.useState(null);
     const [searchResults, setSearchResults] = React.useState(null);
     const [distanceInfo, setDistanceInfo] = React.useState(null);
+    const [showEndedSearchResults, setShowEndedSearchResults] = React.useState(false);
 
     function onDrawerOpen() {
         setOpen(true);
@@ -149,7 +150,9 @@ export default function Layout(props) {
                     onSearchResultsLoaded={posts => setSearchResults(posts)}
                     onSearchResultClick={postId => setSelectedPostId(postId)}
                     onDistanceInfoChange={distanceInfo => setDistanceInfo(distanceInfo)}
+                    onShowEndedSearchResults={isShown => setShowEndedSearchResults(isShown)}
                     distanceInfo={distanceInfo}
+                    showEndedSearchResults={showEndedSearchResults}
                 />
             </Drawer>
             <main className={clsx(classes.content, { [classes.contentShift]: open })}>
@@ -158,6 +161,7 @@ export default function Layout(props) {
                         selectedPostId,
                         searchResults,
                         distanceInfo,
+                        showEndedSearchResults,
                         onCurrentPositionChange: currentPosition => setDistanceInfo({ ...distanceInfo, currentPosition }),
                     })
                 )}

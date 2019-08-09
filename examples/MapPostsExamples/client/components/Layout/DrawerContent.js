@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
-import { Avatar, Divider, Grid, Paper } from '@material-ui/core';
+import { Avatar, Divider, Grid, Paper, Checkbox } from '@material-ui/core';
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 import { Drawer } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -21,6 +21,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ResultList from './ResultList';
 import axios from 'axios';
 import DistancePicker from '../DistancePicker/DistancePicker';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = theme => ({
     searchResultsCard: {
@@ -49,7 +50,8 @@ class DrawerContent extends Component {
                 participantsFrom: '',
                 participantsTo: '',
                 distanceInfo: null,
-                searchResults: [],
+                searchResults: [], // TODO: Why is it here?
+                showEndedSearchResults: false,
             },
         };
     }
@@ -60,6 +62,15 @@ class DrawerContent extends Component {
                 searchFormData: {
                     ...prevState.searchFormData,
                     distanceInfo: this.props.distanceInfo,
+                },
+            });
+        }
+        if (prevProps.showEndedSearchResults !== this.props.showEndedSearchResults) {
+            console.log(this.props.showEndedSearchResults);
+            this.setState({
+                searchFormData: {
+                    ...prevState.searchFormData,
+                    showEndedSearchResults: this.props.showEndedSearchResults,
                 },
             });
         }
@@ -127,6 +138,24 @@ class DrawerContent extends Component {
                         spacing={2}
                         style={{ padding: '5%' }}
                     >
+                        <Grid item>
+                            {/* TODO: Load ended events only if needed, etc.*/}
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        color="primary"
+                                        checked={this.state.searchFormData.showEndedSearchResults}
+                                        onChange={(_, checked) => {
+                                            this.props.onShowEndedSearchResults(checked);
+                                            this.setState({
+                                                searchFormData: { ...this.state.searchFormData, showEndedSearchResults: checked },
+                                            });
+                                        }}
+                                    />
+                                }
+                                label="Show ended events"
+                            />
+                        </Grid>
                         <Grid item>
                             <Typography variant="h6">Tags:</Typography>
                         </Grid>
