@@ -184,7 +184,7 @@ export default class Storage {
             let posts = [];
             this._db
                 .all(
-                    'select p.id, p.title, p.text, p.timestamp, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
+                    'select p.id, p.title, p.text, p.timestamp, p.eventDateTime, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
                         'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
                     (err, rows) => {
                         if (err) {
@@ -284,7 +284,8 @@ export default class Storage {
                 `select p.id,
                         p.title, 
                         p.text, 
-                        p.timestamp, 
+                        p.timestamp,
+                        p.eventDateTime, 
                         u.fullName as author, 
                         ph.url as avatar, 
                         pgp.latitude, 
@@ -382,8 +383,8 @@ export default class Storage {
 
                 sqlWhere += `and ${
                     date
-                        ? 'strftime("%s", p.timestamp)' // If date is specified, compare times since epoch
-                        : 'strftime("%s", time(p.timestamp))' // If not - time of day
+                        ? 'strftime("%s", p.eventDateTime)' // If date is specified, compare times since epoch
+                        : 'strftime("%s", time(p.eventDateTime))' // If not - time of day
                 } between strftime("%s", ?) and strftime("%s", ?) `;
                 sqlParams = [...sqlParams, `${date || ''} ${fromTime}`.trim(), `${date || ''} ${toTime}`.trim()];
             }
