@@ -216,11 +216,15 @@ export default class PostsMap extends Component {
                     >
                         {this.state.posts.map((post, postIdx) => {
                             const eventHasEnded = new Date(post.eventDateTime) < new Date();
-                            if (!this.state.showEndedEvents && eventHasEnded) {
+                            const isSearchResult = this.props.searchResults?.some(r => r.postId === post.id);
+
+                            if (eventHasEnded && !this.state.showEndedEvents && !(isSearchResult && this.props.showEndedSearchResults)) {
                                 return;
                             }
+
                             const iconColor = post.id === this.props.selectedPostId ? 'red' : eventHasEnded ? 'black' : 'blue';
-                            const preset = this.props.searchResults?.some(r => r.postId === post.id) ? 'islands#blueDotIcon' : undefined;
+                            const preset = isSearchResult ? 'islands#blueDotIcon' : undefined;
+
                             return (
                                 <Placemark
                                     key={post.id}
