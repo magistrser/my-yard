@@ -94,12 +94,13 @@ export default class Storage {
         return new Promise((resolve, reject) => {
             this._db
                 .run(
-                    'insert into Posts (id, userId, text, title) values ($id, $userId, $text, $title)',
+                    'insert into Posts (id, userId, text, title, eventDateTime) values ($id, $userId, $text, $title, datetime($eventDateTime))',
                     {
                         $id: post.id,
                         $userId: post.userId,
                         $text: post.text,
                         $title: post.title,
+                        $eventDateTime: post.eventDateTime,
                     },
                     err => {
                         if (err) {
