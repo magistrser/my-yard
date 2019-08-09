@@ -60,15 +60,18 @@ export default class Post extends Component {
     render() {
         return this.state.isLoaded ? (
             <div className={styles.post}>
-                <Grid container direction="column" justify="center" alignItems="center">
+                <Grid container direction="column" justify="center" alignItems="flex-start">
                     <Grid item container direction="row" justify="flex-start" alignItems="center">
                         <Grid item>
                             <Avatar src={this.state.post.avatar} className={styles.profileThumbnail} />
                         </Grid>
                         <Grid item>
                             <h3>{this.state.post.author}</h3>
-                            <Typography>{`Posted: ${this.state.post.timestamp}`}</Typography>
+                            <Typography variant="subtitle2" color="textSecondary">{`Posted: ${this.state.post.timestamp}`}</Typography>
                         </Grid>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="subtitle1" color="textPrimary">{`Event date: ${this.state.post.eventDateTime}`}</Typography>
                     </Grid>
                     <Grid item container>
                         <SubscribeButton
@@ -102,6 +105,7 @@ export default class Post extends Component {
                     <Grid item container>
                         {this.state.post.tags.map(tag => (
                             <Chip
+                                key={tag}
                                 label={tag}
                                 variant="default"
                                 size="small"

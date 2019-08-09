@@ -70,8 +70,28 @@ export default class PostsMap extends Component {
         }
         this.togglePostAddingMode();
         const coords = ev.get('coords');
-        this.mapInstance.balloon.open(coords, ReactDOMServer.renderToString(<PostForm coords={coords} />));
+        // TODO: Give this balloon up and use modal instead? It sucks
+        await this.mapInstance.balloon.open(coords, ReactDOMServer.renderToString(<PostForm coords={coords} />));
+        // This is the only way to add some interaction to html inside balloon:
+        const today = new Date();
+        const minDateTimeString = this.getDateTimeString(today);
+        const maxDateTimeString = this.getDateTimeString(today, 90); // Skip 90 days
+        // Set min and max date values on datetime input
+        document.getElementById('event_date_input').setAttribute('min', minDateTimeString);
+        document.getElementById('event_date_input').setAttribute('max', maxDateTimeString);
     };
+
+    getDateTimeString(date, offset) {
+        if (offset) {
+            const tempDate = new Date();
+            tempDate.setDate(date.getDate() + offset);
+            date = tempDate;
+        }
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // getMonth returns month number starting from 0
+        const day = date.getDate(); // Returns day of month starting from 1
+        return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}T${date.toLocaleTimeString()}`;
+    }
 
     handleYmapsAPILoaded = ymaps => {
         this.ymapsAPI = ymaps;

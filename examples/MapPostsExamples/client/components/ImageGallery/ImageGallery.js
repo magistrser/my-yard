@@ -98,6 +98,7 @@ export default class ImageGallery extends Component {
                     >
                         {this.postImages.map((postImage, idx) => (
                             <GridListTile
+                                key={postImage.src}
                                 style={{
                                     cursor: 'pointer',
                                 }}
