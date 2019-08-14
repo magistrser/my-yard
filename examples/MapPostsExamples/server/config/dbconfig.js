@@ -411,7 +411,7 @@ export default class Storage {
             if (participantsRange) {
                 sqlSelect +=
                     'left join (select postId, count(*) as subCount from PostsSubscribersMap group by postId) s on s.postId = p.id ';
-                sqlWhere += `and (s.subCount between ? and ? or s.subCount is ${participantsRange.includes(0) ? 'null' : 'not null'}) `; // zero participants = NULL in subCount
+                sqlWhere += `and (s.subCount between ? and ? ${participantsRange.includes(0) ? 'or s.subCount is null' : ''}  ) `; // zero participants = NULL in subCount
                 sqlParams = [...sqlParams, ...participantsRange.sort((a, b) => a - b).slice(0, 2)]; // TODO: Redundant check?
             }
             if (distanceInfo) {
