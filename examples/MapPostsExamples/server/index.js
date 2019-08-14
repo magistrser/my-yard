@@ -194,8 +194,8 @@ app.post('/api/search-posts', async (req, res) => {
             req.body.participantsFrom && req.body.participantsTo
                 ? [Number(req.body.participantsFrom), Number(req.body.participantsTo)]
                 : undefined;
-        const { date, timeRange, distanceInfo } = req.body;
-        const searchResults = await Storage.searchPosts({ tags, participantsRange, date, timeRange, distanceInfo });
+        const { date, timeRange, distanceInfo, showEndedSearchResults } = req.body;
+        const searchResults = await Storage.searchPosts({ tags, participantsRange, date, timeRange, distanceInfo, showEndedSearchResults });
         res.json(searchResults);
     } catch (err) {
         console.error('[ERROR] ', err);

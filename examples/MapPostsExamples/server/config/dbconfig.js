@@ -357,7 +357,7 @@ export default class Storage {
 
     static searchPosts(searchQuery) {
         return new Promise((resolve, reject) => {
-            const { tags, date, timeRange, participantsRange, distanceInfo } = searchQuery;
+            const { tags, date, timeRange, participantsRange, distanceInfo, showEndedSearchResults } = searchQuery;
 
             let sqlSelect = `select p.id as postId, p.title, p.text ${distanceInfo ? ', pgp.latitude, pgp.longitude' : ''} from Posts p `;
             let sqlWhere = 'where 1 ';
@@ -396,8 +396,11 @@ export default class Storage {
                 sqlParams = [...sqlParams, ...participantsRange.sort().slice(0, 2)]; // TODO: Redundant check?
             }
             if (distanceInfo) {
-                // There is no fucking way to put that check into sql (without stored procedures at least, which is not a thing in sqlite)
+                // There is no way to put that check into sql (without stored procedures at least, which is not a thing in sqlite)
                 sqlSelect += 'left join PostGeoPositions pgp on p.id = pgp.postId ';
+            }
+            if (!showEndedSearchResults) {
+                sqlWhere += ` and strftime('%s', p.eventDateTime) > strftime('%s', CURRENT_DATE);`;
             }
 
             this._db.all(sqlSelect + sqlWhere, sqlParams, (err, rows) => {
