@@ -357,13 +357,32 @@ export default class Storage {
 
     static searchPosts(searchQuery) {
         return new Promise((resolve, reject) => {
-            const { tags, date, timeRange, participantsRange, distanceInfo, showEndedSearchResults } = searchQuery;
+            const {
+                tags,
+                date,
+                timeRange,
+                participantsRange,
+                distanceInfo,
+                showEndedSearchResults,
+                authenticatedUserFilters,
+            } = searchQuery;
 
             let sqlSelect = `select p.id as postId, p.title, p.text ${distanceInfo ? ', pgp.latitude, pgp.longitude' : ''} from Posts p `;
             let sqlWhere = 'where 1 ';
             let sqlParams = [];
 
             // Build a search query to filter by all requested params possible
+            if (authenticatedUserFilters) {
+                const { ownEventsOnly, subscribedToEventsOnly, userId } = authenticatedUserFilters;
+                if (ownEventsOnly) {
+                    sqlWhere += ` and p.userId = ? `;
+                    sqlParams = [...sqlParams, userId];
+                }
+                if (subscribedToEventsOnly) {
+                    sqlSelect += `join (select * from PostsSubscribersMap where PostsSubscribersMap.userId = ?) psm on psm.postId = p.id `;
+                    sqlParams = [userId, ...sqlParams];
+                }
+            }
             if (tags) {
                 sqlSelect += 'left join PostsTagsMap ptm on p.id = ptm.postId left join Tags t on ptm.tagId = t.id ';
                 sqlWhere += `and t.name in (${tags.map(tag => '?').join(', ')}) `;
@@ -393,16 +412,17 @@ export default class Storage {
                 sqlSelect +=
                     'left join (select postId, count(*) as subCount from PostsSubscribersMap group by postId) s on s.postId = p.id ';
                 sqlWhere += `and (s.subCount between ? and ? or s.subCount is ${participantsRange.includes(0) ? 'null' : 'not null'}) `; // zero participants = NULL in subCount
-                sqlParams = [...sqlParams, ...participantsRange.sort().slice(0, 2)]; // TODO: Redundant check?
+                sqlParams = [...sqlParams, ...participantsRange.sort((a, b) => a - b).slice(0, 2)]; // TODO: Redundant check?
             }
             if (distanceInfo) {
                 // There is no way to put that check into sql (without stored procedures at least, which is not a thing in sqlite)
                 sqlSelect += 'left join PostGeoPositions pgp on p.id = pgp.postId ';
             }
             if (!showEndedSearchResults) {
-                sqlWhere += ` and strftime('%s', p.eventDateTime) > strftime('%s', CURRENT_DATE);`;
+                sqlWhere += `and strftime('%s', p.eventDateTime) > strftime('%s', CURRENT_DATE) `;
             }
 
+            console.log('[INFO] Search request:', '\nSQL query: ', sqlSelect + sqlWhere, '\nSQL params: ', sqlParams);
             this._db.all(sqlSelect + sqlWhere, sqlParams, (err, rows) => {
                 if (err) {
                     console.error(err);
