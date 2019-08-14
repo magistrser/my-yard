@@ -106,6 +106,7 @@ export default class DistancePicker extends Component {
                     //onChange={this.onTextFieldChange}
                 />
                 <Slider
+                    defaultValue={this.state.radius}
                     //value={this.state.radius}
                     step={100}
                     min={0}
