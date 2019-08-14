@@ -187,15 +187,33 @@ app.get('/api/get-post-info', async (req, res) => {
     }
 });
 
+// TODO: async callbacks here are BAD. Refactor
 app.post('/api/search-posts', async (req, res) => {
     try {
+        let authenticatedUserFilters;
+        if (req.isAuthenticated()) {
+            const { ownEventsOnly, subscribedToEventsOnly } = req.body;
+            authenticatedUserFilters = {
+                userId: req.user.id,
+                ownEventsOnly,
+                subscribedToEventsOnly,
+            };
+        }
         const tags = req.body.tags && req.body.tags.trim().split(/\s+/);
         const participantsRange =
             req.body.participantsFrom && req.body.participantsTo
                 ? [Number(req.body.participantsFrom), Number(req.body.participantsTo)]
                 : undefined;
         const { date, timeRange, distanceInfo, showEndedSearchResults } = req.body;
-        const searchResults = await Storage.searchPosts({ tags, participantsRange, date, timeRange, distanceInfo, showEndedSearchResults });
+        const searchResults = await Storage.searchPosts({
+            tags,
+            participantsRange,
+            date,
+            timeRange,
+            distanceInfo,
+            showEndedSearchResults,
+            authenticatedUserFilters,
+        });
         res.json(searchResults);
     } catch (err) {
         console.error('[ERROR] ', err);
