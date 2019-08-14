@@ -22,6 +22,7 @@ import ResultList from './ResultList';
 import axios from 'axios';
 import DistancePicker from '../DistancePicker/DistancePicker';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import withContext from '../../context';
 
 const useStyles = theme => ({
     searchResultsCard: {
@@ -52,6 +53,8 @@ class DrawerContent extends Component {
                 distanceInfo: null,
                 searchResults: [], // TODO: Why is it here?
                 showEndedSearchResults: false,
+                ownEventsOnly: false,
+                subscribedToEventsOnly: false,
             },
         };
     }
@@ -66,7 +69,6 @@ class DrawerContent extends Component {
             });
         }
         if (prevProps.showEndedSearchResults !== this.props.showEndedSearchResults) {
-            console.log(this.props.showEndedSearchResults);
             this.setState({
                 searchFormData: {
                     ...prevState.searchFormData,
@@ -138,23 +140,56 @@ class DrawerContent extends Component {
                         spacing={2}
                         style={{ padding: '5%' }}
                     >
-                        <Grid item>
-                            {/* TODO: Load ended events only if needed, etc.*/}
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        color="primary"
-                                        checked={this.state.searchFormData.showEndedSearchResults}
-                                        onChange={(_, checked) => {
-                                            this.props.onShowEndedSearchResults(checked);
-                                            this.setState({
-                                                searchFormData: { ...this.state.searchFormData, showEndedSearchResults: checked },
-                                            });
-                                        }}
-                                    />
-                                }
-                                label="Include ended events"
-                            />
+                        <Grid item container direction="column" justify="flex-start">
+                            <Grid item>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            color="primary"
+                                            checked={this.state.searchFormData.showEndedSearchResults}
+                                            onChange={(_, checked) => {
+                                                this.props.onShowEndedSearchResults(checked);
+                                                this.setState({
+                                                    searchFormData: { ...this.state.searchFormData, showEndedSearchResults: checked },
+                                                });
+                                            }}
+                                        />
+                                    }
+                                    label="Include ended events"
+                                />
+                            </Grid>
+                            <Grid item hidden={!this.props.isAuthenticated}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            color="primary"
+                                            checked={this.state.searchFormData.ownEventsOnly}
+                                            onChange={(_, checked) => {
+                                                this.setState({
+                                                    searchFormData: { ...this.state.searchFormData, ownEventsOnly: checked },
+                                                });
+                                            }}
+                                        />
+                                    }
+                                    label="My events"
+                                />
+                            </Grid>
+                            <Grid item hidden={!this.props.isAuthenticated}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            color="primary"
+                                            checked={this.state.searchFormData.subscribedToEventsOnly}
+                                            onChange={(_, checked) => {
+                                                this.setState({
+                                                    searchFormData: { ...this.state.searchFormData, subscribedToEventsOnly: checked },
+                                                });
+                                            }}
+                                        />
+                                    }
+                                    label="Events I'm subscribed to"
+                                />
+                            </Grid>
                         </Grid>
                         <Grid item>
                             <Typography variant="h6">Tags:</Typography>
