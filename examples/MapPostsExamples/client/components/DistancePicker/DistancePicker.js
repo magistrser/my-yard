@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Slider from '@material-ui/core/Slider';
 import { Checkbox, TextField, Typography } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import { positions } from '@material-ui/system';
@@ -97,11 +98,24 @@ export default class DistancePicker extends Component {
                 <TextField
                     inputProps={{ step: 100 }}
                     value={this.state.radius}
-                    type="number"
+                    //type="number"
                     label="From your location"
                     placeholder="in meters"
                     disabled={!this.state.checked}
-                    onChange={this.onTextFieldChange}
+                    readOnly
+                    //onChange={this.onTextFieldChange}
+                />
+                <Slider
+                    //value={this.state.radius}
+                    step={100}
+                    min={0}
+                    max={25000}
+                    component={'div'}
+                    //marks={marks}
+                    //valueLabelDisplay="auto"
+                    disabled={!this.state.checked}
+                    onChangeCommitted={(ev, newValue) => this.setState({ radius: newValue }, this.onChange)}
+                    //onChange={(ev, newValue) => this.setState({ radius: newValue }, this.onChange)} // VERY bad performance
                 />
             </Grid>
         );
