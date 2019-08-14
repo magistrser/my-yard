@@ -146,6 +146,7 @@ export default function Layout(props) {
                 }}
             >
                 <DrawerContent
+                    isAuthenticated={props.isAuthenticated}
                     onDrawerClose={onDrawerClose}
                     onSearchResultsLoaded={posts => setSearchResults(posts)}
                     onSearchResultClick={postId => setSelectedPostId(postId)}
