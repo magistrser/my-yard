@@ -153,7 +153,7 @@ class DrawerContent extends Component {
                                         }}
                                     />
                                 }
-                                label="Show ended events"
+                                label="Include ended events"
                             />
                         </Grid>
                         <Grid item>
