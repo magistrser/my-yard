@@ -308,9 +308,11 @@ class DrawerContent extends Component {
                         </Grid>
                     </Grid>
                 ) : (
-                    <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto' }}>
+                    <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto', width: '100%' }}>
                         {this.state.isSearchResultsLoaded ? (
-                            <ResultList searchResults={this.state.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
+                            <Grid container item direction="column" style={{ width: '100%' }}>
+                                <ResultList searchResults={this.state.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
+                            </Grid>
                         ) : (
                             <div className={classes.progress}>
                                 <CircularProgress />
