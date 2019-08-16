@@ -10,6 +10,8 @@ import {
     ExpansionPanelSummary,
     ExpansionPanelDetails,
     ExpansionPanelActions,
+    Select,
+    MenuItem,
 } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import { Card, CardContent, CardHeader } from '@material-ui/core';
@@ -28,29 +30,31 @@ const useStyles = theme => ({
 class ResultList extends Component {
     state = {
         selectedPostId: null,
+        sortingOptions: {
+            by: 'none',
+            direction: 'desc',
+        },
     };
 
     componentWillUnmount() {
         this.props.onSearchResultClick(null);
     }
 
+    onSelectChange = selectName => ev => {
+        this.setState({
+            sortingOptions: {
+                ...this.state.sortingOptions,
+                [selectName]: ev.target.value,
+            },
+        });
+    };
+
     render() {
         const { classes, searchResults } = this.props;
 
         return (
             <>
-                <Grid item>
-                    <ExpansionPanel>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>Options</ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <Grid container direction="column">
-                                <Grid item>Foo</Grid>
-                                <Grid item>Bar</Grid>
-                                <Grid item>Baz</Grid>
-                            </Grid>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                </Grid>
+                <Grid item>{this.sortingOptions}</Grid>
                 <Grid item>
                     <List style={{ width: '100%' }}>
                         <ListSubheader className={classes.resultListSubheader}>
@@ -87,6 +91,45 @@ class ResultList extends Component {
                     </List>
                 </Grid>
             </>
+        );
+    }
+
+    get sortingOptions() {
+        return (
+            <ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>Options</ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container direction="column">
+                        <Grid item>
+                            <Divider />
+                        </Grid>
+                        <Grid item container spacing={2}>
+                            <Grid item xs={3}>
+                                <Typography>Sort by</Typography>
+                            </Grid>
+                            <Grid item xs={9} container direction="column" alignItems="flex-end">
+                                <Grid item>
+                                    <Select value={this.state.sortingOptions.by} onChange={this.onSelectChange('by')}>
+                                        <MenuItem value="none">None</MenuItem>
+                                        <MenuItem value="distance">Distance</MenuItem>
+                                        <MenuItem value="subcount">Subscribers number</MenuItem>
+                                        <MenuItem value="timebefore">Time before event</MenuItem>
+                                    </Select>
+                                </Grid>
+                                <Grid item>
+                                    <Select value={this.state.sortingOptions.direction} onChange={this.onSelectChange('direction')}>
+                                        <MenuItem value="asc">Ascending</MenuItem>
+                                        <MenuItem value="desc">Descending</MenuItem>
+                                    </Select>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item>
+                            <Divider />
+                        </Grid>
+                    </Grid>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
         );
     }
 }
