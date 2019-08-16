@@ -97,7 +97,7 @@ class DrawerContent extends Component {
 
     render() {
         return (
-            <Grid container justify="flex-start" alignItems="flex-start">
+            <Grid container justify="flex-start" alignItems="flex-start" style={{ overflow: 'hidden' }}>
                 <Grid item xs={12} container>
                     <AppBar position="sticky">
                         <Toolbar>
@@ -134,7 +134,16 @@ class DrawerContent extends Component {
         ];
 
         return (
-            <Grid item xs={12} container direction="column" justify="center" alignItems="flex-start" spacing={2} style={{ padding: '5%' }}>
+            <Grid
+                item
+                xs={12}
+                container
+                direction="column"
+                justify="flex-start"
+                alignItems="flex-start"
+                spacing={2}
+                style={{ padding: '5% 0 0 5%', flexWrap: 'nowrap', maxHeight: 'calc(100%-64px)', overflowY: 'auto', width: '100%' }}
+            >
                 <Grid item container direction="column" justify="flex-start">
                     <Grid item>
                         <FormControlLabel
@@ -308,7 +317,7 @@ class DrawerContent extends Component {
     get resultsTab() {
         const { classes } = this.props;
         return (
-            <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto', width: '100%' }}>
+            <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflowY: 'scroll', width: '100%' }}>
                 {this.state.isSearchResultsLoaded ? (
                     <Grid container item direction="column" style={{ width: '100%' }}>
                         <ResultList searchResults={this.state.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
