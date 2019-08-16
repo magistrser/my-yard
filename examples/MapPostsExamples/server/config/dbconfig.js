@@ -3,7 +3,7 @@
 import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
 import { v4 as generateGuid } from 'uuid';
-import { withinArea } from '../utils/GeoDataUtils';
+import { withinArea, calcDistance } from '../utils/GeoDataUtils';
 
 export default class Storage {
     static _dbLocation = './examples/MapPostsExamples/server/db.sqlite';
@@ -367,9 +367,14 @@ export default class Storage {
                 authenticatedUserFilters,
             } = searchQuery;
 
-            let sqlSelect = `select p.id as postId, p.title, p.text ${distanceInfo ? ', pgp.latitude, pgp.longitude' : ''} from Posts p `;
+            let sqlSelect = `select p.id as postId, p.title, p.text, p.eventDateTime, ifnull(psmcount.subCount, 0) as subCount ${
+                distanceInfo ? ', pgp.latitude, pgp.longitude' : ''
+            } from Posts p `;
             let sqlWhere = 'where 1 ';
             let sqlParams = [];
+
+            // TODO: Joins to deliver more data. Delete commented out code when certain that nothing explodes (and write some damn unit tests)
+            sqlSelect += `left join ( select postId, count(1) as subCount from PostsSubscribersMap group by postId) psmcount on psmcount.postId = p.id `;
 
             // Build a search query to filter by all requested params possible
             if (authenticatedUserFilters) {
@@ -379,7 +384,7 @@ export default class Storage {
                     sqlParams = [...sqlParams, userId];
                 }
                 if (subscribedToEventsOnly) {
-                    sqlSelect += `join (select * from PostsSubscribersMap where PostsSubscribersMap.userId = ?) psm on psm.postId = p.id `;
+                    sqlSelect += `join (select * from PostsSubscribersMap where PostsSubscribersMap.userId = ?) psmaux on psmaux.postId = p.id `;
                     sqlParams = [userId, ...sqlParams];
                 }
             }
@@ -431,14 +436,21 @@ export default class Storage {
                     // Filter by parameters not included into sql filters
                     if (distanceInfo) {
                         const { currentPosition, radius } = distanceInfo;
-                        rows = [
-                            ...rows.filter(row =>
+                        rows = rows
+                            .filter(row =>
                                 withinArea(currentPosition, Number(radius), {
                                     latitude: row.latitude,
                                     longitude: row.longitude,
                                 })
-                            ),
-                        ];
+                            )
+                            // Add distance to results
+                            .map(row => {
+                                row.distance = calcDistance(currentPosition, {
+                                    latitude: row.latitude,
+                                    longitude: row.longitude,
+                                });
+                                return row;
+                            });
                     }
 
                     resolve(rows);
