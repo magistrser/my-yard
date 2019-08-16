@@ -144,7 +144,7 @@ class DrawerContent extends Component {
                 justify="flex-start"
                 alignItems="flex-start"
                 spacing={2}
-                style={{ padding: '5% 0 0 5%', flexWrap: 'nowrap', maxHeight: 'calc(100%-64px)', overflowY: 'auto', width: '100%' }}
+                style={{ padding: '5% 0 0 5%', flexWrap: 'nowrap', maxHeight: 'calc(100vh - 64px)', overflowY: 'auto', width: '100%' }}
             >
                 <Grid item container direction="column" justify="flex-start">
                     <Grid item>
