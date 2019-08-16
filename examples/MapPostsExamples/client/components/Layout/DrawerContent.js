@@ -56,6 +56,7 @@ class DrawerContent extends Component {
                 ownEventsOnly: false,
                 subscribedToEventsOnly: false,
             },
+            searchResults: [],
         };
     }
 
@@ -82,7 +83,8 @@ class DrawerContent extends Component {
         let searchResults = null;
         if (tab != 0) {
             const { data: result } = await this.loadSearchResults();
-            searchResults = result.map(item => ({ postId: item.postId, title: item.title, description: item.text.slice(0, 50) }));
+            console.log(result);
+            searchResults = result.map(item => ({ ...item, description: item.text.slice(0, 50) }));
         }
         this.setState({ isSearchResultsLoaded: true, currentTab: tab, searchResults }, () => {
             this.props.onSearchResultsLoaded(searchResults);
