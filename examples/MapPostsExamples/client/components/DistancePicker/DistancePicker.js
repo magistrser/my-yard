@@ -5,62 +5,42 @@ import { Grid } from '@material-ui/core';
 import { positions } from '@material-ui/system';
 
 export default class DistancePicker extends Component {
-    constructor(props) {
-        super(props);
-
-        const { value } = props;
-        this.state = {
-            checked: (value && true) || false,
-            currentPosition: (value && value.currentPosition) || null,
-            radius: (value && value.radius) || 0,
-        };
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const { value } = this.props;
-        if (value && value?.currentPosition !== prevProps?.value?.currentPosition) {
-            this.setState({
-                currentPosition: value.currentPosition,
-            });
-        }
-    }
+    defaultValue = {
+        radius: 0,
+        currentPosition: {
+            latitude: 0,
+            longitude: 0,
+        },
+    };
 
     onCheckboxChange = async (ev, checked) => {
+        if (!checked) {
+            return this.props.onChange(null);
+        }
         try {
             const pos = await this.getCurrentPosition();
-            this.setState(
-                {
-                    checked: !this.state.checked,
-                    currentPosition: {
-                        latitude: pos.coords.latitude,
-                        longitude: pos.coords.longitude,
-                    },
+            this.props.onChange({
+                radius: this.props?.value?.radius || this.defaultValue.radius,
+                currentPosition: {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude,
                 },
-                () => {
-                    this.onChange();
-                }
-            );
+            });
         } catch (err) {
-            this.setState(
-                {
-                    checked: false,
-                    currentPosition: null,
-                },
-                () => {
-                    this.onChange();
-                    console.error(err);
-                    alert('Cannot get your position using Geolocation API');
-                }
-            );
+            console.error(err);
+            alert('Cannot get your position using Geolocation API');
+            this.props.onChange(null);
         }
     };
 
-    onTextFieldChange = ev => {
-        if (ev.target.value < 0) ev.target.value = 0;
-        this.setState({ radius: ev.target.value }, () => {
-            this.onChange();
+    onSliderChange = (ev, newValue) =>
+        this.props.onChange({
+            radius: newValue,
+            currentPosition: {
+                latitude: this.props.value.currentPosition.latitude,
+                longitude: this.props.value.currentPosition.longitude,
+            },
         });
-    };
 
     getCurrentPosition() {
         return new Promise((resolve, reject) => {
@@ -79,44 +59,25 @@ export default class DistancePicker extends Component {
         });
     }
 
-    onChange() {
-        this.props.onChange &&
-            this.props.onChange(
-                this.state.checked
-                    ? {
-                          currentPosition: this.state.currentPosition,
-                          radius: this.state.radius,
-                      }
-                    : null
-            );
-    }
-
     render() {
         return (
             <Grid item container>
-                <Checkbox checked={this.state.checked} onChange={this.onCheckboxChange} color="primary" />
+                <Checkbox checked={!!this.props.value} onChange={this.onCheckboxChange} color="primary" />
                 <TextField
-                    inputProps={{ step: 100 }}
-                    value={this.state.radius}
-                    //type="number"
+                    value={this.props.value?.radius || this.defaultValue.radius}
                     label="From your location"
                     placeholder="in meters"
-                    disabled={!this.state.checked}
+                    disabled={!this.props.value}
                     readOnly
-                    //onChange={this.onTextFieldChange}
                 />
                 <Slider
-                    defaultValue={this.state.radius}
-                    //value={this.state.radius}
+                    value={this.props.value?.radius || this.defaultValue.radius}
                     step={100}
                     min={0}
                     max={25000}
                     component={'div'}
-                    //marks={marks}
-                    //valueLabelDisplay="auto"
-                    disabled={!this.state.checked}
-                    onChangeCommitted={(ev, newValue) => this.setState({ radius: newValue }, this.onChange)}
-                    //onChange={(ev, newValue) => this.setState({ radius: newValue }, this.onChange)} // VERY bad performance
+                    disabled={!this.props.value}
+                    onChange={this.onSliderChange}
                 />
             </Grid>
         );
