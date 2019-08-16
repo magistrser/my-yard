@@ -96,23 +96,6 @@ class DrawerContent extends Component {
     };
 
     render() {
-        const marks = [
-            {
-                value: 1, // HACK: if 0, label centers itself on zero and overflows the container
-                label: '00:00',
-            },
-            {
-                value: 12,
-                label: '12:00',
-            },
-            {
-                value: 23,
-                label: '23:59',
-            },
-        ];
-
-        const { classes } = this.props;
-
         return (
             <Grid container justify="flex-start" alignItems="flex-start">
                 <Grid item xs={12} container>
@@ -129,196 +112,211 @@ class DrawerContent extends Component {
                         </Toolbar>
                     </AppBar>
                 </Grid>
-                {this.state.currentTab === 0 ? (
-                    <Grid
-                        item
-                        xs={12}
-                        container
-                        direction="column"
-                        justify="center"
-                        alignItems="flex-start"
-                        spacing={2}
-                        style={{ padding: '5%' }}
-                    >
-                        <Grid item container direction="column" justify="flex-start">
-                            <Grid item>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            color="primary"
-                                            checked={this.state.searchFormData.showEndedSearchResults}
-                                            onChange={(_, checked) => {
-                                                this.props.onShowEndedSearchResults(checked);
-                                                this.setState({
-                                                    searchFormData: { ...this.state.searchFormData, showEndedSearchResults: checked },
-                                                });
-                                            }}
-                                        />
-                                    }
-                                    label="Include ended events"
-                                />
-                            </Grid>
-                            <Grid item hidden={!this.props.isAuthenticated}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            color="primary"
-                                            checked={this.state.searchFormData.ownEventsOnly}
-                                            onChange={(_, checked) => {
-                                                this.setState({
-                                                    searchFormData: { ...this.state.searchFormData, ownEventsOnly: checked },
-                                                });
-                                            }}
-                                        />
-                                    }
-                                    label="My events"
-                                />
-                            </Grid>
-                            <Grid item hidden={!this.props.isAuthenticated}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            color="primary"
-                                            checked={this.state.searchFormData.subscribedToEventsOnly}
-                                            onChange={(_, checked) => {
-                                                this.setState({
-                                                    searchFormData: { ...this.state.searchFormData, subscribedToEventsOnly: checked },
-                                                });
-                                            }}
-                                        />
-                                    }
-                                    label="Events I'm subscribed to"
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6">Tags:</Typography>
-                        </Grid>
-                        <Grid item container>
-                            <TextField
-                                fullWidth
-                                placeholder="Whitespace separated list"
-                                value={this.state.searchFormData.tags}
-                                onChange={ev =>
-                                    this.setState({
-                                        searchFormData: {
-                                            ...this.state.searchFormData,
-                                            tags: ev.target.value,
-                                        },
-                                    })
-                                }
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6" gutterBottom>
-                                Date:
-                            </Typography>
-                        </Grid>
-                        <Grid item container>
-                            <TextField
-                                fullWidth
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                value={this.state.searchFormData.date}
-                                onChange={ev =>
-                                    this.setState({
-                                        searchFormData: {
-                                            ...this.state.searchFormData,
-                                            date: ev.target.value,
-                                        },
-                                    })
-                                }
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6">Time:</Typography>
-                        </Grid>
-                        <Grid item container>
-                            <Slider
-                                value={this.state.searchFormData.timeRange}
-                                step={1}
-                                min={0}
-                                max={24}
-                                component={'div'}
-                                marks={marks}
-                                valueLabelDisplay="auto"
-                                onChange={(ev, newValue) =>
-                                    this.setState({
-                                        searchFormData: {
-                                            ...this.state.searchFormData,
-                                            timeRange: newValue,
-                                        },
-                                    })
-                                }
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6">Distance:</Typography>
-                        </Grid>
-                        <Grid item container>
-                            <DistancePicker
-                                value={this.state.searchFormData.distanceInfo}
-                                onChange={value => {
-                                    this.props.onDistanceInfoChange(value);
-                                    this.setState({
-                                        searchFormData: { ...this.state.searchFormData, distanceInfo: value },
-                                    });
-                                }}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6">Number of participants:</Typography>
-                        </Grid>
-                        <Grid item container>
-                            <Grid item container alignItems="flex-end">
-                                <Typography variant="subtitle2">More than:</Typography>
-                                <TextField
-                                    value={this.state.searchFormData.participantsFrom}
-                                    onChange={ev =>
+                {this.state.currentTab === 0 ? this.optionsTab : this.resultsTab}
+            </Grid>
+        );
+    }
+
+    get optionsTab() {
+        const marks = [
+            {
+                value: 1, // HACK: if 0, label centers itself on zero and overflows the container
+                label: '00:00',
+            },
+            {
+                value: 12,
+                label: '12:00',
+            },
+            {
+                value: 23,
+                label: '23:59',
+            },
+        ];
+
+        return (
+            <Grid item xs={12} container direction="column" justify="center" alignItems="flex-start" spacing={2} style={{ padding: '5%' }}>
+                <Grid item container direction="column" justify="flex-start">
+                    <Grid item>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    color="primary"
+                                    checked={this.state.searchFormData.showEndedSearchResults}
+                                    onChange={(_, checked) => {
+                                        this.props.onShowEndedSearchResults(checked);
                                         this.setState({
-                                            searchFormData: { ...this.state.searchFormData, participantsFrom: ev.target.value },
-                                        })
-                                    }
-                                    type="number"
-                                    InputLabelProps={{
-                                        shrink: true,
+                                            searchFormData: { ...this.state.searchFormData, showEndedSearchResults: checked },
+                                        });
                                     }}
                                 />
-                            </Grid>
-                            <Grid item container alignItems="flex-end">
-                                <Typography variant="subtitle2">Less than:</Typography>
-                                <TextField
-                                    value={this.state.searchFormData.participantsTo}
-                                    onChange={ev =>
-                                        this.setState({ searchFormData: { ...this.state.searchFormData, participantsTo: ev.target.value } })
-                                    }
-                                    type="number"
-                                    InputLabelProps={{
-                                        shrink: true,
+                            }
+                            label="Include ended events"
+                        />
+                    </Grid>
+                    <Grid item hidden={!this.props.isAuthenticated}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    color="primary"
+                                    checked={this.state.searchFormData.ownEventsOnly}
+                                    onChange={(_, checked) => {
+                                        this.setState({
+                                            searchFormData: { ...this.state.searchFormData, ownEventsOnly: checked },
+                                        });
                                     }}
                                 />
-                            </Grid>
-                        </Grid>
-                        <Grid item container>
-                            <Button variant="contained" color="primary" onClick={ev => this.onTabChange(ev, 1)}>
-                                search
-                            </Button>
-                        </Grid>
+                            }
+                            label="My events"
+                        />
+                    </Grid>
+                    <Grid item hidden={!this.props.isAuthenticated}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    color="primary"
+                                    checked={this.state.searchFormData.subscribedToEventsOnly}
+                                    onChange={(_, checked) => {
+                                        this.setState({
+                                            searchFormData: { ...this.state.searchFormData, subscribedToEventsOnly: checked },
+                                        });
+                                    }}
+                                />
+                            }
+                            label="Events I'm subscribed to"
+                        />
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    <Typography variant="h6">Tags:</Typography>
+                </Grid>
+                <Grid item container>
+                    <TextField
+                        fullWidth
+                        placeholder="Whitespace separated list"
+                        value={this.state.searchFormData.tags}
+                        onChange={ev =>
+                            this.setState({
+                                searchFormData: {
+                                    ...this.state.searchFormData,
+                                    tags: ev.target.value,
+                                },
+                            })
+                        }
+                    />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h6" gutterBottom>
+                        Date:
+                    </Typography>
+                </Grid>
+                <Grid item container>
+                    <TextField
+                        fullWidth
+                        type="date"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={this.state.searchFormData.date}
+                        onChange={ev =>
+                            this.setState({
+                                searchFormData: {
+                                    ...this.state.searchFormData,
+                                    date: ev.target.value,
+                                },
+                            })
+                        }
+                    />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h6">Time:</Typography>
+                </Grid>
+                <Grid item container>
+                    <Slider
+                        value={this.state.searchFormData.timeRange}
+                        step={1}
+                        min={0}
+                        max={24}
+                        component={'div'}
+                        marks={marks}
+                        valueLabelDisplay="auto"
+                        onChange={(ev, newValue) =>
+                            this.setState({
+                                searchFormData: {
+                                    ...this.state.searchFormData,
+                                    timeRange: newValue,
+                                },
+                            })
+                        }
+                    />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h6">Distance:</Typography>
+                </Grid>
+                <Grid item container>
+                    <DistancePicker
+                        value={this.state.searchFormData.distanceInfo}
+                        onChange={value => {
+                            this.props.onDistanceInfoChange(value);
+                            this.setState({
+                                searchFormData: { ...this.state.searchFormData, distanceInfo: value },
+                            });
+                        }}
+                    />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h6">Number of participants:</Typography>
+                </Grid>
+                <Grid item container>
+                    <Grid item container alignItems="flex-end">
+                        <Typography variant="subtitle2">More than:</Typography>
+                        <TextField
+                            value={this.state.searchFormData.participantsFrom}
+                            onChange={ev =>
+                                this.setState({
+                                    searchFormData: { ...this.state.searchFormData, participantsFrom: ev.target.value },
+                                })
+                            }
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item container alignItems="flex-end">
+                        <Typography variant="subtitle2">Less than:</Typography>
+                        <TextField
+                            value={this.state.searchFormData.participantsTo}
+                            onChange={ev =>
+                                this.setState({ searchFormData: { ...this.state.searchFormData, participantsTo: ev.target.value } })
+                            }
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid item container>
+                    <Button variant="contained" color="primary" onClick={ev => this.onTabChange(ev, 1)}>
+                        search
+                    </Button>
+                </Grid>
+            </Grid>
+        );
+    }
+
+    get resultsTab() {
+        const { classes } = this.props;
+        return (
+            <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto', width: '100%' }}>
+                {this.state.isSearchResultsLoaded ? (
+                    <Grid container item direction="column" style={{ width: '100%' }}>
+                        <ResultList searchResults={this.state.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
                     </Grid>
                 ) : (
-                    <Grid item xs={12} container style={{ maxHeight: 'calc(100% - 64px)', overflow: 'auto', width: '100%' }}>
-                        {this.state.isSearchResultsLoaded ? (
-                            <Grid container item direction="column" style={{ width: '100%' }}>
-                                <ResultList searchResults={this.state.searchResults} onSearchResultClick={this.props.onSearchResultClick} />
-                            </Grid>
-                        ) : (
-                            <div className={classes.progress}>
-                                <CircularProgress />
-                            </div>
-                        )}
-                    </Grid>
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div>
                 )}
             </Grid>
         );
