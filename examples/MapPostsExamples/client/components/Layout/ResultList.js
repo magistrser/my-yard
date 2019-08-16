@@ -95,6 +95,9 @@ class ResultList extends Component {
     }
 
     get sortingOptions() {
+        const { searchResults } = this.props;
+        const isDistanceSpecified = searchResults.some(res => !!res.distance);
+
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>Options</ExpansionPanelSummary>
@@ -111,7 +114,9 @@ class ResultList extends Component {
                                 <Grid item>
                                     <Select value={this.state.sortingOptions.by} onChange={this.onSelectChange('by')}>
                                         <MenuItem value="none">None</MenuItem>
-                                        <MenuItem value="distance">Distance</MenuItem>
+                                        <MenuItem value="distance" disabled={!isDistanceSpecified}>
+                                            Distance
+                                        </MenuItem>
                                         <MenuItem value="subcount">Subscribers number</MenuItem>
                                         <MenuItem value="timebefore">Time before event</MenuItem>
                                     </Select>
