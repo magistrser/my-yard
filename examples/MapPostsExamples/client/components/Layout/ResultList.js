@@ -63,31 +63,54 @@ class ResultList extends Component {
                             </Typography>
                             <Divider />
                         </ListSubheader>
-                        {searchResults.map(item => (
-                            <ListItem key={item.postId}>
-                                <ListItemText>
-                                    <Card
-                                        className={classes.searchResultsCard}
-                                        raised={item.postId === this.state.selectedPostId}
-                                        onClick={() => {
-                                            this.setState(
-                                                {
-                                                    selectedPostId: item.postId,
-                                                },
-                                                () => this.props.onSearchResultClick(item.postId)
-                                            );
-                                        }}
-                                    >
-                                        <CardHeader title={item.title} />
-                                        <CardContent>
-                                            <Typography variant="body2" color="textSecondary" gutterBottom>
-                                                {item.description}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </ListItemText>
-                            </ListItem>
-                        ))}
+                        {searchResults
+                            .sort((res1, res2) => {
+                                const { sortingOptions } = this.state;
+                                let comp1, comp2;
+                                switch (sortingOptions.by) {
+                                    case 'none':
+                                        return 0;
+                                        break;
+                                    case 'distance':
+                                        comp1 = res1.distance;
+                                        comp2 = res2.distance;
+                                        break;
+                                    case 'subcount':
+                                        comp1 = res1.subCount;
+                                        comp2 = res2.subCount;
+                                        break;
+                                    case 'timebefore':
+                                        comp1 = new Date(res1.eventDateTime) - new Date();
+                                        comp2 = new Date(res2.eventDateTime) - new Date();
+                                        break;
+                                }
+                                return sortingOptions.direction === 'asc' ? comp1 - comp2 : comp2 - comp1;
+                            })
+                            .map(item => (
+                                <ListItem key={item.postId}>
+                                    <ListItemText>
+                                        <Card
+                                            className={classes.searchResultsCard}
+                                            raised={item.postId === this.state.selectedPostId}
+                                            onClick={() => {
+                                                this.setState(
+                                                    {
+                                                        selectedPostId: item.postId,
+                                                    },
+                                                    () => this.props.onSearchResultClick(item.postId)
+                                                );
+                                            }}
+                                        >
+                                            <CardHeader title={item.title} />
+                                            <CardContent>
+                                                <Typography variant="body2" color="textSecondary" gutterBottom>
+                                                    {item.description}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </ListItemText>
+                                </ListItem>
+                            ))}
                     </List>
                 </Grid>
             </>
