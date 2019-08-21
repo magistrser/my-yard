@@ -157,6 +157,25 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
 
     res.redirect('back');
 });
+
+app.delete('/api/delete-post', ensureAuthenticated, async (req, res) => {
+    if (!req.body.id) {
+        res.status(400).send('Wrong data');
+        return;
+    }
+    try {
+        await Storage.deletePostByIdChecked(req.body.id, req.user.id);
+        res.status(200).send('Success');
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
+        if (err === 'No deleted rows') {
+            res.status(400).send('Wrong post id or insufficient rights');
+        } else {
+            res.status(500).send('Error occured');
+        }
+    }
+});
+
 app.get('/api/get-posts', async (req, res) => {
     try {
         const posts = await Storage.getPosts();
