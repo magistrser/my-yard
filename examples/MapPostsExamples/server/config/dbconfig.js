@@ -171,6 +171,27 @@ export default class Storage {
         });
     }
 
+    static deletePostByIdChecked(postId, userId) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                `delete from Posts where id=? and ( userId=? or exists ( 
+                    select 1 from Users where id=? and isAdmin > 0 
+                 )) `,
+                [postId, userId, userId],
+                function(err) {
+                    if (err) {
+                        console.error(`[ERROR] ${err}`);
+                        reject(err);
+                    } else if (!this.changes) {
+                        reject('No deleted rows');
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+        });
+    }
+
     static getPosts() {
         return new Promise((resolve, reject) => {
             // TODO: no idea how to do this in one query
