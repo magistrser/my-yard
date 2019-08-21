@@ -3,7 +3,7 @@
 import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
 import { v4 as generateGuid } from 'uuid';
-import { withinArea } from '../utils/GeoDataUtils';
+import { withinArea, calcDistance } from '../utils/GeoDataUtils';
 
 export default class Storage {
     static _dbLocation = './examples/MapPostsExamples/server/db.sqlite';
@@ -259,11 +259,12 @@ export default class Storage {
         });
     }
 
+    // Gets minimal information about post (not only positions) TODO: What does RESTful paradigm think about it?
     static getPostPositions() {
         return new Promise((resolve, reject) => {
             let posts = [];
             this._db.all(
-                `select p.id, pgp.latitude, pgp.longitude 
+                `select p.id, p.eventDateTime, pgp.latitude, pgp.longitude 
                     from Posts p join PostGeoPositions pgp on p.id = pgp.postId`,
                 (err, rows) => {
                     if (err) {
@@ -356,13 +357,37 @@ export default class Storage {
 
     static searchPosts(searchQuery) {
         return new Promise((resolve, reject) => {
-            const { tags, date, timeRange, participantsRange, distanceInfo } = searchQuery;
+            const {
+                tags,
+                date,
+                timeRange,
+                participantsRange,
+                distanceInfo,
+                showEndedSearchResults,
+                authenticatedUserFilters,
+            } = searchQuery;
 
-            let sqlSelect = `select p.id as postId, p.title, p.text ${distanceInfo ? ', pgp.latitude, pgp.longitude' : ''} from Posts p `;
+            let sqlSelect = `select p.id as postId, p.title, p.text, p.eventDateTime, ifnull(psmcount.subCount, 0) as subCount ${
+                distanceInfo ? ', pgp.latitude, pgp.longitude' : ''
+            } from Posts p `;
             let sqlWhere = 'where 1 ';
             let sqlParams = [];
 
+            // TODO: Joins to deliver more data. Delete commented out code when certain that nothing explodes (and write some damn unit tests)
+            sqlSelect += `left join ( select postId, count(1) as subCount from PostsSubscribersMap group by postId) psmcount on psmcount.postId = p.id `;
+
             // Build a search query to filter by all requested params possible
+            if (authenticatedUserFilters) {
+                const { ownEventsOnly, subscribedToEventsOnly, userId } = authenticatedUserFilters;
+                if (ownEventsOnly) {
+                    sqlWhere += ` and p.userId = ? `;
+                    sqlParams = [...sqlParams, userId];
+                }
+                if (subscribedToEventsOnly) {
+                    sqlSelect += `join (select * from PostsSubscribersMap where PostsSubscribersMap.userId = ?) psmaux on psmaux.postId = p.id `;
+                    sqlParams = [userId, ...sqlParams];
+                }
+            }
             if (tags) {
                 sqlSelect += 'left join PostsTagsMap ptm on p.id = ptm.postId left join Tags t on ptm.tagId = t.id ';
                 sqlWhere += `and t.name in (${tags.map(tag => '?').join(', ')}) `;
@@ -391,14 +416,18 @@ export default class Storage {
             if (participantsRange) {
                 sqlSelect +=
                     'left join (select postId, count(*) as subCount from PostsSubscribersMap group by postId) s on s.postId = p.id ';
-                sqlWhere += `and (s.subCount between ? and ? or s.subCount is ${participantsRange.includes(0) ? 'null' : 'not null'}) `; // zero participants = NULL in subCount
-                sqlParams = [...sqlParams, ...participantsRange.sort().slice(0, 2)]; // TODO: Redundant check?
+                sqlWhere += `and (s.subCount between ? and ? ${participantsRange.includes(0) ? 'or s.subCount is null' : ''}  ) `; // zero participants = NULL in subCount
+                sqlParams = [...sqlParams, ...participantsRange.sort((a, b) => a - b).slice(0, 2)]; // TODO: Redundant check?
             }
             if (distanceInfo) {
-                // There is no fucking way to put that check into sql (without stored procedures at least, which is not a thing in sqlite)
+                // There is no way to put that check into sql (without stored procedures at least, which is not a thing in sqlite)
                 sqlSelect += 'left join PostGeoPositions pgp on p.id = pgp.postId ';
             }
+            if (!showEndedSearchResults) {
+                sqlWhere += `and strftime('%s', p.eventDateTime) > strftime('%s', CURRENT_DATE) `;
+            }
 
+            console.log('[INFO] Search request:', '\nSQL query: ', sqlSelect + sqlWhere, '\nSQL params: ', sqlParams);
             this._db.all(sqlSelect + sqlWhere, sqlParams, (err, rows) => {
                 if (err) {
                     console.error(err);
@@ -407,14 +436,21 @@ export default class Storage {
                     // Filter by parameters not included into sql filters
                     if (distanceInfo) {
                         const { currentPosition, radius } = distanceInfo;
-                        rows = [
-                            ...rows.filter(row =>
+                        rows = rows
+                            .filter(row =>
                                 withinArea(currentPosition, Number(radius), {
                                     latitude: row.latitude,
                                     longitude: row.longitude,
                                 })
-                            ),
-                        ];
+                            )
+                            // Add distance to results
+                            .map(row => {
+                                row.distance = calcDistance(currentPosition, {
+                                    latitude: row.latitude,
+                                    longitude: row.longitude,
+                                });
+                                return row;
+                            });
                     }
 
                     resolve(rows);
