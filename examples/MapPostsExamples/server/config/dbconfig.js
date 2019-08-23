@@ -31,7 +31,7 @@ export default class Storage {
     static getUserById(id) {
         return new Promise((resolve, reject) => {
             const sqlReq =
-                'select u.id, u.email, u.fullName, p.url as photoUrl from Users u inner join Photos p on u.id=userId where u.id = $id';
+                'select u.id, u.email, u.fullName, u.isAdmin, p.url as photoUrl from Users u inner join Photos p on u.id=userId where u.id = $id';
             const sqlParams = { $id: id };
             const statement = this._db.prepare(sqlReq);
             statement.get(sqlParams, (err, row) => {
@@ -189,6 +189,174 @@ export default class Storage {
                     }
                 }
             );
+        });
+    }
+
+    static updatePostChecked(postId, updateData, userId) {
+        return new Promise((resolve, reject) => {
+            /* Update direct columns of Posts table: */
+            let sql = 'update Posts set id = id '; // id=id for query to work if no colums need updating in Posts
+            let sqlCheckCredentials =
+                'where id = $postId and (userId = $userId or exists (select 1 from Users where id = $userId or isAdmin = 1)) ';
+            let updatedColumnsParams = {
+                $postId: postId,
+                $userId: userId,
+            };
+
+            // Set columns to update
+            let sqlUpdatedColumns = '';
+            if (updateData.text) {
+                sqlUpdatedColumns += ', text = $text ';
+                updatedColumnsParams.$text = updateData.text;
+            }
+            if (updateData.title) {
+                sqlUpdatedColumns += ', title = $title ';
+                updatedColumnsParams.$title = updateData.title;
+            }
+            if (updateData.eventDateTime) {
+                sqlUpdatedColumns += ', eventDateTime = datetime($eventDateTime) ';
+                updatedColumnsParams.$eventDateTime = updateData.eventDateTime;
+            }
+            if (updateData.userId) {
+                sqlUpdatedColumns += ', userId = $userId ';
+                updatedColumnsParams.$userId = updateData.userId;
+            }
+            if (updateData.timestamp) {
+                sqlUpdatedColumns += ', timestamp = datetime($timestamp) ';
+                updatedColumnsParams.$timestamp = updateData.timestamp;
+            }
+
+            console.log(
+                `*** Update Post ***
+                SQL:
+                    ${sql + sqlUpdatedColumns + sqlCheckCredentials}
+                PARAMS:
+`,
+                updatedColumnsParams
+            );
+            this._db.run(sql + sqlUpdatedColumns + sqlCheckCredentials, updatedColumnsParams, function(err) {
+                if (!this.changes) {
+                    // No rows affected => id=id wasnt executed => insufficient cridentials
+                    console.error('[ERROR] ', 'No rights to update post');
+                    return reject(err);
+                }
+                // If we are here, user has sufficient cridentials, no need to check them again
+
+                // Update post images and post tags
+                /* You can't run multiple queries in one run(), and we have to resolve only when all queries are done,
+                    so here comes tangled and uncomprehenceble code*/
+
+                let sqlQueries = {};
+                if (updateData.images) {
+                    // Delete old images
+                    const sqlDeleteOldImages = 'delete from Images where postId = ?; ';
+                    const sqlDeleteOldImagesParams = [postId];
+                    sqlQueries['deleteOldImages'] = {
+                        sql: sqlDeleteOldImages,
+                        params: sqlDeleteOldImagesParams,
+                    };
+                    // TODO: Need to somehow find unbound images and delete them
+                    // Insert new images
+                    let sqlInsertNewImagesParams = [];
+                    const sqlInsertNewImages = `insert into Images (rowId, postId, name) values ${updateData.images
+                        .map(name => {
+                            const rowId = generateGuid();
+                            // Push multible values
+                            Array.prototype.push.call(sqlInsertNewImagesParams, rowId, postId, name);
+                            return `(?, ?, ?)`;
+                        })
+                        .join(', ')}`;
+                    sqlQueries['insertNewImages'] = {
+                        sql: sqlInsertNewImages,
+                        params: sqlInsertNewImagesParams,
+                    };
+                }
+                if (updateData.tags) {
+                    // Delete old tags
+                    const sqlDeleteOldTags = `delete from PostsTagsMap where postId = ?; `;
+                    const sqlDeleteOldTagsParams = [postId];
+                    sqlQueries['deleteOldTags'] = {
+                        sql: sqlDeleteOldTags,
+                        params: sqlDeleteOldTagsParams,
+                    };
+                    // Insert new tags
+                    let sqlInsertNewTagsParams = [];
+                    const sqlInsertNewTags = `insert or ignore into Tags (name) values ${updateData.tags
+                        .map(tag => {
+                            sqlInsertNewTagsParams.push(tag);
+                            return `(?)`;
+                        })
+                        .join(', ')}; `;
+                    sqlQueries['insertNewTags'] = {
+                        sql: sqlInsertNewTags,
+                        params: sqlInsertNewTagsParams,
+                    };
+                    // Map new tags to post
+                    let sqlMapNewTagsToPost = `insert into PostsTagsMap select
+                            ? as postId, t.id as tagId from `;
+                    let sqlMapNewTagsToPostParams = [postId];
+                    sqlMapNewTagsToPost += `(select id from Tags where name in (${updateData.tags
+                        .map(tag => {
+                            sqlMapNewTagsToPostParams.push(tag);
+                            return `?`;
+                        })
+                        .join(', ')}) ) as t; `;
+                    sqlQueries['mapNewTagsToPost'] = {
+                        sql: sqlMapNewTagsToPost,
+                        params: sqlMapNewTagsToPostParams,
+                    };
+                }
+
+                if (Object.keys(sqlQueries).length > 0) {
+                    // Run corresponding sql query sequences in separate promises
+                    const imagesPromise =
+                        sqlQueries.deleteOldImages &&
+                        new Promise((resolve, reject) => {
+                            const { deleteOldImages, insertNewImages } = sqlQueries;
+                            Storage.Db.run(deleteOldImages.sql, deleteOldImages.params, err => {
+                                if (err) reject(err);
+                                else {
+                                    Storage.Db.run(insertNewImages.sql, insertNewImages.params, err => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                    });
+                                }
+                            });
+                        });
+                    const tagsPromise =
+                        sqlQueries.deleteOldTags &&
+                        new Promise((resolve, reject) => {
+                            const { deleteOldTags, insertNewTags, mapNewTagsToPost } = sqlQueries;
+                            Storage.Db.run(deleteOldTags.sql, deleteOldTags.params, err => {
+                                if (err) reject(err);
+                                else {
+                                    Storage.Db.run(insertNewTags.sql, insertNewTags.params, err => {
+                                        if (err) reject(err);
+                                        else {
+                                            Storage.Db.run(mapNewTagsToPost.sql, mapNewTagsToPost.params, err => {
+                                                if (err) reject(err);
+                                                else resolve();
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    (async () => {
+                        if (imagesPromise) {
+                            await imagesPromise;
+                        }
+                        if (tagsPromise) {
+                            await tagsPromise;
+                        }
+                    })()
+                        .then(resolve)
+                        .catch(err => reject(err));
+                } else {
+                    // No image or tag update is required, just resolve
+                    resolve();
+                }
+            });
         });
     }
 
