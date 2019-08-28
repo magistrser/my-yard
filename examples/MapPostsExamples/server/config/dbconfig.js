@@ -476,6 +476,7 @@ export default class Storage {
                         p.text, 
                         p.timestamp,
                         p.eventDateTime, 
+                        p.userId as authorId, 
                         u.fullName as author, 
                         ph.url as avatar, 
                         pgp.latitude, 
