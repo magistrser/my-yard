@@ -14,6 +14,9 @@ import axios from 'axios';
 import Comment from '../Comment/Comment';
 import CommentBox from '../CommentBox/CommentBox';
 import Chip from '@material-ui/core/Chip';
+import DeleteIcon from '@material-ui/icons/Delete';
+import PostTitle from './PostTitle/PostTitle';
+import PostText from './PostText/PostText';
 
 export default class Post extends Component {
     constructor(props) {
@@ -94,12 +97,8 @@ export default class Post extends Component {
                     </Grid>
                     <Grid item container direction="column" className={styles.inner}>
                         <hr />
-                        <Typography component={'span'} align="justify" variant="h5">
-                            {this.state.post.title}
-                        </Typography>
-                        <Typography component={'span'} align="justify" className={styles.postText}>
-                            {this.state.post.text}
-                        </Typography>
+                        <PostTitle onUpdate={() => console.log('Title has been updated')}>{this.state.post.title}</PostTitle>
+                        <PostText>{this.state.post.text}</PostText>
                         <hr />
                     </Grid>
                     <Grid item container>
@@ -123,14 +122,29 @@ export default class Post extends Component {
                         />
                     </Grid>
                 </Grid>
+                {this.props.isAuthenticated && (
+                    <Fab
+                        color="default"
+                        size="small"
+                        onClick={() => console.log('Delete post')}
+                        style={{
+                            position: 'absolute',
+                            right: '40px',
+                            top: '40px',
+                        }}
+                    >
+                        <DeleteIcon />
+                    </Fab>
+                )}
+
                 <Fab
-                    color="secondary"
+                    color="default"
                     size="small"
                     onClick={this.props.closePost}
                     style={{
                         position: 'absolute',
-                        right: '2%',
-                        top: '2%',
+                        right: '10px',
+                        top: '10px',
                     }}
                 >
                     X
