@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Typography, Grid, IconButton, TextField, Button } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
 import { Consumer } from '../../../context';
+import axios from 'axios';
 
 export default class PostTitle extends Component {
     constructor() {
@@ -16,11 +17,10 @@ export default class PostTitle extends Component {
         if (!isCancelled) {
             const title = this.editFieldRef.current.value;
             try {
-                // Axios.put('/api/update-comment/', {
-                //     id: this.props.comment.id,
-                //     text,
-                // });
-                console.log('Edited title: ', title);
+                axios.put('/api/update-post', {
+                    id: this.props.postId,
+                    title,
+                });
             } catch (err) {
                 console.error(err);
             }
