@@ -69,7 +69,6 @@ export default class Post extends Component {
     };
 
     deletePost = async () => {
-        console.log(this.state.post);
         const { id } = this.state.post;
         try {
             await axios.delete('/api/delete-post', {
