@@ -14,6 +14,9 @@ import axios from 'axios';
 import Comment from '../Comment/Comment';
 import CommentBox from '../CommentBox/CommentBox';
 import Chip from '@material-ui/core/Chip';
+import DeleteIcon from '@material-ui/icons/Delete';
+import PostTitle from './PostTitle/PostTitle';
+import PostText from './PostText/PostText';
 
 export default class Post extends Component {
     constructor(props) {
@@ -30,13 +33,21 @@ export default class Post extends Component {
     }
 
     updatePost = async () => {
-        const post = await this.loadPost(this.props.postId);
-        const comments = await this.loadPostComments(this.props.postId);
-        this.setState({
-            post,
-            comments,
-            isLoaded: true,
-        });
+        let post;
+        let comments;
+        try {
+            post = await this.loadPost(this.props.postId);
+            comments = await this.loadPostComments(this.props.postId);
+        } catch (err) {
+            console.error(err);
+        }
+        if (post && comments) {
+            this.setState({
+                post,
+                comments,
+                isLoaded: true,
+            });
+        }
     };
 
     loadPost = async postId => {
@@ -55,6 +66,20 @@ export default class Post extends Component {
             },
         });
         return comments.data;
+    };
+
+    deletePost = async () => {
+        const { id } = this.state.post;
+        try {
+            await axios.delete('/api/delete-post', {
+                data: {
+                    id,
+                },
+            });
+            this.props.closePost();
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     render() {
@@ -94,12 +119,12 @@ export default class Post extends Component {
                     </Grid>
                     <Grid item container direction="column" className={styles.inner}>
                         <hr />
-                        <Typography component={'span'} align="justify" variant="h5">
+                        <PostTitle postId={this.state.post.id} authorId={this.state.post.authorId} onUpdate={this.updatePost}>
                             {this.state.post.title}
-                        </Typography>
-                        <Typography component={'span'} align="justify" className={styles.postText}>
+                        </PostTitle>
+                        <PostText postId={this.state.post.id} authorId={this.state.post.authorId} onUpdate={this.updatePost}>
                             {this.state.post.text}
-                        </Typography>
+                        </PostText>
                         <hr />
                     </Grid>
                     <Grid item container>
@@ -123,14 +148,29 @@ export default class Post extends Component {
                         />
                     </Grid>
                 </Grid>
+                {this.props.isAuthenticated && (
+                    <Fab
+                        color="default"
+                        size="small"
+                        onClick={this.deletePost}
+                        style={{
+                            position: 'absolute',
+                            right: '40px',
+                            top: '40px',
+                        }}
+                    >
+                        <DeleteIcon />
+                    </Fab>
+                )}
+
                 <Fab
-                    color="secondary"
+                    color="default"
                     size="small"
                     onClick={this.props.closePost}
                     style={{
                         position: 'absolute',
-                        right: '2%',
-                        top: '2%',
+                        right: '10px',
+                        top: '10px',
                     }}
                 >
                     X

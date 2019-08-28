@@ -157,6 +157,56 @@ app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), as
 
     res.redirect('back');
 });
+
+app.delete('/api/delete-post', ensureAuthenticated, async (req, res) => {
+    if (!req.body.id) {
+        res.status(400).send('Wrong data');
+        return;
+    }
+    try {
+        await Storage.deletePostByIdChecked(req.body.id, req.user.id);
+        res.status(200).send('Success');
+    } catch (err) {
+        console.error(`[ERROR] ${err}`);
+        if (err === 'No deleted rows') {
+            res.status(400).send('Wrong post id or insufficient rights');
+        } else {
+            res.status(500).send('Error occured');
+        }
+    }
+});
+
+app.put('/api/update-post', ensureAuthenticated, async (req, res) => {
+    const postId = req.body.id;
+    if (!postId) {
+        return res.status(400).send('Invalid request');
+    }
+    let updateData = {
+        text: req.body.text,
+        title: req.body.title,
+        eventDateTime: req.body.eventDateTime,
+        images: req.body.images,
+        tags: req.body.tags,
+    };
+    console.log('tags: ', req.body.tags);
+    console.log('images: ', req.body.images);
+    if (req.user.isAdmin) {
+        updateData = {
+            ...updateData,
+            userId: req.body.authorId,
+            timestamp: req.body.timestamp,
+        };
+    }
+    try {
+        await Storage.updatePostChecked(postId, updateData, req.user.id);
+        res.status(200).send();
+    } catch (err) {
+        console.error('[ERROR] ', err);
+        // TODO: Check for different rejection reasons: bad request data, insufficient rights, etc
+        res.status(500).send('Error occured while updating post');
+    }
+});
+
 app.get('/api/get-posts', async (req, res) => {
     try {
         const posts = await Storage.getPosts();
