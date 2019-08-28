@@ -60,7 +60,7 @@ export default class SubscribeButton extends Component {
     render() {
         const buttonColor = this.state.subscribed ? 'secondary' : 'primary';
         return (
-            <Grid container justify="space-between">
+            <Grid container justify="space-between" style={{ padding: '10px 0' }}>
                 <SubscribersListDialog
                     open={this.state.isSubscribersModalOpen}
                     onClose={() => {
