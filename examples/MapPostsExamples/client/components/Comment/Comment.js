@@ -31,6 +31,8 @@ const styles = {
     },
 };
 
+// TODO: Editing functionality is the same on Comment, title, text. It can be HOC
+
 export default class Comment extends Component {
     constructor(props) {
         super(props);
