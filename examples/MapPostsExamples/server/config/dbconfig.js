@@ -863,3 +863,6 @@ export default class Storage {
         });
     }
 }
+
+// Turn on foreign key constraints
+Storage._db.get('PRAGMA foreign_keys = ON');
