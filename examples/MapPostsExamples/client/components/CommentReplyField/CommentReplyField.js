@@ -101,11 +101,7 @@ export default class CommentReplyField extends Component {
                 <Grid item>
                     {this.state.validationError ? (
                         <Typography color="error">
-                            <ul>
-                                {this.state.validationError.messages.map(msg => (
-                                    <li key={msg /* Is this legal? */}>{msg}</li>
-                                ))}
-                            </ul>
+                            <ul>{this.state.validationError.messages?.map(msg => <li key={msg /* Is this legal? */}>{msg}</li>)}</ul>
                         </Typography>
                     ) : null}
                 </Grid>
