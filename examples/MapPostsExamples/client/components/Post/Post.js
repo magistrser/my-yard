@@ -97,8 +97,12 @@ export default class Post extends Component {
                     </Grid>
                     <Grid item container direction="column" className={styles.inner}>
                         <hr />
-                        <PostTitle onUpdate={() => console.log('Title has been updated')}>{this.state.post.title}</PostTitle>
-                        <PostText>{this.state.post.text}</PostText>
+                        <PostTitle authorId={this.state.post.authorId} onUpdate={() => console.log('Title has been updated')}>
+                            {this.state.post.title}
+                        </PostTitle>
+                        <PostText authorId={this.state.post.authorId} onUpdate={() => console.log('Text has been updated')}>
+                            {this.state.post.text}
+                        </PostText>
                         <hr />
                     </Grid>
                     <Grid item container>
