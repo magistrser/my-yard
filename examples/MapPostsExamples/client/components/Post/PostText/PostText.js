@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Typography, Grid, IconButton, TextField, Button } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
 import { Consumer } from '../../../context';
+import axios from 'axios';
 import styles from './PostText.module.css';
 
 export default class PostText extends Component {
@@ -17,11 +18,10 @@ export default class PostText extends Component {
         if (!isCancelled) {
             const text = this.editFieldRef.current.value;
             try {
-                // Axios.put('/api/update-comment/', {
-                //     id: this.props.comment.id,
-                //     text,
-                // });
-                console.log('Edited text: ', text);
+                axios.put('/api/update-post', {
+                    id: this.props.postId,
+                    text,
+                });
             } catch (err) {
                 console.error(err);
             }
