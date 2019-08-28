@@ -33,13 +33,21 @@ export default class Post extends Component {
     }
 
     updatePost = async () => {
-        const post = await this.loadPost(this.props.postId);
-        const comments = await this.loadPostComments(this.props.postId);
-        this.setState({
-            post,
-            comments,
-            isLoaded: true,
-        });
+        let post;
+        let comments;
+        try {
+            post = await this.loadPost(this.props.postId);
+            comments = await this.loadPostComments(this.props.postId);
+        } catch (err) {
+            console.error(err);
+        }
+        if (post && comments) {
+            this.setState({
+                post,
+                comments,
+                isLoaded: true,
+            });
+        }
     };
 
     loadPost = async postId => {
@@ -58,6 +66,21 @@ export default class Post extends Component {
             },
         });
         return comments.data;
+    };
+
+    deletePost = async () => {
+        console.log(this.state.post);
+        const { id } = this.state.post;
+        try {
+            await axios.delete('/api/delete-post', {
+                data: {
+                    id,
+                },
+            });
+            this.props.closePost();
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     render() {
@@ -130,7 +153,7 @@ export default class Post extends Component {
                     <Fab
                         color="default"
                         size="small"
-                        onClick={() => console.log('Delete post')}
+                        onClick={this.deletePost}
                         style={{
                             position: 'absolute',
                             right: '40px',

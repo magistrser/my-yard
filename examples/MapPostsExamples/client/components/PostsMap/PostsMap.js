@@ -187,7 +187,9 @@ export default class PostsMap extends Component {
     };
 
     handlePostClose = ev => {
-        this.setState({ isPostOpen: false });
+        this.setState({ isPostOpen: false }, async () => {
+            await this.loadPosts();
+        });
     };
 
     render() {
