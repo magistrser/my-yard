@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styles from './Post.module.css';
 import ImageBox from '../ImageBox/ImageBox';
 import img from '../ImageBox/exampleImg.png';
 import ImageGallery from '../ImageGallery/ImageGallery';
@@ -17,6 +16,7 @@ import Chip from '@material-ui/core/Chip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PostTitle from './PostTitle/PostTitle';
 import PostText from './PostText/PostText';
+import styles from './Post.module.css';
 
 export default class Post extends Component {
     constructor(props) {
