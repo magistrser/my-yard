@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styles from './Post.module.css';
 import ImageBox from '../ImageBox/ImageBox';
 import img from '../ImageBox/exampleImg.png';
 import ImageGallery from '../ImageGallery/ImageGallery';
@@ -17,6 +16,7 @@ import Chip from '@material-ui/core/Chip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PostTitle from './PostTitle/PostTitle';
 import PostText from './PostText/PostText';
+import styles from './Post.module.css';
 
 export default class Post extends Component {
     constructor(props) {
@@ -33,6 +33,7 @@ export default class Post extends Component {
     }
 
     updatePost = async () => {
+        await new Promise(resolve => this.setState({ isLoaded: false }, resolve)); // Can be outsourced into util function
         let post;
         let comments;
         try {
@@ -120,10 +121,10 @@ export default class Post extends Component {
                     <Grid item container direction="column" className={styles.inner}>
                         <hr />
                         <PostTitle postId={this.state.post.id} authorId={this.state.post.authorId} onUpdate={this.updatePost}>
-                            {this.state.post.title}
+                            {this.state.isLoaded ? this.state.post.title : <CircularProgress />}
                         </PostTitle>
                         <PostText postId={this.state.post.id} authorId={this.state.post.authorId} onUpdate={this.updatePost}>
-                            {this.state.post.text}
+                            {this.state.isLoaded ? this.state.post.text : <CircularProgress />}
                         </PostText>
                         <hr />
                     </Grid>

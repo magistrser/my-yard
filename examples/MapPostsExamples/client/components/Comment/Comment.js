@@ -44,7 +44,7 @@ export default class Comment extends Component {
 
     onEditorClose = isCancelled => {
         if (!isCancelled) {
-            const text = this.editFieldRef.current.value;
+            const text = this.editFieldRef?.current?.value;
             // TODO: validation and shit
             try {
                 Axios.put('/api/update-comment/', {
@@ -142,6 +142,7 @@ export default class Comment extends Component {
                                     <Typography variant="body1">{this.props.comment.text}</Typography>
                                 )
                             }
+                            disableTypography
                         />
                         {user?.id === this.props.comment.authorId ? (
                             <ListItemSecondaryAction>
