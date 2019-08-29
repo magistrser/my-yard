@@ -57,7 +57,7 @@ export default class PostText extends Component {
                 {({ user }) => (
                     <Grid container direction="column">
                         <Grid item>
-                            <Typography component={'span'} align="justify" className={styles.postText}>
+                            <Typography component={'pre'} align="justify" className={styles.postText}>
                                 {this.props.children}
                             </Typography>
                         </Grid>
