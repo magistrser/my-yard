@@ -47,17 +47,16 @@ class App extends Component {
         const { classes } = this.props;
         return (
             <Provider value={this.getContext()}>
-                <Switch>
-                    {this.state.isAuthenticated && <Route path="/admin" component={Admin} />}
-                    <Route
-                        path="/"
-                        render={() => (
-                            <Layout {...this.state}>
-                                <PostsMap {...this.state} />
-                            </Layout>
-                        )}
-                    />
-                </Switch>
+                {this.state.isAuthenticated && <Route path="/admin" component={Admin} />}
+                <Route
+                    path="/"
+                    exact
+                    render={() => (
+                        <Layout {...this.state}>
+                            <PostsMap {...this.state} />
+                        </Layout>
+                    )}
+                />
             </Provider>
         );
     }
