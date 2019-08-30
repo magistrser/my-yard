@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import App from './components/App/App';
 import './index.css';
@@ -10,7 +10,9 @@ const theme = createMuiTheme();
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
-        <App />
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
     </ThemeProvider>,
     document.getElementById('root')
 );
