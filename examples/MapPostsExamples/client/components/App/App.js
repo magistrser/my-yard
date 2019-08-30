@@ -7,6 +7,7 @@ import PostsMap from '../PostsMap/PostsMap';
 import { withStyles } from '@material-ui/styles';
 import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import Admin from '../Admin/Admin';
 
 import { Provider } from '../../context';
 
@@ -46,9 +47,17 @@ class App extends Component {
         const { classes } = this.props;
         return (
             <Provider value={this.getContext()}>
-                <Layout {...this.state}>
-                    <PostsMap {...this.state} />
-                </Layout>
+                <Switch>
+                    {this.state.isAuthenticated && <Route path="/admin" component={Admin} />}
+                    <Route
+                        path="/"
+                        render={() => (
+                            <Layout {...this.state}>
+                                <PostsMap {...this.state} />
+                            </Layout>
+                        )}
+                    />
+                </Switch>
             </Provider>
         );
     }
