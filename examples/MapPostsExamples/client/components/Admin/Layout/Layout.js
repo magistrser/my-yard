@@ -45,15 +45,15 @@ class Layout extends Component {
 
     render() {
         return (
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', height: '100%' }}>
                 <CssBaseline />
                 {this.appBar}
                 {this.drawer}
-                <div style={{ width: '100%' }}>
+                <div style={{ width: '100%', height: '100%' }}>
                     <div style={{ width: DRAWER_WIDTH, height: 64 }} />
-                    <div style={{ height: 64, width: '100%' }}>{this.getTabs(this.state.selectedDrawerItem)}</div>
+                    <div style={{ height: 64 }}>{this.getTabs(this.state.selectedDrawerItem)}</div>
                     <Divider />
-                    <main style={{ flexGrow: 1, padding: 10 }}>{this.props.children}</main>
+                    <main style={{ flexGrow: 1, padding: 10, height: '100%' }}>{this.props.children}</main>
                 </div>
             </div>
         );
