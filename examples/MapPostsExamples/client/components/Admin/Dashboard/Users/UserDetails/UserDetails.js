@@ -24,16 +24,38 @@ const panels = {
 class UserDetails extends Component {
     state = {
         selectedPanel: panels.USER_PANEL,
+        userInfo: null,
     };
 
-    onPanelChange = panel => ev => this.props.userInfo && this.setState({ selectedPanel: panel });
+    componentDidMount() {
+        this.loadUserInfo();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.location.pathname !== prevProps.location.pathname) this.loadUserInfo();
+    }
+
+    loadUserInfo() {
+        const parsedId = this.props.location.pathname.split('/').slice(-1)[0];
+        console.log(parsedId);
+        // ...load user info ....
+
+        this.setState({
+            userInfo: parsedId !== 'users' && {
+                id: parsedId,
+            },
+        });
+    }
+
+    onPanelChange = panel => ev => this.state.userInfo && this.setState({ selectedPanel: panel });
 
     isExpanded(panel) {
-        return !!this.props.userInfo && this.state.selectedPanel === panel;
+        console.log(this.state.userInfo);
+        return !!this.state.userInfo && this.state.selectedPanel === panel;
     }
 
     render() {
-        const { userInfo } = this.props;
+        const { userInfo } = this.state;
         return (
             <>
                 <ExpansionPanel expanded={this.isExpanded(panels.USER_PANEL)} onChange={this.onPanelChange(panels.USER_PANEL)}>
@@ -41,12 +63,7 @@ class UserDetails extends Component {
                         <Typography>User</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <p>
-                            foo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo
-                            barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo
-                            barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo
-                            barfoo barfoo barfoo bar foo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo ba
-                        </p>
+                        <p>Information about user {userInfo?.id}</p>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <ExpansionPanel expanded={this.isExpanded(panels.POSTS_PANEL)} onChange={this.onPanelChange(panels.POSTS_PANEL)}>
@@ -54,7 +71,7 @@ class UserDetails extends Component {
                         <Typography>Posts</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <p>foo bar</p>
+                        <p>Posts of user {userInfo?.id}</p>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <ExpansionPanel expanded={this.isExpanded(panels.COMMENTS_PANEL)} onChange={this.onPanelChange(panels.COMMENTS_PANEL)}>
@@ -62,11 +79,7 @@ class UserDetails extends Component {
                         <Typography>Comments</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <p>
-                            foo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo
-                            barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo
-                            barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barfoo barf
-                        </p>
+                        <p>Comments of user {userInfo?.id}</p>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </>
