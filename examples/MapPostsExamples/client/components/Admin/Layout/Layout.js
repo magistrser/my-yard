@@ -14,7 +14,8 @@ import {
     Divider,
 } from '@material-ui/core';
 import { Group as GroupIcon, Comment as CommentIcon, Assignment as AssignmentIcon } from '@material-ui/icons';
-import { withRouter, Link, NavLink } from 'react-router-dom';
+import { withRouter, Link, NavLink, Route } from 'react-router-dom';
+import Admin from '../Admin';
 
 const DRAWER_WIDTH = 180;
 
@@ -26,14 +27,13 @@ class Layout extends Component {
         console.log(path); // TODO: deal with paths
 
         this.state = {
-            selectedDrawerItem: null,
+            selectedDrawerItem: path[2],
             selectedTabValue: 0,
         };
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.location !== prevProps.location) {
-            console.log('location updated ', this.props.location);
+        if (this.props.location.pathname !== prevProps.location.pathname) {
         }
     }
 
@@ -52,7 +52,13 @@ class Layout extends Component {
                     <div style={{ width: DRAWER_WIDTH, height: 64 }} />
                     <div style={{ height: 64 }}>{this.getTabs(this.state.selectedDrawerItem)}</div>
                     <Divider />
-                    <main style={{ flexGrow: 1, padding: 10, height: '100%' }}>{this.props.children}</main>
+                    <main style={{ flexGrow: 1, padding: 10, height: '100%' }}>
+                        {React.Children.map(this.props.children, child =>
+                            React.cloneElement(child, {
+                                ...this.state,
+                            })
+                        )}
+                    </main>
                 </div>
             </div>
         );
@@ -109,23 +115,19 @@ class Layout extends Component {
     }
 
     getTabs(currentDrawerOption) {
-        let label;
+        let tabs = null;
 
         switch (currentDrawerOption) {
             case 'users':
-                label = 'user';
                 break;
             case 'posts':
-                label = 'post';
                 break;
             case 'comments':
-                label = 'comment';
                 break;
         }
-        console.log(label);
 
         return (
-            label && (
+            currentDrawerOption && (
                 <Tabs
                     value={this.state.selectedTabValue}
                     onChange={(ev, tabVal) => this.setState({ selectedTabValue: tabVal })}
@@ -133,11 +135,7 @@ class Layout extends Component {
                     textColor="primary"
                     variant="fullWidth"
                 >
-                    <Tab label={label + ' option 1'} />
-                    <Tab label={label + ' option 2'} />
-                    <Tab label={label + ' option 3'} />
-                    <Tab label={label + ' option 4'} />
-                    <Tab label={label + ' option 5'} />
+                    {tabs}
                 </Tabs>
             )
         );
