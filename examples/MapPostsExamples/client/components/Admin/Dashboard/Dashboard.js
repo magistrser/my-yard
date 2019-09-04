@@ -15,6 +15,12 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
 export default class Dashboard extends Component {
+    state = {
+        selectedPanel: 'userPanel',
+    };
+
+    onPanelChange = panel => () => this.setState({ selectedPanel: panel });
+
     render() {
         return (
             <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
@@ -34,7 +40,7 @@ export default class Dashboard extends Component {
                             </Grid>
                             <Grid item style={{ overflowY: 'auto' }}>
                                 {/* List of users */}
-                                <List dense style={{ height: '40%' }}>
+                                <List dense>
                                     {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(val => {
                                         return (
                                             <ListItem key={val} button selected={val === 2}>
@@ -51,8 +57,31 @@ export default class Dashboard extends Component {
                     </Paper>
                 </Grid>
                 <Grid item xs={5} style={{ height: '100%' }}>
-                    <Paper style={{ height: '80%', overflowY: 'auto' }}>
-                        <p>Selected user info, post preview, etc...</p>
+                    <Paper style={{ height: '80%', position: 'relative' }}>
+                        {/* Right side panel */}
+                        <ExpansionPanel expanded={this.state.selectedPanel === 'userPanel'} onChange={this.onPanelChange('userPanel')}>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography>User</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <p>foo bar</p>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                        <ExpansionPanel expanded={this.state.selectedPanel === 'postsPanel'} onChange={this.onPanelChange('postsPanel')}>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography>Posts</Typography>
+                            </ExpansionPanelSummary>
+                            <div />
+                        </ExpansionPanel>
+                        <ExpansionPanel
+                            expanded={this.state.selectedPanel === 'commentsPanel'}
+                            onChange={this.onPanelChange('commentsPanel')}
+                        >
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography>Comments</Typography>
+                            </ExpansionPanelSummary>
+                            <div />
+                        </ExpansionPanel>
                     </Paper>
                 </Grid>
             </Grid>
