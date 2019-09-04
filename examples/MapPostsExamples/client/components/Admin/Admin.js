@@ -5,8 +5,7 @@ import Dashboard from './Dashboard/Dashboard';
 
 export default class Admin extends Component {
     render() {
-        console.log(this.props);
-
+        console.log('---Admin renders');
         return (
             <Layout>
                 <Dashboard />
