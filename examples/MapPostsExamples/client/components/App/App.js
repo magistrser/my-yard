@@ -45,9 +45,12 @@ class App extends Component {
 
     render() {
         const { classes } = this.props;
+        const { isAuthenticated } = this.state;
         return (
             <Provider value={this.getContext()}>
-                {this.state.isAuthenticated && <Route path="/admin" component={Admin} />}
+                {isAuthenticated && <Route path="/admin" component={Admin} />}
+                {isAuthenticated && <Route path="/admin/users/:id" exact component={Admin} />}
+
                 <Route
                     path="/"
                     exact
