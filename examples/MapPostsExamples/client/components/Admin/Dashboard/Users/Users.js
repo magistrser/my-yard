@@ -36,7 +36,7 @@ class Users extends Component {
                 </Grid>
                 <Grid item xs={5} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%', position: 'relative' }}>
-                        <UserDetails userInfo={{ foo: 1 }} />
+                        <UserDetails />
                     </Paper>
                 </Grid>
             </Grid>
