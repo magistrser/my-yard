@@ -24,7 +24,7 @@ class Layout extends Component {
         super(props);
 
         const path = props.location.pathname.split('/');
-        console.log(path); // TODO: deal with paths
+        //console.log(path); // ["", "admin", "users", "1"]
 
         this.state = {
             selectedDrawerItem: path[2],
