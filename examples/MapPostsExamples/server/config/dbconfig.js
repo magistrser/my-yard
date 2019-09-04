@@ -1,5 +1,11 @@
 /** https://www.npmjs.com/package/sqlite3 */
 
+/**
+ * TODO:
+ * There is a way to serialize/parallelize queries to avoid nested callbacks
+ * https://www.sqlitetutorial.net/sqlite-nodejs/statements-control-flow/
+ */
+
 import sqlite3 from 'sqlite3';
 import { stat } from 'fs';
 import { v4 as generateGuid } from 'uuid';
