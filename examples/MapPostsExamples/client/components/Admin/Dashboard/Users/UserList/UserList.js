@@ -32,13 +32,13 @@ class UserList extends Component {
 
     render() {
         console.log('-----UserList render', this.props.match.params.id);
-        const selectedUserId = this.props.location.pathname.split('/').slice(-1)[0]; // Equals to 'users' if no id specified, but it works, so fuck it for now
+        //const selectedUserId = this.props.location.pathname.split('/').slice(-1)[0]; // Equals to 'users' if no id specified, but it works, so fuck it for now
+        const selectedUserId = this.props.match.params.id;
         return (
             <List dense>
                 {this.props.users.map(val => {
                     return (
                         <Link key={val} to={`/admin/users/${val}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            {}
                             <MenuItem button selected={val == selectedUserId}>
                                 <ListItemAvatar>
                                     <Avatar>AVA</Avatar>

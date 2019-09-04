@@ -36,7 +36,8 @@ class UserDetails extends Component {
     }
 
     loadUserInfo() {
-        const parsedId = this.props.location.pathname.split('/').slice(-1)[0];
+        //const parsedId = this.props.location.pathname.split('/').slice(-1)[0];
+        const parsedId = this.props.match.params.id;
         console.log(parsedId);
         // ...load user info ....
 
@@ -50,39 +51,41 @@ class UserDetails extends Component {
     onPanelChange = panel => ev => this.state.userInfo && this.setState({ selectedPanel: panel });
 
     isExpanded(panel) {
-        console.log(this.state.userInfo);
         return !!this.state.userInfo && this.state.selectedPanel === panel;
     }
 
     render() {
         const { userInfo } = this.state;
+        console.log('userInfo', userInfo);
         return (
-            <>
-                <ExpansionPanel expanded={this.isExpanded(panels.USER_PANEL)} onChange={this.onPanelChange(panels.USER_PANEL)}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>User</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <p>Information about user {userInfo?.id}</p>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-                <ExpansionPanel expanded={this.isExpanded(panels.POSTS_PANEL)} onChange={this.onPanelChange(panels.POSTS_PANEL)}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>Posts</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <p>Posts of user {userInfo?.id}</p>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-                <ExpansionPanel expanded={this.isExpanded(panels.COMMENTS_PANEL)} onChange={this.onPanelChange(panels.COMMENTS_PANEL)}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>Comments</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <p>Comments of user {userInfo?.id}</p>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-            </>
+            userInfo && (
+                <>
+                    <ExpansionPanel expanded={this.isExpanded(panels.USER_PANEL)} onChange={this.onPanelChange(panels.USER_PANEL)}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography>User</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                            <p>Information about user {userInfo && userInfo.id}</p>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    <ExpansionPanel expanded={this.isExpanded(panels.POSTS_PANEL)} onChange={this.onPanelChange(panels.POSTS_PANEL)}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography>Posts</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                            <p>Posts of user {userInfo?.id}</p>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    <ExpansionPanel expanded={this.isExpanded(panels.COMMENTS_PANEL)} onChange={this.onPanelChange(panels.COMMENTS_PANEL)}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography>Comments</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                            <p>Comments of user {userInfo?.id}</p>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </>
+            )
         );
     }
 }
