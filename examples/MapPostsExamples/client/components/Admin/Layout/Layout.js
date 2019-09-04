@@ -14,7 +14,7 @@ import {
     Divider,
 } from '@material-ui/core';
 import { Group as GroupIcon, Comment as CommentIcon, Assignment as AssignmentIcon } from '@material-ui/icons';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, NavLink } from 'react-router-dom';
 
 const DRAWER_WIDTH = 180;
 
@@ -37,8 +37,7 @@ class Layout extends Component {
         }
     }
 
-    onDrawerButtonClick = ev => {
-        const { id } = ev.currentTarget;
+    onDrawerButtonClick = ({ currentTarget: { id } }) => {
         console.log(id);
         this.setState({ selectedDrawerItem: id, selectedTabValue: 0 });
     };
@@ -74,29 +73,35 @@ class Layout extends Component {
             <Drawer variant="permanent" style={{ width: DRAWER_WIDTH, flexShrink: 0 }}>
                 <div style={{ width: DRAWER_WIDTH, height: 64 }} />
                 <List>
-                    <ListItem button id="users" selected={this.state.selectedDrawerItem == 'users'} onClick={this.onDrawerButtonClick}>
-                        <ListItemIcon>
-                            <GroupIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Users" />
-                    </ListItem>
-                    <ListItem button id="posts" selected={this.state.selectedDrawerItem == 'posts'} onClick={this.onDrawerButtonClick}>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Posts" />
-                    </ListItem>
-                    <ListItem
-                        button
-                        id="comments"
-                        selected={this.state.selectedDrawerItem == 'comments'}
-                        onClick={this.onDrawerButtonClick}
-                    >
-                        <ListItemIcon>
-                            <CommentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Comments" />
-                    </ListItem>
+                    <Link to="/admin/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <ListItem button id="users" selected={this.state.selectedDrawerItem == 'users'} onClick={this.onDrawerButtonClick}>
+                            <ListItemIcon>
+                                <GroupIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Users" />
+                        </ListItem>
+                    </Link>
+                    <Link to="/admin/posts" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <ListItem button id="posts" selected={this.state.selectedDrawerItem == 'posts'} onClick={this.onDrawerButtonClick}>
+                            <ListItemIcon>
+                                <AssignmentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Posts" />
+                        </ListItem>
+                    </Link>
+                    <Link to="/admin/comments" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <ListItem
+                            button
+                            id="comments"
+                            selected={this.state.selectedDrawerItem == 'comments'}
+                            onClick={this.onDrawerButtonClick}
+                        >
+                            <ListItemIcon>
+                                <CommentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Comments" />
+                        </ListItem>
+                    </Link>
                 </List>
                 <Divider />
             </Drawer>
