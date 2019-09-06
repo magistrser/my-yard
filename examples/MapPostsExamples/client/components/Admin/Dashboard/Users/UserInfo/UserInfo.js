@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Avatar, Typography, TextField, Button } from '@material-ui/core';
+import { Grid, Avatar, Typography, TextField, Button, Switch } from '@material-ui/core';
 import UserInput from './UserInput/UserInput';
 
 export default class UserInfo extends Component {
@@ -14,19 +14,20 @@ export default class UserInfo extends Component {
                         <Typography variant="h6">Ivan Ivanovich</Typography>
                     </Grid>
                 </Grid>
+                <Grid item container justify="flex-end">
+                    <Grid item>
+                        <Typography variant="caption" display="inline">
+                            admin:
+                        </Typography>
+                        <Switch value="isAdmin" onChange={ev => console.log(ev.target.checked)} size="small" />
+                    </Grid>
+                </Grid>
                 <Grid item container>
                     <Grid item>
+                        <UserInput name="Name" value="IvanIvanovich" onSubmit={newVal => console.log(newVal)} />
+                    </Grid>
+                    <Grid item>
                         <UserInput name="Email" value="fffff@aaaaa.com" onSubmit={newVal => console.log(newVal)} />
-                    </Grid>
-                    <Grid item>
-                        <Typography display="inline">Email: </Typography>
-                        <TextField />
-                        <Button style={{ visibility: '' && 'hidden' }}>Submit</Button>
-                    </Grid>
-                    <Grid item>
-                        <Typography display="inline">Email: </Typography>
-                        <TextField />
-                        <Button style={{ visibility: '' && 'hidden' }}>Submit</Button>
                     </Grid>
                 </Grid>
             </Grid>
