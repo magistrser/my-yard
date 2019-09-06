@@ -10,7 +10,7 @@ import styles from './PostsMap.module.css';
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
 import { BrushTwoTone } from '@material-ui/icons';
-import { Dialog, DialogTitle, DialogContent, Button, Fab, DialogContentText } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Button, Fab, DialogContentText, Grid, Avatar } from '@material-ui/core';
 
 const defaultYMapState = {
     center: [55.771707, 37.678784],
@@ -195,7 +195,7 @@ export default class PostsMap extends Component {
     render() {
         return (
             <div className={styles.mapContainer}>
-                <Dialog fullWidth scroll="paper" open={this.state.isPostOpen} onClose={this.handlePostClose}>
+                <Dialog fullWidth scroll="body" open={this.state.isPostOpen} onClose={this.handlePostClose}>
                     {this.state.isPostOpen ? ( // TODO: Use shouldComponentUpdate instead of this
                         <DialogContent>
                             <Post
