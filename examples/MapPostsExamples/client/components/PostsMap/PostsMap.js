@@ -8,9 +8,9 @@ import Post from '../Post/Post';
 import PostForm from '../PostForm/PostForm';
 import styles from './PostsMap.module.css';
 import Modal from '@material-ui/core/Modal';
-import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import { BrushTwoTone } from '@material-ui/icons';
+import { Dialog, DialogTitle, DialogContent, Button, Fab, DialogContentText } from '@material-ui/core';
 
 const defaultYMapState = {
     center: [55.771707, 37.678784],
@@ -195,18 +195,20 @@ export default class PostsMap extends Component {
     render() {
         return (
             <div className={styles.mapContainer}>
-                <Modal open={this.state.isPostOpen} onClose={this.handlePostClose}>
+                <Dialog fullWidth scroll="paper" open={this.state.isPostOpen} onClose={this.handlePostClose}>
                     {this.state.isPostOpen ? ( // TODO: Use shouldComponentUpdate instead of this
-                        <Post
-                            postId={this.state.posts[this.state.currentPostIdx].id}
-                            isAuthenticated={this.props.isAuthenticated}
-                            closePost={this.handlePostClose}
-                        />
+                        <DialogContent>
+                            <Post
+                                postId={this.state.posts[this.state.currentPostIdx].id}
+                                isAuthenticated={this.props.isAuthenticated}
+                                closePost={this.handlePostClose}
+                            />
+                        </DialogContent>
                     ) : (
                         // For PropTypes of Modal to fuck off
                         <div />
                     )}
-                </Modal>
+                </Dialog>
                 <YMaps query={{ apikey: this.apikey, load: 'package.full' }}>
                     <Map
                         onClick={this.handleMapClick}

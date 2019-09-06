@@ -85,7 +85,8 @@ export default class Post extends Component {
 
     render() {
         return this.state.isLoaded ? (
-            <div className={styles.post}>
+            // <div className={styles.post}>
+            <Grid container>
                 <Grid container direction="column" justify="center" alignItems="flex-start">
                     <Grid item container direction="row" justify="flex-start" alignItems="center">
                         <Grid item>
@@ -176,8 +177,9 @@ export default class Post extends Component {
                 >
                     X
                 </Fab>
-            </div>
+            </Grid>
         ) : (
+            // </div>
             <div className={styles.post}>
                 <Grid container direction="row" justify="center" alignItems="center">
                     <CircularProgress />
