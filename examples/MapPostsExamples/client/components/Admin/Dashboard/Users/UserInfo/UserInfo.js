@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { Grid, Avatar, Typography, TextField, Button, Switch } from '@material-ui/core';
 import UserInput from './UserInput/UserInput';
+import BanControl from './BanControl/BanControl';
 
 export default class UserInfo extends Component {
     render() {
         return (
             <Grid container direction="column">
+                <Grid item container justify="flex-end">
+                    <Grid item>
+                        <BanControl />
+                    </Grid>
+                </Grid>
                 <Grid item container alignItems="center" justify="center">
                     <Grid item>
                         <Avatar style={{ margin: 10, width: 80, height: 80 }} />
