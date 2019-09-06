@@ -14,6 +14,9 @@ import {
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
+import UserPosts from '../UserPosts/UserPosts';
+import UserComments from '../UserComments/UserComments';
+import UserInfo from '../UserInfo/UserInfo';
 
 const panels = {
     USER_PANEL: 'USER_PANEL',
@@ -36,16 +39,16 @@ class UserDetails extends Component {
     }
 
     loadUserInfo() {
-        //const parsedId = this.props.location.pathname.split('/').slice(-1)[0];
-        const parsedId = this.props.match.params.id;
-        console.log(parsedId);
-        // ...load user info ....
+        const userId = this.props.match.params.id;
 
-        this.setState({
-            userInfo: parsedId !== 'users' && {
-                id: parsedId,
-            },
-        });
+        // ...load user info ....
+        if (userId) {
+            this.setState({
+                userInfo: {
+                    id: userId,
+                },
+            });
+        }
     }
 
     onPanelChange = panel => ev => this.state.userInfo && this.setState({ selectedPanel: panel });
@@ -65,7 +68,7 @@ class UserDetails extends Component {
                             <Typography>User</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <p>Information about user {userInfo && userInfo.id}</p>
+                            <UserInfo userInfo={userInfo} />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel expanded={this.isExpanded(panels.POSTS_PANEL)} onChange={this.onPanelChange(panels.POSTS_PANEL)}>
@@ -73,7 +76,7 @@ class UserDetails extends Component {
                             <Typography>Posts</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <p>Posts of user {userInfo?.id}</p>
+                            <UserPosts />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel expanded={this.isExpanded(panels.COMMENTS_PANEL)} onChange={this.onPanelChange(panels.COMMENTS_PANEL)}>
@@ -81,7 +84,7 @@ class UserDetails extends Component {
                             <Typography>Comments</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <p>Comments of user {userInfo?.id}</p>
+                            <UserComments />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                 </>
