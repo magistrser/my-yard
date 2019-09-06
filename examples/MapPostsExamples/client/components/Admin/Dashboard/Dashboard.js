@@ -13,6 +13,7 @@ import {
     ListItemText,
 } from '@material-ui/core';
 import Users from './Users/Users';
+import Posts from './Posts/Posts';
 
 export default class Dashboard extends Component {
     render() {
@@ -25,6 +26,10 @@ export default class Dashboard extends Component {
         switch (selectedDrawerItem) {
             case 'users':
                 return <Users />;
+                break;
+            case 'posts':
+                return <Posts />;
+                break;
             default:
                 return <div />;
         }
