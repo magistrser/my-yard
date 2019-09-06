@@ -45,7 +45,7 @@ export default class CommentBox extends Component {
 
     render() {
         return (
-            <Grid container direction="column">
+            <Grid item container direction="column">
                 {this.props.isAuthenticated ? (
                     <Grid item container>
                         <CommentReplyField
@@ -62,9 +62,10 @@ export default class CommentBox extends Component {
                         aria-label="aria-label"
                         style={{
                             width: '100%',
-                            position: 'relative',
+                            // Why did I do this?
+                            //position: 'relative',
                             //overflow: 'auto',
-                            maxHeight: 300,
+                            //maxHeight: 300,
                         }}
                     >
                         {this.props.comments.map(comment => (
