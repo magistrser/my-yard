@@ -22,7 +22,7 @@ class Users extends Component {
         console.log('---Users render');
         return (
             <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
-                <Grid item xs={7} style={{ height: '100%' }}>
+                <Grid item xs={4} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%' }}>
                         <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
                             <Grid item>
@@ -34,7 +34,8 @@ class Users extends Component {
                         </Grid>
                     </Paper>
                 </Grid>
-                <Grid item xs={5} style={{ height: '100%' }}>
+
+                <Grid item xs={8} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%', position: 'relative' }}>
                         <UserDetails />
                     </Paper>
