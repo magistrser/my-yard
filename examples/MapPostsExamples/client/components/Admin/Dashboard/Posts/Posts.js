@@ -11,9 +11,9 @@ export default class Posts extends Component {
                     <Paper style={{ height: '80%' }}>{/* <PostList /> */}</Paper>
                 </Grid>
                 <Grid item xs={8} style={{ height: '100%' }}>
-                    <Paper style={{ height: '80%', position: 'relative' }}>
+                    <Paper style={{ height: '80%', position: 'relative', padding: 5, overflowY: 'auto', overflowX: 'hidden' }}>
                         {id ? (
-                            <Post postId={id} />
+                            <Post postId={id} isAuthenticated />
                         ) : (
                             <Typography
                                 variant="h4"
