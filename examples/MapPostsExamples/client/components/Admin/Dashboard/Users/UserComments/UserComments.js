@@ -7,30 +7,11 @@ export default class UserComments extends Component {
             <Grid container>
                 <Grid item xs={6}>
                     <Paper>
-                        <p>...Comment filters</p>
+                        <p>{'<CommentFilters />'}</p>
                     </Paper>
                 </Grid>
                 <Grid item xs={6}>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
-                    <p>...Comment list</p>
+                    <p>{'<CommentFilters />'}</p>
                 </Grid>
             </Grid>
         );

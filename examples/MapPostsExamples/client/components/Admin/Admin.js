@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Layout from './Layout/Layout';
 import { Grid } from '@material-ui/core';
-import Dashboard from './Dashboard/Dashboard';
 import { Route } from 'react-router-dom';
 
 import Users from './Dashboard/Users/Users';

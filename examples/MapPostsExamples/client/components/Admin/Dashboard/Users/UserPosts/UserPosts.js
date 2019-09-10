@@ -7,30 +7,11 @@ export default class UserPosts extends Component {
             <Grid container>
                 <Grid item xs={6}>
                     <Paper>
-                        <p>...Post filters</p>
+                        <p>{'<PostFilters />'}</p>
                     </Paper>
                 </Grid>
                 <Grid item xs={6}>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
-                    <p>...Post list</p>
+                    <p>{'<PostList />'}</p>
                 </Grid>
             </Grid>
         );
