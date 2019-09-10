@@ -28,13 +28,8 @@ class Layout extends Component {
 
         this.state = {
             selectedDrawerItem: path[2],
-            selectedTabValue: 0,
+            // selectedTabValue: 0,
         };
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.location.pathname !== prevProps.location.pathname) {
-        }
     }
 
     onDrawerButtonClick = ({ currentTarget: { id } }) => {
@@ -50,8 +45,8 @@ class Layout extends Component {
                 {this.drawer}
                 <div style={{ width: '100%', height: '100%' }}>
                     <div style={{ width: DRAWER_WIDTH, height: 64 }} />
-                    <div style={{ height: 64 }}>{this.getTabs(this.state.selectedDrawerItem)}</div>
-                    <Divider />
+                    {/* <div style={{ height: 64 }}>{this.getTabs(this.state.selectedDrawerItem)}</div>
+                    <Divider /> */}
                     <main style={{ flexGrow: 1, padding: 10, height: '100%' }}>
                         {React.Children.map(this.props.children, child =>
                             React.cloneElement(child, {
