@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, List, MenuItem, ListItemAvatar, Avatar, ListItemText } from '@material-ui/core';
+import PostFilters from '../PostFilters/PostFilters';
 
 export default class PostList extends Component {
     render() {
@@ -8,7 +9,7 @@ export default class PostList extends Component {
         return (
             <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
                 <Grid item>
-                    {/* <PostFilters /> */} <p>PostFilters</p>
+                    <PostFilters />
                 </Grid>
                 <Grid item style={{ overflowY: 'auto' }}>
                     <List dense>
