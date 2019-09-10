@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import Post from '../../../Post/Post';
+import PostList from './PostList/PostList';
 
 export default class Posts extends Component {
     render() {
@@ -8,12 +9,15 @@ export default class Posts extends Component {
         return (
             <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
                 <Grid item xs={4} style={{ height: '100%' }}>
-                    <Paper style={{ height: '80%' }}>{/* <PostList /> */}</Paper>
+                    <Paper style={{ height: '80%' }}>
+                        <PostList id={id} />
+                    </Paper>
                 </Grid>
                 <Grid item xs={8} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%', position: 'relative', padding: 5, overflowY: 'auto', overflowX: 'hidden' }}>
                         {id ? (
                             <Post
+                                key={id}
                                 postId={id}
                                 isAuthenticated
                                 closePost={() => console.log('close post')}
