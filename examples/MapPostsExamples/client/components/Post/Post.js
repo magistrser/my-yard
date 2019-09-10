@@ -69,19 +69,19 @@ export default class Post extends Component {
         return comments.data;
     };
 
-    deletePost = async () => {
-        const { id } = this.state.post;
-        try {
-            await axios.delete('/api/delete-post', {
-                data: {
-                    id,
-                },
-            });
-            this.props.closePost();
-        } catch (err) {
-            console.error(err);
-        }
-    };
+    // deletePost = async () => {
+    //     const { id } = this.state.post;
+    //     try {
+    //         await axios.delete('/api/delete-post', {
+    //             data: {
+    //                 id,
+    //             },
+    //         });
+    //         this.props.closePost();
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // };
 
     render() {
         return this.state.isLoaded ? (
@@ -154,7 +154,7 @@ export default class Post extends Component {
                     <Fab
                         color="default"
                         size="small"
-                        onClick={this.deletePost}
+                        onClick={this.props.deletePost}
                         style={{
                             position: 'absolute',
                             right: '40px',

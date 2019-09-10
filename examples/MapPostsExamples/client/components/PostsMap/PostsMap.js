@@ -192,6 +192,19 @@ export default class PostsMap extends Component {
         });
     };
 
+    handlePostDelete = id => async ev => {
+        try {
+            await axios.delete('/api/delete-post', {
+                data: {
+                    id,
+                },
+            });
+            this.handlePostClose();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     render() {
         return (
             <div className={styles.mapContainer}>
@@ -202,6 +215,7 @@ export default class PostsMap extends Component {
                                 postId={this.state.posts[this.state.currentPostIdx].id}
                                 isAuthenticated={this.props.isAuthenticated}
                                 closePost={this.handlePostClose}
+                                deletePost={this.handlePostDelete(this.state.posts[this.state.currentPostIdx].id)}
                             />
                         </DialogContent>
                     ) : (
