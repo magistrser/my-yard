@@ -13,7 +13,12 @@ export default class Posts extends Component {
                 <Grid item xs={8} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%', position: 'relative', padding: 5, overflowY: 'auto', overflowX: 'hidden' }}>
                         {id ? (
-                            <Post postId={id} isAuthenticated />
+                            <Post
+                                postId={id}
+                                isAuthenticated
+                                closePost={() => console.log('close post')}
+                                deletePost={() => console.log('delete post')}
+                            />
                         ) : (
                             <Typography
                                 variant="h4"
