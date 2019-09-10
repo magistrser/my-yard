@@ -18,18 +18,19 @@ import UserDetails from './UserDetails/UserDetails';
 
 class Users extends Component {
     render() {
-        console.log('---Users render');
+        const { id } = this.props;
+
         return (
             <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
                 <Grid item xs={4} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%' }}>
-                        <UserList />
+                        <UserList id={id} />
                     </Paper>
                 </Grid>
 
                 <Grid item xs={8} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%', position: 'relative' }}>
-                        <UserDetails />
+                        <UserDetails id={id} key={id} /> {/* change key to rerender */}
                     </Paper>
                 </Grid>
             </Grid>

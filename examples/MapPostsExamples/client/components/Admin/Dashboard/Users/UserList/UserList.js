@@ -20,21 +20,10 @@ import UserFilters from '../UserFilters/UserFilters';
 class UserList extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            selectedId: props.match?.params?.id,
-            isLoading: true,
-        };
-        console.log('---ctor', this.state.selectedId);
-    }
-
-    componentDidMount() {
-        console.log('--UserList mount', this.props.match.params);
     }
 
     render() {
-        console.log('-----UserList render', this.props.match.params.id);
-
-        const selectedUserId = this.props.match.params.id;
+        const selectedUserId = this.props.id;
         return (
             <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
                 <Grid item>
@@ -61,4 +50,4 @@ class UserList extends Component {
     }
 }
 
-export default withRouter(UserList);
+export default UserList;

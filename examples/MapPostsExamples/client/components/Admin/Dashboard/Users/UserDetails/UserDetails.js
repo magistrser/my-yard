@@ -34,12 +34,12 @@ class UserDetails extends Component {
         this.loadUserInfo();
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.location.pathname !== prevProps.location.pathname) this.loadUserInfo();
-    }
+    // componentDidUpdate(prevProps) {
+    //     if (this.props.location.pathname !== prevProps.location.pathname) this.loadUserInfo();
+    // }
 
     loadUserInfo() {
-        const userId = this.props.match.params.id;
+        const userId = this.props.id;
 
         // ...load user info ....
         if (userId) {
@@ -93,4 +93,4 @@ class UserDetails extends Component {
     }
 }
 
-export default withRouter(UserDetails);
+export default UserDetails;
