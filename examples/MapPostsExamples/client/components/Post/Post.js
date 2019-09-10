@@ -180,11 +180,11 @@ export default class Post extends Component {
             </Grid>
         ) : (
             // </div>
-            <div className={styles.post}>
-                <Grid container direction="row" justify="center" alignItems="center">
-                    <CircularProgress />
-                </Grid>
-            </div>
+            // <div className={styles.post}>
+            <Grid container direction="row" justify="center" alignItems="center" style={{ overflow: 'hidden' }}>
+                <CircularProgress />
+            </Grid>
+            // </div>
         );
     }
 }
