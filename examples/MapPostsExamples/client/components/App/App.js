@@ -48,9 +48,7 @@ class App extends Component {
         const { isAuthenticated } = this.state;
         return (
             <Provider value={this.getContext()}>
-                {isAuthenticated && <Route path="/admin/users/:id" exact component={Admin} />}
                 {isAuthenticated && <Route path="/admin" component={Admin} />}
-
                 <Route
                     path="/"
                     exact
