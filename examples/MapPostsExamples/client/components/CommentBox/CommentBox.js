@@ -6,6 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import CommentReplyField from '../CommentReplyField/CommentReplyField';
+import CommentList from '../CommentList/CommentList';
 
 export default class CommentBox extends Component {
     constructor(props) {
@@ -56,31 +57,14 @@ export default class CommentBox extends Component {
                         />
                     </Grid>
                 ) : null}
-                <Grid item>
-                    <List // TODO: Move this list into its own component (like CommentList) ?
-                        component="nav"
-                        aria-label="aria-label"
-                        style={{
-                            width: '100%',
-                            // Why did I do this?
-                            //position: 'relative',
-                            //overflow: 'auto',
-                            //maxHeight: 300,
-                        }}
-                    >
-                        {this.props.comments.map(comment => (
-                            <div key={comment.id}>
-                                <hr ref={comment.ref} />
-                                <Comment
-                                    comment={comment}
-                                    selected={this.state.highlightedComment === comment.id}
-                                    highlightComment={this.highlightComment}
-                                    onAuthorNameClick={comment => this.setState({ replyTo: comment })}
-                                    onUpdate={this.props.onCommentsUpdate}
-                                />
-                            </div>
-                        ))}
-                    </List>
+                <Grid item container>
+                    <CommentList
+                        comments={this.props.comments}
+                        highlightedComment={this.state.highlightedComment}
+                        highlightComment={this.highlightComment}
+                        onAuthorNameClick={comment => this.setState({ replyTo: comment })}
+                        onCommentsUpdate={this.props.onCommentsUpdate}
+                    />
                 </Grid>
             </Grid>
         );
