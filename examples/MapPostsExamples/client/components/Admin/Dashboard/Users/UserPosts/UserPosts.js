@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import { Grid, Paper } from '@material-ui/core';
+import PostFilters from '../../Posts/PostFilters/PostFilters';
+import PostList from '../../Posts/PostList/PostList';
 
 export default class UserPosts extends Component {
     render() {
         return (
-            <Grid container>
-                <Grid item xs={6}>
-                    <Paper>
-                        <p>{'<PostFilters />'}</p>
-                    </Paper>
-                </Grid>
-                <Grid item xs={6}>
-                    <p>{'<PostList />'}</p>
-                </Grid>
-            </Grid>
+            <Paper style={{ width: '100%' }}>
+                <PostList />
+            </Paper>
         );
     }
 }
