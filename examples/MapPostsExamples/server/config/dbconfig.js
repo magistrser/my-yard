@@ -738,9 +738,10 @@ export default class Storage {
 
     static deleteCommentByIdChecked(commentId, userId) {
         return new Promise((resolve, reject) => {
+            console.log('Delete comment with id', commentId);
             this._db.run(
-                `delete from Comments where id=?1 and authorId=?2 
-                or exists (select 1 from Users where id=?2);`, //and isAdmin=1
+                `delete from Comments where id=?1 and (authorId=?2 
+                or exists (select 1 from Users where id=?2));`, //and isAdmin=1
                 [commentId, userId],
                 // not lambda because brilliant sqlite3 developer decided that passing data to callback using THIS is very conveniant
                 function(err) {
