@@ -96,6 +96,23 @@ export default class Storage {
         });
     }
 
+    static getUsers() {
+        return new Promise((resolve, reject) => {
+            this._db.all(
+                `select u.id, u.email, u.fullName, u.vkProfileUrl, u.isAdmin, u.bannedUntil, p.url as userPic
+                from Users u left join Photos p on u.id = p.userId`,
+                (err, rows) => {
+                    if (err) {
+                        console.error('[ERROR], ', err);
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                }
+            );
+        });
+    }
+
     static insertPost(post) {
         return new Promise((resolve, reject) => {
             this._db

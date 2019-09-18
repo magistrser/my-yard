@@ -108,6 +108,16 @@ app.get('/api/get-userpic/', async (req, res) => {
     }
 });
 
+// Gets users
+app.get('/api/get-users', async (req, res) => {
+    try {
+        const users = await Storage.getUsers();
+        res.status(200).send(users);
+    } catch {
+        res.status(500).send('Internal error');
+    }
+});
+
 /**
  * Posts
  */
