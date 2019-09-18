@@ -41,7 +41,7 @@ class Users extends Component {
 
                     <Grid item xs={8} style={{ height: '100%' }}>
                         <Paper style={{ height: '80%', position: 'relative' }}>
-                            <UserDetails id={id} key={id} /> {/* change key to rerender */}
+                            <UserDetails user={this.state.users.find(u => u.id === id)} key={id} /> {/* change key to rerender */}
                         </Paper>
                     </Grid>
                 </Grid>

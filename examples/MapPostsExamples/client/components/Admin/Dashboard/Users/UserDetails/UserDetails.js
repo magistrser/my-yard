@@ -17,6 +17,7 @@ import { withRouter } from 'react-router-dom';
 import UserPosts from '../UserPosts/UserPosts';
 import UserComments from '../UserComments/UserComments';
 import UserInfo from '../UserInfo/UserInfo';
+import axios from 'axios';
 
 const panels = {
     USER_PANEL: 'USER_PANEL',
@@ -30,25 +31,25 @@ class UserDetails extends Component {
         userInfo: null,
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         this.loadUserInfo();
     }
 
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.location.pathname !== prevProps.location.pathname) this.loadUserInfo();
-    // }
+    async loadUserInfo() {
+        const { user } = this.props;
 
-    loadUserInfo() {
-        const userId = this.props.id;
+        if (!user) return;
 
-        // ...load user info ....
-        if (userId) {
-            this.setState({
-                userInfo: {
-                    id: userId,
-                },
-            });
-        }
+        const { data: posts } = await axios.get(`/api/get-posts?userId=${user.id}`);
+        const { data: comments } = await axios.get(`/api/get-comments?userId=${user.id}`); // TODO: implement
+
+        this.setState({
+            userInfo: {
+                ...user,
+                posts,
+                comments,
+            },
+        });
     }
 
     onPanelChange = panel => ev => this.state.userInfo && this.setState({ selectedPanel: panel });
