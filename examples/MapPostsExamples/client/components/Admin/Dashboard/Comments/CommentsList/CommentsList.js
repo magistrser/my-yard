@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, List, MenuItem, ListItemAvatar, Avatar, ListItemText } from '@material-ui/core';
 import CommentList from '../../../../CommentList/CommentList';
+import { withRouter } from 'react-router-dom';
+import CommentsFilters from '../CommentsFilters/CommentsFilters';
 
-export default class CommentsList extends Component {
+class CommentsList extends Component {
     render() {
-        const selectedCommentId = this.props.id;
+        const { highlightedCommentId } = this.props;
+        console.log(highlightedCommentId);
         return (
             <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
-                <Grid item>CommentFilters</Grid>
+                <Grid item>
+                    <CommentsFilters />
+                </Grid>
                 <Grid item container style={{ overflowY: 'auto' }}>
                     <CommentList
                         comments={[
@@ -22,10 +27,15 @@ export default class CommentsList extends Component {
                             id: commentId,
                             fullName: 'full namme',
                             timestamp: new Date().toDateString(),
+                            authorId: 1,
                         }))}
+                        onAuthorNameClick={({ authorId }) => this.props.history.push('/admin/users/' + authorId)}
+                        highlightedComment={highlightedCommentId}
                     />
                 </Grid>
             </Grid>
         );
     }
 }
+
+export default withRouter(CommentsList);
