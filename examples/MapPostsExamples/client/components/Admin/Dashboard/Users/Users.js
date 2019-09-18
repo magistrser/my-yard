@@ -15,25 +15,37 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import UserList from './UserList/UserList';
 import UserDetails from './UserDetails/UserDetails';
+import axios from 'axios';
 
 class Users extends Component {
+    state = {
+        users: null,
+    };
+
+    async componentDidMount() {
+        const { data: users } = await axios.get('/api/get-users');
+        this.setState({ users });
+    }
+
     render() {
         const { id } = this.props;
 
         return (
-            <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
-                <Grid item xs={4} style={{ height: '100%' }}>
-                    <Paper style={{ height: '80%' }}>
-                        <UserList id={id} />
-                    </Paper>
-                </Grid>
+            this.state.users && (
+                <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
+                    <Grid item xs={4} style={{ height: '100%' }}>
+                        <Paper style={{ height: '80%' }}>
+                            <UserList selectedUserId={id} users={this.state.users} />
+                        </Paper>
+                    </Grid>
 
-                <Grid item xs={8} style={{ height: '100%' }}>
-                    <Paper style={{ height: '80%', position: 'relative' }}>
-                        <UserDetails id={id} key={id} /> {/* change key to rerender */}
-                    </Paper>
+                    <Grid item xs={8} style={{ height: '100%' }}>
+                        <Paper style={{ height: '80%', position: 'relative' }}>
+                            <UserDetails id={id} key={id} /> {/* change key to rerender */}
+                        </Paper>
+                    </Grid>
                 </Grid>
-            </Grid>
+            )
         );
     }
 }
