@@ -15,6 +15,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
 import CommentsList from './CommentsList/CommentsList';
+import CommentsDetails from './CommentsDetails/CommentsDetails';
 
 class Comments extends Component {
     render() {
@@ -29,7 +30,9 @@ class Comments extends Component {
                 </Grid>
 
                 <Grid item xs={6} style={{ height: '100%' }}>
-                    <Paper style={{ height: '80%', position: 'relative' }}>asdf</Paper>
+                    <Paper style={{ height: '80%', position: 'relative' }}>
+                        <CommentsDetails />
+                    </Paper>
                 </Grid>
             </Grid>
         );
