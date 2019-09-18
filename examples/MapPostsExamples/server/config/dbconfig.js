@@ -383,7 +383,7 @@ export default class Storage {
         });
     }
 
-    static getPosts() {
+    static getPosts(userId) {
         return new Promise((resolve, reject) => {
             // TODO: no idea how to do this in one query
             /**
@@ -396,8 +396,9 @@ export default class Storage {
             let posts = [];
             this._db
                 .all(
-                    'select p.id, p.title, p.text, p.timestamp, p.eventDateTime, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
-                        'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId',
+                    'select p.id, p.title, p.text, p.timestamp, p.eventDateTime, p.userId, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
+                        'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId ',
+
                     (err, rows) => {
                         if (err) {
                             reject(err);
@@ -406,7 +407,7 @@ export default class Storage {
                         }
                     }
                 )
-                .all('select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId', (err, rows) => {
+                .all('select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId ', (err, rows) => {
                     if (err) {
                         console.error('[ERROR] ', err);
                         reject(err);
@@ -423,7 +424,7 @@ export default class Storage {
                     `select p.id as postId, t.name as tagName 
                     from Posts p 
                     inner join PostsTagsMap ptm on p.id = ptm.postId 
-                    inner join Tags t on ptm.tagId = t.id; `,
+                    inner join Tags t on ptm.tagId = t.id `,
                     (err, rows) => {
                         if (err) {
                             console.error('[ERROR] ', err);
@@ -448,7 +449,7 @@ export default class Storage {
                     from Posts posts 
                         join PostsSubscribersMap psm on posts.id = psm.postId 
                         join Users subs on psm.userId = subs.id 
-                        left join Photos p on subs.id=p.userId;`,
+                        left join Photos p on subs.id=p.userId `,
                     (err, rows) => {
                         if (err) {
                             reject(err);
@@ -464,7 +465,7 @@ export default class Storage {
                                 );
                                 post.subs = subs;
                             });
-                            resolve(posts);
+                            resolve(userId ? posts.filter(p => p.userId === userId) : posts); // HACK: Makeshift solution, do it in sql
                         }
                     }
                 );

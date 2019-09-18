@@ -219,7 +219,8 @@ app.put('/api/update-post', ensureAuthenticated, async (req, res) => {
 
 app.get('/api/get-posts', async (req, res) => {
     try {
-        const posts = await Storage.getPosts();
+        const { userId } = req.query;
+        const posts = await Storage.getPosts(userId);
         res.json(posts);
     } catch (err) {
         res.status(500).send();
