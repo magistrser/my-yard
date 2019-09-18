@@ -18,6 +18,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 import { Consumer } from '../../context';
 
@@ -33,7 +34,7 @@ const styles = {
 
 // TODO: Editing functionality is the same on Comment, title, text. It can be HOC
 
-export default class Comment extends Component {
+class Comment extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -104,6 +105,15 @@ export default class Comment extends Component {
                                     <Typography component="span" color="textSecondary" variant="subtitle2" style={{ display: 'inline' }}>
                                         {this.props.comment.timestamp}
                                     </Typography>
+
+                                    {user?.isAdmin && (
+                                        <Link to={`/admin/comments/${this.props.comment.id}`} style={{ textDecoration: 'none' }}>
+                                            <Button size="small" variant="outlined" color="primary">
+                                                GOTO
+                                            </Button>
+                                        </Link>
+                                    )}
+
                                     {this.props.comment.replyToCommentId ? (
                                         <Typography color="textSecondary" variant="caption" gutterBottom>
                                             <a
@@ -160,3 +170,5 @@ export default class Comment extends Component {
         );
     }
 }
+
+export default Comment;
