@@ -24,7 +24,7 @@ class Comments extends Component {
             <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
                 <Grid item xs={6} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%' }}>
-                        <CommentsList />
+                        <CommentsList highlightedCommentId={id} />
                     </Paper>
                 </Grid>
 
