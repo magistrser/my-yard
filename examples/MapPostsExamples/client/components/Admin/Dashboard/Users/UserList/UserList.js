@@ -23,7 +23,7 @@ class UserList extends Component {
     }
 
     render() {
-        const selectedUserId = this.props.id;
+        const { selectedUserId, users } = this.props;
         return (
             <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
                 <Grid item>
@@ -31,14 +31,14 @@ class UserList extends Component {
                 </Grid>
                 <Grid item style={{ overflowY: 'auto' }}>
                     <List dense>
-                        {[1, 2, 3, 4].map(val => {
+                        {users.map(user => {
                             return (
-                                <Link key={val} to={`/admin/users/${val}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <MenuItem button selected={val == selectedUserId}>
+                                <Link key={user.id} to={`/admin/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <MenuItem button selected={user.id == selectedUserId}>
                                         <ListItemAvatar>
-                                            <Avatar>AVA</Avatar>
+                                            <Avatar src={user.userPic}>AVA</Avatar>
                                         </ListItemAvatar>
-                                        <ListItemText primary={'%USERNAME%'} />
+                                        <ListItemText primary={user.fullName} />
                                     </MenuItem>
                                 </Link>
                             );
