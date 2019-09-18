@@ -8,7 +8,7 @@ import CommentsFilters from '../CommentsFilters/CommentsFilters';
 class CommentsList extends Component {
     render() {
         const { highlightedCommentId } = this.props;
-        console.log(highlightedCommentId);
+
         return (
             <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
                 <Grid item>
