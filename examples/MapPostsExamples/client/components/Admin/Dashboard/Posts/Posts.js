@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import { Grid, Paper, Typography } from '@material-ui/core';
+import axios from 'axios';
 import Post from '../../../Post/Post';
 import PostList from './PostList/PostList';
 
 export default class Posts extends Component {
+    state = {
+        posts: null,
+    };
+
+    async componentDidMount() {
+        const { data: posts } = await axios.get('/api/get-posts');
+        this.setState({ posts });
+    }
+
     render() {
         const { id } = this.props;
         return (
             <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
                 <Grid item xs={4} style={{ height: '100%' }}>
-                    <Paper style={{ height: '80%' }}>
-                        <PostList id={id} />
+                    <Paper style={{ height: '80%', overflowY: 'auto' }}>
+                        <PostList selectedPostId={id} posts={this.state.posts} />
                     </Paper>
                 </Grid>
                 <Grid item xs={8} style={{ height: '100%' }}>

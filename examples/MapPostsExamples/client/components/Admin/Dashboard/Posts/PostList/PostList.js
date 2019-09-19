@@ -5,7 +5,7 @@ import PostFilters from '../PostFilters/PostFilters';
 
 export default class PostList extends Component {
     render() {
-        const selectedPostId = this.props.id;
+        const selectedPostId = this.props.selectedPostId;
         return (
             <Paper style={{ width: '100%' }}>
                 <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
