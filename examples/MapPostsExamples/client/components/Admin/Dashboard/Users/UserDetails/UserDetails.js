@@ -14,10 +14,11 @@ import {
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
-import UserPosts from '../UserPosts/UserPosts';
+import axios from 'axios';
+
 import UserComments from '../UserComments/UserComments';
 import UserInfo from '../UserInfo/UserInfo';
-import axios from 'axios';
+import PostList from '../../Posts/PostList/PostList';
 
 const panels = {
     USER_PANEL: 'USER_PANEL',
@@ -60,7 +61,7 @@ class UserDetails extends Component {
 
     render() {
         const { userInfo } = this.state;
-        console.log('userInfo', userInfo);
+
         return (
             userInfo && (
                 <>
@@ -77,7 +78,7 @@ class UserDetails extends Component {
                             <Typography>Posts</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <UserPosts />
+                            <PostList posts={userInfo.posts} />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel expanded={this.isExpanded(panels.COMMENTS_PANEL)} onChange={this.onPanelChange(panels.COMMENTS_PANEL)}>
