@@ -14,6 +14,13 @@ export default class Posts extends Component {
         this.setState({ posts });
     }
 
+    async componentDidUpdate(prevProps, prevState) {
+        if (!this.state.posts) {
+            const { data: posts } = await axios.get('/api/get-posts');
+            this.setState({ posts });
+        }
+    }
+
     render() {
         const { id } = this.props;
         return (

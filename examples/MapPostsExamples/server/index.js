@@ -219,8 +219,8 @@ app.put('/api/update-post', ensureAuthenticated, async (req, res) => {
 
 app.get('/api/get-posts', async (req, res) => {
     try {
-        const { userId } = req.query;
-        const posts = await Storage.getPosts(userId);
+        const { userid } = req.query;
+        const posts = await Storage.getPosts(userid);
         res.json(posts);
     } catch (err) {
         res.status(500).send();
@@ -292,8 +292,8 @@ app.get('/api/get-comments/', async (req, res) => {
         let comments = null;
         if (req.query.postid) {
             comments = await Storage.getCommentsByPostId(req.query.postid);
-        } else if (req.query.userId) {
-            comments = await Storage.getCommentsByUserId(req.query.userId);
+        } else if (req.query.userid) {
+            comments = await Storage.getCommentsByUserId(req.query.userid);
         } else {
             comments = await Storage.getComments();
         }

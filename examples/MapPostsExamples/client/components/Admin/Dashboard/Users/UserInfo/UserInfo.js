@@ -21,7 +21,7 @@ export default class UserInfo extends Component {
                     <Grid item>
                         <Typography variant="h6">{userInfo.fullName}</Typography>
                     </Grid>
-                    {userInfo.isAdmin && (
+                    {!!userInfo.isAdmin && (
                         <Grid item>
                             <Typography variant="h6" color="secondary">
                                 (admin)
