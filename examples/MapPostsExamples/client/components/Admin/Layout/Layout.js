@@ -32,6 +32,12 @@ class Layout extends Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        const path = this.props.location.pathname.split('/');
+        const selectedDrawerItem = path[2];
+        if (prevState.selectedDrawerItem !== selectedDrawerItem) this.setState({ selectedDrawerItem });
+    }
+
     onDrawerButtonClick = ({ currentTarget: { id } }) => {
         console.log(id);
         this.setState({ selectedDrawerItem: id, selectedTabValue: 0 });
