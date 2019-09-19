@@ -15,7 +15,7 @@ export default class CommentList extends Component {
                     width: '100%',
                 }}
             >
-                {comments.map(comment => (
+                {comments?.map(comment => (
                     <div key={comment.id}>
                         <hr ref={comment.ref} />
                         <Comment

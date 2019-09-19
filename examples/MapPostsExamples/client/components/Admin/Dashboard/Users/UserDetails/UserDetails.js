@@ -19,6 +19,7 @@ import axios from 'axios';
 import UserComments from '../UserComments/UserComments';
 import UserInfo from '../UserInfo/UserInfo';
 import PostList from '../../Posts/PostList/PostList';
+import CommentsList from '../../Comments/CommentsList/CommentsList';
 
 const panels = {
     USER_PANEL: 'USER_PANEL',
@@ -86,7 +87,7 @@ class UserDetails extends Component {
                             <Typography>Comments</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <UserComments />
+                            <CommentsList comments={userInfo.comments} />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                 </>
