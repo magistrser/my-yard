@@ -673,6 +673,24 @@ export default class Storage {
         });
     }
 
+    static getComments() {
+        return new Promise((resolve, reject) => {
+            this._db.all(
+                `select c.id, c.authorId, u.fullName, p.url as photoUrl, c.replyToCommentId, ru.fullName as replyToName, c.text, c.timestamp 
+                from Comments c inner join Users u on c.authorId=u.id left outer join Photos p on u.id=p.userId left outer join Comments rc on c.replyToCommentId=rc.id left outer join Users ru on rc.authorId=ru.id 
+                order by c.timestamp desc; `,
+                (err, rows) => {
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                }
+            );
+        });
+    }
+
     static getCommentsByPostId(postId) {
         return new Promise((resolve, reject) => {
             this._db.all(
@@ -684,6 +702,28 @@ export default class Storage {
                 (err, rows) => {
                     if (err) {
                         console.error(err);
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                }
+            );
+        });
+    }
+
+    static getCommentsByUserId(userId) {
+        return new Promise((resolve, reject) => {
+            this._db.all(
+                ` 
+                select c.id, c.authorId, u.fullName, p.url as photoUrl, c.replyToCommentId, ru.fullName as replyToName, c.text, c.timestamp 
+                from Comments c inner join Users u on c.authorId=u.id left outer join Photos p on u.id=p.userId left outer join Comments rc on c.replyToCommentId=rc.id left outer join Users ru on rc.authorId=ru.id 
+                where c.authorId=? 
+                order by c.timestamp desc; 
+            `,
+                [userId],
+                (err, rows) => {
+                    if (err) {
+                        console.error('[ERROR] ', err);
                         reject(err);
                     } else {
                         resolve(rows);

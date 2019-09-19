@@ -41,7 +41,7 @@ class UserDetails extends Component {
         if (!user) return;
 
         const { data: posts } = await axios.get(`/api/get-posts?userId=${user.id}`);
-        const { data: comments } = await axios.get(`/api/get-comments?userId=${user.id}`); // TODO: implement
+        const { data: comments } = await axios.get(`/api/get-comments?userid=${user.id}`);
 
         this.setState({
             userInfo: {

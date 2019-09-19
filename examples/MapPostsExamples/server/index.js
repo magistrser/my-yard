@@ -289,11 +289,18 @@ app.post('/api/search-posts', async (req, res) => {
 // Gets comments for post
 app.get('/api/get-comments/', async (req, res) => {
     try {
-        const { postid } = req.query;
-        const comments = await Storage.getCommentsByPostId(postid);
+        let comments = null;
+        if (req.query.postid) {
+            comments = await Storage.getCommentsByPostId(req.query.postid);
+        } else if (req.query.userId) {
+            comments = await Storage.getCommentsByUserId(req.query.userId);
+        } else {
+            comments = await Storage.getComments();
+        }
         res.status(200).json(comments);
-    } catch {
-        res.status(500).send('No such postid');
+    } catch (err) {
+        console.error('[ERROR]', err);
+        res.status(500).send('Error occured');
     }
 });
 
