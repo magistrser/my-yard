@@ -5,35 +5,43 @@ import BanControl from './BanControl/BanControl';
 
 export default class UserInfo extends Component {
     render() {
+        const { userInfo } = this.props;
+        console.log('---userInfo', userInfo);
         return (
             <Grid container direction="column">
                 <Grid item container justify="flex-end">
                     <Grid item>
-                        <BanControl />
+                        <BanControl userId={userInfo.id} />
                     </Grid>
                 </Grid>
                 <Grid item container alignItems="center" justify="center">
                     <Grid item>
-                        <Avatar style={{ margin: 10, width: 80, height: 80 }} />
+                        <Avatar style={{ margin: 10, width: 80, height: 80 }} src={userInfo.userPic} />
                     </Grid>
                     <Grid item>
-                        <Typography variant="h6">Ivan Ivanovich</Typography>
+                        <Typography variant="h6">{userInfo.fullName}</Typography>
                     </Grid>
+                    {userInfo.isAdmin && (
+                        <Grid item>
+                            <Typography variant="h6" color="secondary">
+                                (admin)
+                            </Typography>
+                        </Grid>
+                    )}
                 </Grid>
-                <Grid item container justify="flex-end">
+                <Grid item container direction="column" alignItems="center">
                     <Grid item>
-                        <Typography variant="caption" display="inline">
-                            admin:
-                        </Typography>
-                        <Switch value="isAdmin" onChange={ev => console.log(ev.target.checked)} size="small" />
-                    </Grid>
-                </Grid>
-                <Grid item container>
-                    <Grid item>
-                        <UserInput name="Name" value="IvanIvanovich" onSubmit={newVal => console.log(newVal)} />
+                        <Typography display="inline">ID: </Typography>
+                        <TextField disabled value={userInfo.id} />
                     </Grid>
                     <Grid item>
-                        <UserInput name="Email" value="fffff@aaaaa.com" onSubmit={newVal => console.log(newVal)} />
+                        <UserInput name="Name" value={userInfo.fullName} onSubmit={newVal => console.log(newVal)} />
+                    </Grid>
+                    <Grid item>
+                        <UserInput name="Email" value={userInfo.email} onSubmit={newVal => console.log(newVal)} />
+                    </Grid>
+                    <Grid item>
+                        <UserInput name="VK" value={userInfo.vkProfileUrl} onSubmit={newVal => console.log(newVal)} />
                     </Grid>
                 </Grid>
             </Grid>
