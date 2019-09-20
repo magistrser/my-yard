@@ -14,7 +14,6 @@ export default class BanControl extends Component {
 
     render() {
         const { bannedUntil } = this.props;
-        console.log(bannedUntil);
         return <Button onClick={() => this.banRequest(!bannedUntil)}>{bannedUntil ? 'UNBAN' : 'BAN'}</Button>;
     }
 }

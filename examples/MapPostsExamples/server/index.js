@@ -141,6 +141,21 @@ app.put('/api/ban-user', ensureAuthenticated, async (req, res) => {
     }
 });
 
+// Updates user
+app.put('/api/update-user', ensureAuthenticated, async (req, res) => {
+    if (!req.user.isAdmin) {
+        return res.status(403).send('Forbidden');
+    }
+    const { user } = req.body;
+    try {
+        await Storage.updateUser(user);
+        res.status(200).send('Updated user');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 /**
  * Posts
  */

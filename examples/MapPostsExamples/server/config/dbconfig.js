@@ -153,6 +153,36 @@ export default class Storage {
         });
     }
 
+    static updateUser(user) {
+        const supportedColumns = ['email', 'fullName', 'vkProfileUrl', 'isAdmin', 'bannedUntil'];
+        let params = [];
+        const sql = `
+        update Users set id = id, ${Object.entries(user)
+            .map(([key, val]) => {
+                if (!supportedColumns.includes(key)) return null;
+                else {
+                    params.push(val);
+                    return `${key} = ? `;
+                }
+            })
+            .filter(i => i != null)
+            .join(', ')} 
+            where id = ?
+        `;
+        params.push(user.id);
+        return new Promise((resolve, reject) => {
+            console.log('[INFO] ', sql);
+            this._db.run(sql, params, err => {
+                if (err) {
+                    console.error('[ERROR] ', err);
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
     static insertPost(post) {
         return new Promise((resolve, reject) => {
             this._db
