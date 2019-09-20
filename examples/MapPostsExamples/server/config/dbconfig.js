@@ -113,6 +113,44 @@ export default class Storage {
         });
     }
 
+    static banUser(userId, bannedUntil) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                `
+                update Users set bannedUntil = date(?) where id = ?
+            `,
+                [bannedUntil || '3000-01-01', userId],
+                err => {
+                    if (err) {
+                        console.error('[ERROR] ', err);
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+        });
+    }
+
+    static unbanUser(userId) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                `
+                update Users set bannedUntil = NULL where id = ?
+            `,
+                [userId],
+                err => {
+                    if (err) {
+                        console.error('[ERROR] ', err);
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+        });
+    }
+
     static insertPost(post) {
         return new Promise((resolve, reject) => {
             this._db
