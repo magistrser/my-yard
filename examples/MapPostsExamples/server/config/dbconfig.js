@@ -394,81 +394,83 @@ export default class Storage {
              *  */
 
             let posts = [];
-            this._db
-                .all(
-                    'select p.id, p.title, p.text, p.timestamp, p.eventDateTime, p.userId, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
-                        'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId ',
+            this._db.all(
+                'select p.id, p.title, p.text, p.timestamp, p.eventDateTime, p.userId, u.fullName as author, ph.url as avatar, pgp.latitude, pgp.longitude ' +
+                    'from Posts p join Users u on p.userId = u.id join Photos ph on p.userId = ph.userId join PostGeoPositions pgp on p.id = pgp.postId ',
 
-                    (err, rows) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            posts = [...rows];
-                        }
-                    }
-                )
-                .all('select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId ', (err, rows) => {
+                (err, rows) => {
                     if (err) {
-                        console.error('[ERROR] ', err);
                         reject(err);
                     } else {
-                        posts.forEach(post => {
-                            post.images = [];
-                            rows.filter(row => post.id === row.id).forEach(row => {
-                                post.images.push(row.imageName);
-                            });
-                        });
+                        posts = [...rows];
+                        this._db.all(
+                            'select p.id, i.name as imageName from Posts as p inner join Images as i on p.id = i.postId ',
+                            (err, rows) => {
+                                if (err) {
+                                    console.error('[ERROR] ', err);
+                                    reject(err);
+                                } else {
+                                    posts.forEach(post => {
+                                        post.images = [];
+                                        rows.filter(row => post.id === row.id).forEach(row => {
+                                            post.images.push(row.imageName);
+                                        });
+                                    });
+                                    this._db.all(
+                                        `select p.id as postId, t.name as tagName 
+                                        from Posts p 
+                                        inner join PostsTagsMap ptm on p.id = ptm.postId 
+                                        inner join Tags t on ptm.tagId = t.id `,
+                                        (err, rows) => {
+                                            if (err) {
+                                                console.error('[ERROR] ', err);
+                                                reject(err);
+                                            } else {
+                                                posts.forEach(post => {
+                                                    post.tags = [];
+                                                    rows.filter(row => post.id === row.postId).forEach(row => {
+                                                        post.tags.push(row.tagName);
+                                                    });
+                                                });
+                                                this._db.all(
+                                                    `select 
+                                                        posts.id as postId, 
+                                                        subs.id as subId, 
+                                                        subs.email, 
+                                                        subs.fullName, 
+                                                        p.url as photoUrl 
+                                                    from Posts posts 
+                                                        join PostsSubscribersMap psm on posts.id = psm.postId 
+                                                        join Users subs on psm.userId = subs.id 
+                                                        left join Photos p on subs.id=p.userId `,
+                                                    (err, rows) => {
+                                                        if (err) {
+                                                            reject(err);
+                                                        } else {
+                                                            posts.forEach(post => {
+                                                                const subs = [];
+                                                                rows.filter(row => row.postId === post.id).forEach(row =>
+                                                                    subs.push({
+                                                                        email: row.email,
+                                                                        fullName: row.fullName,
+                                                                        photoUrl: row.photoUrl,
+                                                                    })
+                                                                );
+                                                                post.subs = subs;
+                                                            });
+                                                            resolve(userId ? posts.filter(p => p.userId === userId) : posts); // HACK: Makeshift solution, do it in sql
+                                                        }
+                                                    }
+                                                );
+                                            }
+                                        }
+                                    );
+                                }
+                            }
+                        );
                     }
-                })
-                .all(
-                    `select p.id as postId, t.name as tagName 
-                    from Posts p 
-                    inner join PostsTagsMap ptm on p.id = ptm.postId 
-                    inner join Tags t on ptm.tagId = t.id `,
-                    (err, rows) => {
-                        if (err) {
-                            console.error('[ERROR] ', err);
-                            reject(err);
-                        } else {
-                            posts.forEach(post => {
-                                post.tags = [];
-                                rows.filter(row => post.id === row.postId).forEach(row => {
-                                    post.tags.push(row.tagName);
-                                });
-                            });
-                        }
-                    }
-                )
-                .all(
-                    `select 
-                        posts.id as postId, 
-                        subs.id as subId, 
-                        subs.email, 
-                        subs.fullName, 
-                        p.url as photoUrl 
-                    from Posts posts 
-                        join PostsSubscribersMap psm on posts.id = psm.postId 
-                        join Users subs on psm.userId = subs.id 
-                        left join Photos p on subs.id=p.userId `,
-                    (err, rows) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            posts.forEach(post => {
-                                const subs = [];
-                                rows.filter(row => row.postId === post.id).forEach(row =>
-                                    subs.push({
-                                        email: row.email,
-                                        fullName: row.fullName,
-                                        photoUrl: row.photoUrl,
-                                    })
-                                );
-                                post.subs = subs;
-                            });
-                            resolve(userId ? posts.filter(p => p.userId === userId) : posts); // HACK: Makeshift solution, do it in sql
-                        }
-                    }
-                );
+                }
+            );
         });
     }
 
