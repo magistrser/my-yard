@@ -115,11 +115,13 @@ export default class Storage {
 
     static banUser(userId, bannedUntil) {
         return new Promise((resolve, reject) => {
+            bannedUntil = bannedUntil && new Date(bannedUntil) ? bannedUntil : '3000-01-01';
+            console.log(userId, bannedUntil);
             this._db.run(
                 `
                 update Users set bannedUntil = date(?) where id = ?
             `,
-                [bannedUntil || '3000-01-01', userId],
+                [bannedUntil, userId],
                 err => {
                     if (err) {
                         console.error('[ERROR] ', err);

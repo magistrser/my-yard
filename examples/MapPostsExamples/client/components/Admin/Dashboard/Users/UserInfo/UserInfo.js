@@ -11,7 +11,7 @@ export default class UserInfo extends Component {
             <Grid container direction="column">
                 <Grid item container justify="flex-end">
                     <Grid item>
-                        <BanControl userId={userInfo.id} />
+                        <BanControl bannedUntil={userInfo.bannedUntil} userId={userInfo.id} updateUserInfo={this.props.updateUserInfo} />
                     </Grid>
                 </Grid>
                 <Grid item container alignItems="center" justify="center">

@@ -23,9 +23,14 @@ class Users extends Component {
     };
 
     async componentDidMount() {
+        await this.loadUser();
+    }
+
+    loadUser = async () => {
+        console.log('-----');
         const { data: users } = await axios.get('/api/get-users');
         this.setState({ users });
-    }
+    };
 
     render() {
         const { id } = this.props;
@@ -41,7 +46,7 @@ class Users extends Component {
 
                     <Grid item xs={8} style={{ height: '100%' }}>
                         <Paper style={{ height: '80%', position: 'relative' }}>
-                            <UserDetails user={this.state.users.find(u => u.id === id)} key={id} /> {/* change key to rerender */}
+                            <UserDetails user={this.state.users.find(u => u.id === id)} updateUserInfo={() => this.loadUser()} />
                         </Paper>
                     </Grid>
                 </Grid>

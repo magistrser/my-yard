@@ -36,8 +36,13 @@ class UserDetails extends Component {
     async componentDidMount() {
         this.loadUserInfo();
     }
+    async componentDidUpdate(prevProps) {
+        if (prevProps.user !== this.props.user) {
+            this.loadUserInfo();
+        }
+    }
 
-    async loadUserInfo() {
+    loadUserInfo = async () => {
         const { user } = this.props;
 
         if (!user) return;
@@ -52,7 +57,7 @@ class UserDetails extends Component {
                 comments,
             },
         });
-    }
+    };
 
     onPanelChange = panel => ev => this.state.userInfo && this.setState({ selectedPanel: panel });
 
@@ -71,7 +76,7 @@ class UserDetails extends Component {
                             <Typography>User</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <UserInfo userInfo={userInfo} />
+                            <UserInfo userInfo={userInfo} updateUserInfo={this.props.updateUserInfo} />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel expanded={this.isExpanded(panels.POSTS_PANEL)} onChange={this.onPanelChange(panels.POSTS_PANEL)}>

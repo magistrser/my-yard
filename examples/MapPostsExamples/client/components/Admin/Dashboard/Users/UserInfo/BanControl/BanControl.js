@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
 import { Button } from '@material-ui/core';
+import axios from 'axios';
 
 export default class BanControl extends Component {
+    async banRequest(isBanned, bannedUntil) {
+        axios.put('/api/ban-user', {
+            isBanned,
+            bannedUntil,
+            userId: this.props.userId,
+        });
+        this.props.updateUserInfo();
+    }
+
     render() {
-        return <Button color="secondary">BAN</Button>;
+        const { bannedUntil } = this.props;
+        console.log(bannedUntil);
+        return <Button onClick={() => this.banRequest(!bannedUntil)}>{bannedUntil ? 'UNBAN' : 'BAN'}</Button>;
     }
 }

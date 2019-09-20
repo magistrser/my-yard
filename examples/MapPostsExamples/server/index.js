@@ -121,11 +121,11 @@ app.get('/api/get-users', async (req, res) => {
 // Bans user
 app.put('/api/ban-user', ensureAuthenticated, async (req, res) => {
     if (!req.user.isAdmin) {
-        res.status(403).send('Forbidden');
+        return res.status(403).send('Forbidden');
     }
     const { isBanned, bannedUntil, userId } = req.body;
-    if (userId === undefined || isBanned === undefined || new Date(bannedUntil) < Date.now()) {
-        res.status(400).send('Invalid params');
+    if (userId === undefined || isBanned === undefined) {
+        return res.status(400).send('Invalid params');
     }
     try {
         if (isBanned) {
