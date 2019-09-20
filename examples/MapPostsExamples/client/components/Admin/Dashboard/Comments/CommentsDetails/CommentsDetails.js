@@ -17,7 +17,7 @@ export default class CommentsDetails extends Component {
 
     render() {
         const { comment } = this.props;
-        console.log('---comments', comment);
+
         return (
             !comment || (
                 <Grid container direction="column" spacing={2} style={{ overflowY: 'auto' }}>

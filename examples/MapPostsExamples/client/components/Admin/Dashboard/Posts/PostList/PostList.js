@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { Grid, List, MenuItem, ListItemAvatar, Avatar, ListItemText, Paper } from '@material-ui/core';
 import PostFilters from '../PostFilters/PostFilters';
 
-// TODO: Bags
-
 export default class PostList extends Component {
     render() {
         const selectedPostId = this.props.selectedPostId;
