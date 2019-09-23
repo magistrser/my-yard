@@ -21,7 +21,7 @@ export default class UserInput extends Component {
         return (
             <>
                 <Typography display="inline">{name}: </Typography>
-                <TextField inputRef={this.textFieldRef} defaultValue={value} onChange={this.onTextFieldChange} />
+                <TextField key={value} inputRef={this.textFieldRef} defaultValue={value} onChange={this.onTextFieldChange} />
                 <Button onClick={this.onSubmitClick} style={{ visibility: isSubmitBtnVisible || 'hidden' }}>
                     Submit
                 </Button>

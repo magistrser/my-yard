@@ -2,11 +2,25 @@ import React, { Component } from 'react';
 import { Grid, Avatar, Typography, TextField, Button, Switch } from '@material-ui/core';
 import UserInput from './UserInput/UserInput';
 import BanControl from './BanControl/BanControl';
+import axios from 'axios';
 
 export default class UserInfo extends Component {
+    onSubmit(field) {
+        return value => {
+            const { id } = this.props.userInfo;
+            axios.put('/api/update-user', {
+                user: {
+                    id,
+                    [field]: value,
+                },
+            });
+            this.props.updateUserInfo();
+        };
+    }
+
     render() {
         const { userInfo } = this.props;
-        console.log('---userInfo', userInfo);
+
         return (
             <Grid container direction="column">
                 <Grid item container justify="flex-end">
@@ -35,13 +49,13 @@ export default class UserInfo extends Component {
                         <TextField disabled value={userInfo.id} />
                     </Grid>
                     <Grid item>
-                        <UserInput name="Name" value={userInfo.fullName} onSubmit={newVal => console.log(newVal)} />
+                        <UserInput name="Name" value={userInfo.fullName} onSubmit={this.onSubmit('fullName')} />
                     </Grid>
                     <Grid item>
-                        <UserInput name="Email" value={userInfo.email} onSubmit={newVal => console.log(newVal)} />
+                        <UserInput name="Email" value={userInfo.email} onSubmit={this.onSubmit('email')} />
                     </Grid>
                     <Grid item>
-                        <UserInput name="VK" value={userInfo.vkProfileUrl} onSubmit={newVal => console.log(newVal)} />
+                        <UserInput name="VK" value={userInfo.vkProfileUrl} onSubmit={this.onSubmit('vkProfileUrl')} />
                     </Grid>
                 </Grid>
             </Grid>
