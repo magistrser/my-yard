@@ -20,6 +20,25 @@ import UserFilters from '../UserFilters/UserFilters';
 class UserList extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            filters: {
+                name: '',
+                id: '',
+                email: '',
+                vk: '',
+            },
+        };
+    }
+
+    filterUsers(users) {
+        if (!users) return users;
+        const { name, id, email, vk } = this.state.filters;
+        return users
+            .filter(u => u.fullName.toLowerCase().includes(name.toLowerCase()))
+            .filter(u => u.id.includes(id))
+            .filter(u => u.email.toLowerCase().includes(email.toLowerCase()))
+            .filter(u => u.vkProfileUrl.toLowerCase().includes(vk.toLowerCase()));
     }
 
     render() {
@@ -27,11 +46,11 @@ class UserList extends Component {
         return (
             <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
                 <Grid item>
-                    <UserFilters />
+                    <UserFilters filters={this.state.filters} onChange={filters => this.setState({ filters })} />
                 </Grid>
                 <Grid item style={{ overflowY: 'auto' }}>
                     <List dense>
-                        {users.map(user => {
+                        {this.filterUsers(users).map(user => {
                             return (
                                 <Link key={user.id} to={`/admin/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                     <MenuItem button selected={user.id == selectedUserId}>
