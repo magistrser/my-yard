@@ -11,11 +11,13 @@ import {
     ListItemAvatar,
     Avatar,
     ListItemText,
+    TextField,
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
-export default class PostFilters extends Component {
+export default class UserFilters extends Component {
     render() {
+        const { filters, onChange } = this.props;
         return (
             <>
                 <ExpansionPanel>
@@ -23,7 +25,13 @@ export default class PostFilters extends Component {
                         <Typography>Filters</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
-                        <input />
+                        <Grid container direction="column">
+                            {Object.entries(filters).map(([key, val]) => (
+                                <Grid key={key}>
+                                    <TextField label={key} value={val} onChange={e => onChange({ ...filters, [key]: e.target.value })} />
+                                </Grid>
+                            ))}
+                        </Grid>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </>

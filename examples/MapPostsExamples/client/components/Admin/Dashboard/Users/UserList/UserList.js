@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { withRouter, Link } from 'react-router-dom';
-import UserFilters from '../UserFilters/UserFilters';
+import Filters from '../../../Filters/Filters';
 
 class UserList extends Component {
     constructor(props) {
@@ -46,7 +46,7 @@ class UserList extends Component {
         return (
             <Grid container direction="column" style={{ height: '100%', flexWrap: 'nowrap' }}>
                 <Grid item>
-                    <UserFilters filters={this.state.filters} onChange={filters => this.setState({ filters })} />
+                    <Filters filters={this.state.filters} onChange={filters => this.setState({ filters })} />
                 </Grid>
                 <Grid item style={{ overflowY: 'auto' }}>
                     <List dense>
