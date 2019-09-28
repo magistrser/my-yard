@@ -16,7 +16,6 @@ class Posts extends Component {
     }
 
     async componentDidUpdate(prevProps, prevState) {
-        console.log('suka');
         if (!this.state.posts) {
             const { data: posts } = await axios.get('/api/get-posts');
             this.setState({ posts });
