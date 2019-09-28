@@ -321,6 +321,25 @@ export default class Storage {
         });
     }
 
+    static checkBanned(userId) {
+        return new Promise((resolve, reject) => {
+            this._db.get('select bannedUntil from Users where id = ?', [userId], (err, row) => {
+                if (err) {
+                    console.error('[ERROR] ', err);
+                    reject(err);
+                } else {
+                    if (row && new Date(row) > Date.now()) {
+                        console.log('[INFO] ', 'Banned');
+                        return resolve(true);
+                    } else {
+                        console.log('[INFO] ', 'Not banned');
+                        return resolve(false);
+                    }
+                }
+            });
+        });
+    }
+
     static insertPost(post) {
         return new Promise((resolve, reject) => {
             this._db

@@ -164,7 +164,7 @@ app.put('/api/update-user', ensureAuthenticated, async (req, res) => {
  */
 
 // Creates new post
-app.post('/api/create-post', ensureAuthenticated, upload.array('images', 10), async (req, res) => {
+app.post('/api/create-post', ensureAuthenticated, ensureNotBanned, upload.array('images', 10), async (req, res) => {
     // TODO: Should we save images from here and pass names to database helper class
     // or should we pass images to database helper class and it should save them itself?
 
@@ -345,7 +345,7 @@ app.get('/api/get-comments/', async (req, res) => {
     }
 });
 
-app.post('/api/create-comment/', ensureAuthenticated, async (req, res) => {
+app.post('/api/create-comment/', ensureAuthenticated, ensureNotBanned, async (req, res) => {
     const comment = {
         postId: req.body.postid,
         authorId: req.user.id,
@@ -503,4 +503,9 @@ function ensureAuthenticated(req, res, next) {
         return next();
     }
     res.redirect('/api/fail');
+}
+
+async function ensureNotBanned(req, res, next) {
+    if (await Storage.checkBanned(req.user.id)) return res.status(403).send('You are banned');
+    return next();
 }
