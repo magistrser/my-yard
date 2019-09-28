@@ -24,6 +24,14 @@ class Comments extends Component {
     };
 
     async componentDidMount() {
+        await this.loadComments();
+    }
+
+    async componentDidUpdate() {
+        await this.loadComments();
+    }
+
+    async loadComments() {
         const { data: comments } = await axios.get('/api/get-comments');
         this.setState({ comments });
     }
@@ -35,7 +43,11 @@ class Comments extends Component {
             <Grid container justify="flex-start" spacing={3} style={{ height: '100%', position: 'relative' }}>
                 <Grid item xs={6} style={{ height: '100%' }}>
                     <Paper style={{ height: '80%' }}>
-                        <CommentsList highlightedCommentId={id} comments={this.state.comments} />
+                        <CommentsList
+                            highlightedCommentId={id}
+                            comments={this.state.comments}
+                            onCommentsUpdate={() => this.forceUpdate()}
+                        />
                     </Paper>
                 </Grid>
 

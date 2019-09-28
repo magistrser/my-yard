@@ -44,6 +44,7 @@ class CommentsList extends Component {
                         comments={this.filterComments(this.props.comments)}
                         onAuthorNameClick={({ authorId }) => this.props.history.push('/admin/users/' + authorId)}
                         highlightedComment={highlightedCommentId}
+                        onCommentsUpdate={this.props.onCommentsUpdate}
                     />
                 </Grid>
             </Grid>
