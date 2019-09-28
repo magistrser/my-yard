@@ -13,13 +13,14 @@ export default class PostList extends Component {
             latitude: '',
             longitude: '',
             text: '',
+            title: '',
             timestamp: '',
         },
     };
     // TODO: I was doing something here
     filterPosts(posts) {
         if (!posts) return posts;
-        const { author, userId, eventDateTime, id, latitude, longitude, text, timestamp } = this.state.filters;
+        const { author, userId, eventDateTime, id, latitude, longitude, text, title, timestamp } = this.state.filters;
         return posts
             .filter(p => p.author.toLowerCase().includes(author.toLowerCase()))
             .filter(p => p.userId.includes(userId))
@@ -27,7 +28,8 @@ export default class PostList extends Component {
             .filter(p => p.id.includes(id))
             .filter(p => Math.abs(p.latitude - latitude) < 100)
             .filter(p => Math.abs(p.longitude - longitude) < 100)
-            .filter(p => p.text.toLowerCase().includes);
+            .filter(p => p.text.toLowerCase().includes(text.toLowerCase()))
+            .filter(p => p.title.toLowerCase().includes(title.toLowerCase()));
     }
 
     render() {
