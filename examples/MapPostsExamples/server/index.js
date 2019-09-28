@@ -35,6 +35,9 @@ app.use(
 /* File uploading middleware */
 const upload = multer({ storage: multer.memoryStorage() });
 
+/* Configure db */
+Storage.init();
+
 /* Passport configuration */
 configurePassport(passport);
 app.use(passport.initialize());
