@@ -3,8 +3,9 @@ import { Grid, Paper, Typography } from '@material-ui/core';
 import axios from 'axios';
 import Post from '../../../Post/Post';
 import PostList from './PostList/PostList';
+import { withRouter } from 'react-router-dom';
 
-export default class Posts extends Component {
+class Posts extends Component {
     state = {
         posts: null,
     };
@@ -15,11 +16,25 @@ export default class Posts extends Component {
     }
 
     async componentDidUpdate(prevProps, prevState) {
+        console.log('suka');
         if (!this.state.posts) {
             const { data: posts } = await axios.get('/api/get-posts');
             this.setState({ posts });
         }
     }
+
+    deletePost = async postId => {
+        try {
+            await axios.delete('/api/delete-post', {
+                data: {
+                    id: postId,
+                },
+            });
+            this.setState({ posts: null }, () => this.props.history.push('/admin/posts'));
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     render() {
         const { id } = this.props;
@@ -38,7 +53,7 @@ export default class Posts extends Component {
                                 postId={id}
                                 isAuthenticated
                                 closePost={() => console.log('close post')}
-                                deletePost={() => console.log('delete post')}
+                                deletePost={this.deletePost}
                             />
                         ) : (
                             <Typography
@@ -55,3 +70,5 @@ export default class Posts extends Component {
         );
     }
 }
+
+export default withRouter(Posts);

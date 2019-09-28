@@ -154,7 +154,7 @@ export default class Post extends Component {
                     <Fab
                         color="default"
                         size="small"
-                        onClick={this.props.deletePost}
+                        onClick={() => this.props.deletePost(this.state.post.id)}
                         style={{
                             position: 'absolute',
                             right: '40px',
