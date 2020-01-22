@@ -8,6 +8,5 @@ dist
 examples/MapPostsExamples/server/__images/*.jpg
 
 *.log
-*.sqlite
 yarn.lock
 package-lock.json
