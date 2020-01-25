@@ -14,7 +14,7 @@ export default passport => {
             {
                 clientID: secrets.appID,
                 clientSecret: secrets.secretKey,
-                callbackURL: 'http://localhost:8080/api/auth/vkontakte/callback',
+                callbackURL: 'http://93.157.236.34:8080/api/auth/vkontakte/callback',
                 scope: ['email', 'photos'],
                 profileFields: ['email'],
             },

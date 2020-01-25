@@ -67,12 +67,12 @@ app.get('/api/restricted-area', ensureAuthenticated, (req, res) => {
 // If auth succeeds:
 app.get('/api/success', (req, res) => {
     console.log('<<Auth succeeded>>');
-    res.redirect('http://localhost:80/');
+    res.redirect('http://93.157.236.34:80/');
 });
 // If auth fails:
 app.get('/api/fail', (req, res) => {
     console.log('<<Auth failed>>');
-    res.redirect('http://localhost:80/');
+    res.redirect('http://93.157.236.34:80/');
 });
 
 // Checks if user is authenticated
@@ -90,7 +90,7 @@ app.get('/api/check-authentication', (req, res) => {
 // Logs user out
 app.get('/api/logout', (req, res) => {
     req.logout();
-    res.redirect('http://localhost:80/');
+    res.redirect('http://93.157.236.34:80/');
 });
 
 // Sends userpic by userId
@@ -430,7 +430,7 @@ app.get('/api/get-subscribers-count', async (req, res) => {
 });
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
-    res.redirect('http://localhost:80/'); // HACK: A workaround
+    res.redirect('http://93.157.236.34:80/'); // HACK: A workaround
 });
 
 /**
