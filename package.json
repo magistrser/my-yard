@@ -4,8 +4,8 @@
   "description": "Boilerplate to build a full stack web application using React, Node.js, Express and Webpack.",
   "main": "src/server/index.js",
   "scripts": {
-    "buildClient": "webpack --config webpack.config.client.js --mode production",
-    "start": "npm run buildClient && nodemon --exec babel-node src/server/index.js",
+    "buildClient": "webpack --config ./examples/MapPostsExamples/webpack.config.client.js --mode production",
+    "start": "npm run buildClient && nodemon --exec babel-node ./examples/MapPostsExamples/server/index.js",
     "client": "webpack-dev-server --config webpack.config.client.js --mode development --devtool inline-source-map --hot",
     "server": "nodemon --exec babel-node --inspect --debug src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",

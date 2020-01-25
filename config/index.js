@@ -1,5 +1,5 @@
-//module.exports.ip = '93.157.236.34';
-const ip = 'localhost';
+const ip = '93.157.236.34';
+//const ip = 'localhost';
 module.exports.ip = ip;
 
 const clientPort = 80;
