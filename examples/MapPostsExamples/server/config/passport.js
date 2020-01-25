@@ -4,7 +4,6 @@
 import Storage from './dbconfig';
 import secrets from '../config/secrets';
 import { Strategy as VKontakteStrategy } from 'passport-vkontakte';
-import { v4 as generateGuid } from 'uuid';
 import { serverAddress } from '../../../../config';
 
 export default passport => {
@@ -25,11 +24,11 @@ export default passport => {
                 // TODO: Probably we should verify token
 
                 try {
-                    let user = await Storage.getUserByEmail(params.email);
+                    let user = await Storage.getUserById(profile.id);
                     if (!user) {
                         // User does not exist
                         user = {
-                            id: generateGuid(),
+                            id: profile.id,
                             email: params.email,
                             fullName: profile.displayName,
                             photoUrl: profile.photos[0].value, // Save img url from vk storage for now
