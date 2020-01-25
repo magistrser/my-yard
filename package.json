@@ -22,7 +22,7 @@
     "infExamplesServer": "nodemon --exec babel-node --inspect --debug examples/InfrastructureExamples/server/index.js --watch examples/InfrastructureExamples/server/index.js",
     "infExamples": "concurrently \"npm run infExamplesServer\" \"npm run infExamplesClient\"",
     "mapPostsExamplesClient": "webpack-dev-server --config examples/MapPostsExamples/webpack.config.client.js --mode development --devtool inline-source-map --hot",
-    "mapPostsExamplesServer": "nodemon --exec babel-node --inspect --debug examples/MapPostsExamples/server/index.js --watch examples/MapPostsExamples/server/**/*.js",
+    "mapPostsExamplesServer": "nodemon --exec babel-node --inspect examples/MapPostsExamples/server/index.js --watch examples/MapPostsExamples/server/**/*.js",
     "mapPostsExamples": "concurrently \"npm run mapPostsExamplesClient\" \"npm run mapPostsExamplesServer\""
   },
   "author": "Sandeep Raveesh",

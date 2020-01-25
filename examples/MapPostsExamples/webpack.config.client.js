@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const config = require('../../config');
 
 const outputDirectory = 'dist';
 
@@ -45,11 +46,11 @@ module.exports = {
         ],
     },
     devServer: {
-        port: 80,
+        port: config.clientPort,
         open: true,
         historyApiFallback: true,
         proxy: {
-            '/api': 'http://localhost:8080',
+            '/api': config.serverAddress,
         },
     },
     plugins: [

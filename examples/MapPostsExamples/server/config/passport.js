@@ -1,11 +1,11 @@
 /**
  * Passport configuration goes here
  */
-import { storage } from '../mockStorage';
 import Storage from './dbconfig';
 import secrets from '../config/secrets';
 import { Strategy as VKontakteStrategy } from 'passport-vkontakte';
 import { v4 as generateGuid } from 'uuid';
+import { serverAddress } from '../../../../config';
 
 export default passport => {
     passport.use(
@@ -14,7 +14,7 @@ export default passport => {
             {
                 clientID: secrets.appID,
                 clientSecret: secrets.secretKey,
-                callbackURL: 'http://93.157.236.34:8080/api/auth/vkontakte/callback',
+                callbackURL: `${serverAddress}api/auth/vkontakte/callback`,
                 scope: ['email', 'photos'],
                 profileFields: ['email'],
             },

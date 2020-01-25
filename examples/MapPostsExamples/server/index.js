@@ -1,21 +1,13 @@
-import os from 'os';
 import express from 'express';
-import path from 'path';
-import url from 'url';
-import http from 'http';
-import https from 'https';
 import axios from 'axios';
 import passport from 'passport';
 import session from 'express-session';
 import configurePassport from './config/passport';
-import secrets from './config/secrets';
 import { v4 as generateGuid } from 'uuid';
-import sqlite3 from 'sqlite3';
 import Storage from './config/dbconfig';
 import ImageManager from './utils/ImageManager';
 import multer from 'multer';
-
-import { $Request, $Response, NextFunction, Middleware } from 'express';
+import { clientAddress, serverPort } from '../../../config';
 
 const app = express();
 
@@ -67,12 +59,12 @@ app.get('/api/restricted-area', ensureAuthenticated, (req, res) => {
 // If auth succeeds:
 app.get('/api/success', (req, res) => {
     console.log('<<Auth succeeded>>');
-    res.redirect('http://93.157.236.34:80/');
+    res.redirect(clientAddress);
 });
 // If auth fails:
 app.get('/api/fail', (req, res) => {
     console.log('<<Auth failed>>');
-    res.redirect('http://93.157.236.34:80/');
+    res.redirect(clientAddress);
 });
 
 // Checks if user is authenticated
@@ -90,7 +82,7 @@ app.get('/api/check-authentication', (req, res) => {
 // Logs user out
 app.get('/api/logout', (req, res) => {
     req.logout();
-    res.redirect('http://93.157.236.34:80/');
+    res.redirect(clientAddress);
 });
 
 // Sends userpic by userId
@@ -430,13 +422,13 @@ app.get('/api/get-subscribers-count', async (req, res) => {
 });
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
-    res.redirect('http://93.157.236.34:80/'); // HACK: A workaround
+    res.redirect(clientAddress); // HACK: A workaround
 });
 
 /**
  *  Start web server
  * */
-app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
+app.listen(process.env.PORT || serverPort, () => console.log(`Listening on port ${process.env.PORT || serverPort}!`));
 
 // Middleware that checks if user is authenticated
 function ensureAuthenticated(req, res, next) {
