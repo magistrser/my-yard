@@ -7,7 +7,7 @@ import { v4 as generateGuid } from 'uuid';
 import Storage from './config/dbconfig';
 import ImageManager from './utils/ImageManager';
 import multer from 'multer';
-import { clientAddress, serverPort } from '../../../config';
+import { serverAddress, serverPort } from '../../../config';
 
 const app = express();
 
@@ -33,7 +33,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /* Serve static files */
-app.use(express.static('dist'));
+app.use(express.static(`${__dirname}/../dist`));
 app.use('/api/img', express.static(`${__dirname}/__images`));
 
 /* Passport authentication */
@@ -59,12 +59,12 @@ app.get('/api/restricted-area', ensureAuthenticated, (req, res) => {
 // If auth succeeds:
 app.get('/api/success', (req, res) => {
     console.log('<<Auth succeeded>>');
-    res.redirect(clientAddress);
+    res.redirect('/');
 });
 // If auth fails:
 app.get('/api/fail', (req, res) => {
     console.log('<<Auth failed>>');
-    res.redirect(clientAddress);
+    res.redirect('/');
 });
 
 // Checks if user is authenticated
@@ -82,7 +82,7 @@ app.get('/api/check-authentication', (req, res) => {
 // Logs user out
 app.get('/api/logout', (req, res) => {
     req.logout();
-    res.redirect(clientAddress);
+    res.redirect('/');
 });
 
 // Sends userpic by userId
@@ -422,7 +422,7 @@ app.get('/api/get-subscribers-count', async (req, res) => {
 });
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
-    res.redirect(clientAddress); // HACK: A workaround
+    res.redirect('/'); // HACK: A workaround
 });
 
 /**
